@@ -1,0 +1,23 @@
+# VS Code
+.vscode/
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+
+# Environment variables
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
