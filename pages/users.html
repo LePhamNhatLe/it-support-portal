@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -21,13 +21,13 @@
 
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html" class="active" aria-current="page">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users" class="active" aria-current="page">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
 
@@ -45,7 +45,7 @@
           </label>
 
           <div class="topbar__heading">
-            <p class="topbar__eyebrow">Quản lý tài khoản người dùng</p>
+            <p class="topbar__eyebrow">Quản lý người dùng và quyền truy cập</p>
             <h1>Người dùng</h1>
           </div>
 
@@ -61,242 +61,200 @@
         <main class="content" id="main-content">
           <section class="page-header tickets__hero">
             <div>
-              <p class="topbar__eyebrow">Quản lý tài khoản và thông tin người dùng trong hệ thống</p>
+              <p class="topbar__eyebrow">Quản lý người dùng và quyền truy cập</p>
               <h2>Danh sách người dùng</h2>
             </div>
           </section>
 
           <section class="tickets__toolbar">
-            <label class="tickets__search" for="search-user">
+            <label class="tickets__search" for="user-search">
               <span class="visually-hidden">Tìm kiếm người dùng</span>
-              <input id="search-user" type="search" placeholder="Tìm kiếm người dùng" />
+              <input id="user-search" type="search" placeholder="Tìm kiếm người dùng" />
             </label>
-
             <div class="tickets__filters">
               <div class="tickets__filter">
                 <label for="role-filter">Vai trò</label>
                 <select id="role-filter">
                   <option>Tất cả vai trò</option>
-                  <option>Trưởng nhóm kỹ thuật</option>
-                  <option>Nhân viên kỹ thuật</option>
                   <option>Người dùng</option>
-                </select>
-              </div>
-              <div class="tickets__filter">
-                <label for="department-filter">Phòng ban</label>
-                <select id="department-filter">
-                  <option>Tất cả phòng ban</option>
-                  <option>IT</option>
-                  <option>Kế toán</option>
-                  <option>Nhân sự</option>
-                  <option>Kinh doanh</option>
-                  <option>Marketing</option>
-                  <option>Vận hành</option>
+                  <option>Quản trị viên</option>
+                  <option>Kỹ thuật</option>
                 </select>
               </div>
               <div class="tickets__filter">
                 <label for="status-filter">Trạng thái</label>
                 <select id="status-filter">
                   <option>Tất cả trạng thái</option>
-                  <option>Đang hoạt động</option>
-                  <option>Đã khóa</option>
-                  <option>Chờ kích hoạt</option>
+                  <option>Hoạt động</option>
+                  <option>Vô hiệu</option>
+                  <option>Khóa</option>
                 </select>
               </div>
             </div>
-
             <button class="button button--primary" type="button">+ Thêm người dùng</button>
           </section>
 
-          <section class="dashboard__summary tickets__summary">
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Tổng người dùng</p>
-                <p class="metric-card__value">92</p>
+          <section class="dashboard__grid">
+            <article class="dashboard__panel dashboard__panel--wide">
+              <div class="panel__header">
+                <h2>Danh sách người dùng</h2>
+                <p>Quản lý tài khoản, vai trò và trạng thái truy cập.</p>
               </div>
-              <span class="metric-card__delta metric-card__delta--neutral">Dữ liệu mẫu</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đang hoạt động</p>
-                <p class="metric-card__value">71</p>
+              <div class="table-wrap">
+                <table class="dashboard-table users-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Mã</th>
+                      <th scope="col">Tên</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Phòng ban</th>
+                      <th scope="col">Vai trò</th>
+                      <th scope="col">SĐT</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Ngày tạo</th>
+                      <th scope="col">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>U001</td>
+                      <td>Nguyễn Văn An</td>
+                      <td>an@example.local</td>
+                      <td>IT</td>
+                      <td>Kỹ thuật</td>
+                      <td>0912 123 456</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>01/01/2021</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U002</td>
+                      <td>Trần Văn Bình</td>
+                      <td>binh.tran@itsupport.local</td>
+                      <td>IT</td>
+                      <td>Nhân viên kỹ thuật</td>
+                      <td>0912 345 678</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>05/08/2022</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U003</td>
+                      <td>Lê Minh Anh</td>
+                      <td>anh.le@business.local</td>
+                      <td>Kinh doanh</td>
+                      <td>Người dùng</td>
+                      <td>0908 765 432</td>
+                      <td><span class="status-badge status-badge--pending">Chờ kích hoạt</span></td>
+                      <td>22/11/2023</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U004</td>
+                      <td>Phạm Thị Hương</td>
+                      <td>huong.pham@hr.local</td>
+                      <td>Nhân sự</td>
+                      <td>Người dùng</td>
+                      <td>0975 210 987</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>16/04/2022</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U005</td>
+                      <td>Hoàng Văn Cường</td>
+                      <td>cuong.hoang@accounting.local</td>
+                      <td>Kế toán</td>
+                      <td>Người dùng</td>
+                      <td>0944 778 221</td>
+                      <td><span class="status-badge status-badge--locked">Đã khóa</span></td>
+                      <td>30/09/2021</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U006</td>
+                      <td>Nguyễn Thị Lan</td>
+                      <td>lan.nguyen@marketing.local</td>
+                      <td>Marketing</td>
+                      <td>Người dùng</td>
+                      <td>0931 555 010</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>12/12/2022</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U007</td>
+                      <td>Đinh Văn Long</td>
+                      <td>long.dinh@operation.local</td>
+                      <td>Vận hành</td>
+                      <td>Nhân viên kỹ thuật</td>
+                      <td>0964 900 221</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>28/01/2023</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>U008</td>
+                      <td>Vũ Minh Quân</td>
+                      <td>quan.vu@itsupport.local</td>
+                      <td>IT</td>
+                      <td>Nhân viên kỹ thuật</td>
+                      <td>0922 334 556</td>
+                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
+                      <td>09/06/2023</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <span class="metric-card__delta metric-card__delta--success">+8 người</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đã khóa</p>
-                <p class="metric-card__value">10</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--danger">2 người</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Nhân viên kỹ thuật</p>
-                <p class="metric-card__value">28</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--warning">3 người</span>
-            </article>
-          </section>
 
-          <section class="dashboard__panel">
-            <div class="panel__header">
-              <h2>Bảng người dùng</h2>
-              <p>Quản lý tài khoản, vai trò và trạng thái người dùng trong hệ thống IT Support.</p>
-            </div>
-
-            <div class="table-wrap">
-              <table class="dashboard-table users-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Mã người dùng</th>
-                    <th scope="col">Họ và tên</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phòng ban</th>
-                    <th scope="col">Vai trò</th>
-                    <th scope="col">Số điện thoại</th>
-                    <th scope="col">Trạng thái</th>
-                    <th scope="col">Ngày tham gia</th>
-                    <th scope="col">Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>U001</td>
-                    <td>Nguyễn Văn An</td>
-                    <td>an.nguyen@itsupport.local</td>
-                    <td>IT</td>
-                    <td>Trưởng nhóm kỹ thuật</td>
-                    <td>0987 123 456</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>10/03/2021</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U002</td>
-                    <td>Trần Văn Bình</td>
-                    <td>binh.tran@itsupport.local</td>
-                    <td>IT</td>
-                    <td>Nhân viên kỹ thuật</td>
-                    <td>0912 345 678</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>05/08/2022</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U003</td>
-                    <td>Lê Minh Anh</td>
-                    <td>anh.le@business.local</td>
-                    <td>Kinh doanh</td>
-                    <td>Người dùng</td>
-                    <td>0908 765 432</td>
-                    <td><span class="status-badge status-badge--pending">Chờ kích hoạt</span></td>
-                    <td>22/11/2023</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U004</td>
-                    <td>Phạm Thị Hương</td>
-                    <td>huong.pham@hr.local</td>
-                    <td>Nhân sự</td>
-                    <td>Người dùng</td>
-                    <td>0975 210 987</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>16/04/2022</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U005</td>
-                    <td>Hoàng Văn Cường</td>
-                    <td>cuong.hoang@accounting.local</td>
-                    <td>Kế toán</td>
-                    <td>Người dùng</td>
-                    <td>0944 778 221</td>
-                    <td><span class="status-badge status-badge--locked">Đã khóa</span></td>
-                    <td>30/09/2021</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U006</td>
-                    <td>Nguyễn Thị Lan</td>
-                    <td>lan.nguyen@marketing.local</td>
-                    <td>Marketing</td>
-                    <td>Người dùng</td>
-                    <td>0931 555 010</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>12/12/2022</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U007</td>
-                    <td>Đinh Văn Long</td>
-                    <td>long.dinh@operation.local</td>
-                    <td>Vận hành</td>
-                    <td>Nhân viên kỹ thuật</td>
-                    <td>0964 900 221</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>28/01/2023</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>U008</td>
-                    <td>Vũ Minh Quân</td>
-                    <td>quan.vu@itsupport.local</td>
-                    <td>IT</td>
-                    <td>Nhân viên kỹ thuật</td>
-                    <td>0922 334 556</td>
-                    <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
-                    <td>09/06/2023</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem người dùng">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">✏️ Chỉnh sửa</button>
-                      <button class="button button--ghost" type="button" title="Khóa tài khoản">🔒 Khóa</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="tickets__empty" hidden>
-              <div class="empty-state">
-                <h3>Không có người dùng nào</h3>
-                <p>Hiện tại chưa có người dùng phù hợp với bộ lọc. Thêm người dùng mới hoặc điều chỉnh bộ lọc để tiếp tục.</p>
-                <button class="button button--primary" type="button">Thêm người dùng</button>
+              <div class="tickets__empty" hidden>
+                <div class="empty-state">
+                  <h3>Không có người dùng nào</h3>
+                  <p>Hiện tại chưa có người dùng phù hợp với bộ lọc. Thêm người dùng mới hoặc điều chỉnh bộ lọc để tiếp tục.</p>
+                  <button class="button button--primary" type="button">Thêm người dùng</button>
+                </div>
               </div>
-            </div>
+            </article>
           </section>
         </main>
       </div>
     </div>
     <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
     <script src="../js/guard.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>

@@ -1,199 +1,395 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cài đặt | Cổng IT Support</title>
-    <link rel="stylesheet" href="../css/style.css" />
-  </head>
-  <body>
-    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
 
-    <div class="layout">
-      <aside class="sidebar" aria-label="Điều hướng chính">
-        <div class="sidebar__brand">
-          <div class="sidebar__logo">IT</div>
-          <div>
-            <p class="sidebar__product">IT Support</p>
-            <span class="sidebar__subtitle">Portal</span>
-          </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài đặt | Cổng IT Support</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng">
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Điều hướng chính">
+
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">IT</div>
+
+        <div>
+          <p class="sidebar__product">IT Support</p>
+          <span class="sidebar__subtitle">Portal</span>
         </div>
-
-        <nav class="sidebar__nav" aria-label="Menu bên">
-          <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html" class="active" aria-current="page">Cài đặt</a></li>
-          </ul>
-        </nav>
-
-        <div class="sidebar__footer">
-          <button class="sidebar__logout" type="button">Đăng xuất</button>
-        </div>
-      </aside>
-
-      <div class="workspace">
-        <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-
-          <div class="topbar__heading">
-            <p class="topbar__eyebrow">Quản lý thông tin tài khoản và tùy chọn hệ thống</p>
-            <h1>Cài đặt</h1>
-          </div>
-
-          <div class="topbar__profile">
-            <div class="profile__avatar">TL</div>
-            <div class="profile__info">
-              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
-              <span class="profile__role">Hỗ trợ IT nội bộ</span>
-            </div>
-          </div>
-        </header>
-
-        <main class="content" id="main-content">
-          <section class="dashboard__grid settings__grid">
-            <article class="content__panel">
-              <div class="panel__header">
-                <h2>Thông tin cá nhân</h2>
-                <p>Xem và cập nhật thông tin tài khoản của bạn.</p>
-              </div>
-              <div class="profile-card">
-                <div class="profile-card__avatar">TL</div>
-                <div class="profile-card__info">
-                  <div class="profile-field">
-                    <label>Họ và tên</label>
-                    <p>Trần Lê Tùng</p>
-                  </div>
-                  <div class="profile-field">
-                    <label>Email</label>
-                    <p>tung.tran@itsupport.local</p>
-                  </div>
-                  <div class="profile-field">
-                    <label>Số điện thoại</label>
-                    <p>0987 654 321</p>
-                  </div>
-                  <div class="profile-field">
-                    <label>Phòng ban</label>
-                    <p>IT</p>
-                  </div>
-                  <div class="profile-field">
-                    <label>Vai trò</label>
-                    <p>Trưởng nhóm kỹ thuật</p>
-                  </div>
-                </div>
-              </div>
-              <div class="settings-actions">
-                <button class="button button--ghost" type="button">Chỉnh sửa thông tin</button>
-                <button class="button button--primary" type="button">Lưu thay đổi</button>
-              </div>
-            </article>
-
-            <article class="content__panel">
-              <div class="panel__header">
-                <h2>Bảo mật tài khoản</h2>
-                <p>Thay đổi mật khẩu để bảo vệ tài khoản của bạn.</p>
-              </div>
-              <div class="field-grid">
-                <label>
-                  <span>Mật khẩu hiện tại</span>
-                  <input type="password" placeholder="Nhập mật khẩu hiện tại" />
-                </label>
-                <label>
-                  <span>Mật khẩu mới</span>
-                  <input type="password" placeholder="Nhập mật khẩu mới" />
-                </label>
-                <label>
-                  <span>Xác nhận mật khẩu mới</span>
-                  <input type="password" placeholder="Xác nhận mật khẩu mới" />
-                </label>
-              </div>
-              <p class="settings-note">Mật khẩu nên có ít nhất 8 ký tự.</p>
-              <button class="button button--primary" type="button">Đổi mật khẩu</button>
-            </article>
-          </section>
-
-          <section class="dashboard__grid settings__grid">
-            <article class="content__panel">
-              <div class="panel__header">
-                <h2>Tùy chọn giao diện</h2>
-                <p>Chọn giao diện phù hợp với thói quen làm việc.</p>
-              </div>
-              <div class="toggle-group">
-                <label class="toggle-card">
-                  <input type="radio" name="theme" checked />
-                  <div>
-                    <strong>Chế độ sáng</strong>
-                    <p>Giao diện sáng phù hợp môi trường văn phòng.</p>
-                  </div>
-                </label>
-                <label class="toggle-card">
-                  <input type="radio" name="theme" />
-                  <div>
-                    <strong>Chế độ tối</strong>
-                    <p>Giao diện tối giảm chói mắt khi làm việc ban đêm.</p>
-                  </div>
-                </label>
-              </div>
-            </article>
-
-            <article class="content__panel">
-              <div class="panel__header">
-                <h2>Thông báo</h2>
-                <p>Quản lý nhận thông báo từ hệ thống.</p>
-              </div>
-              <div class="settings-checkboxes">
-                <label><input type="checkbox" checked /> Nhận thông báo khi có yêu cầu mới</label>
-                <label><input type="checkbox" checked /> Nhận thông báo khi được phân công yêu cầu</label>
-                <label><input type="checkbox" checked /> Nhận thông báo khi yêu cầu được cập nhật</label>
-                <label><input type="checkbox" /> Nhận thông báo qua email</label>
-              </div>
-            </article>
-          </section>
-
-          <section class="dashboard__grid settings__grid">
-            <article class="content__panel">
-              <div class="panel__header">
-                <h2>Phiên đăng nhập</h2>
-                <p>Theo dõi phiên truy cập hiện tại và đăng xuất từ các thiết bị khác.</p>
-              </div>
-              <div class="session-card">
-                <div>
-                  <p class="session-label">Thiết bị hiện tại</p>
-                  <strong>Laptop Windows</strong>
-                </div>
-                <div>
-                  <p class="session-label">Trình duyệt</p>
-                  <strong>Chrome</strong>
-                </div>
-                <div>
-                  <p class="session-label">Thời gian đăng nhập gần nhất</p>
-                  <strong>5 phút trước</strong>
-                </div>
-              </div>
-              <button class="button button--ghost" type="button">Đăng xuất khỏi tất cả thiết bị</button>
-            </article>
-
-            <article class="content__panel settings-danger">
-              <div class="panel__header">
-                <h2>Vùng nguy hiểm</h2>
-                <p>Hành động bên dưới có thể ảnh hưởng đến quyền truy cập tài khoản.</p>
-              </div>
-              <p class="danger-text">Thao tác này không thể hoàn tác.</p>
-              <button class="button button--ghost button--danger" type="button">Xóa tài khoản</button>
-            </article>
-          </section>
-        </main>
       </div>
+
+      <nav class="sidebar__nav" aria-label="Menu bên">
+        <ul>
+          <li>
+            <a href="dashboard.html" data-permission="dashboard">
+              Bảng điều khiển
+            </a>
+          </li>
+
+          <li>
+            <a href="tickets.html" data-permission="tickets">
+              Phiếu hỗ trợ
+            </a>
+          </li>
+
+          <li>
+            <a href="devices.html" data-permission="devices">
+              Thiết bị
+            </a>
+          </li>
+
+          <li>
+            <a href="users.html" data-permission="users">
+              Người dùng
+            </a>
+          </li>
+
+          <li>
+            <a href="network.html" data-permission="network">
+              Mạng
+            </a>
+          </li>
+
+          <li>
+            <a href="reports.html" data-permission="reports">
+              Báo cáo
+            </a>
+          </li>
+
+          <li>
+            <a href="settings.html" data-permission="settings" class="active" aria-current="page">
+              Cài đặt
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar__footer">
+        <button class="sidebar__logout" type="button">
+          Đăng xuất
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Workspace -->
+    <div class="workspace">
+
+      <!-- Topbar -->
+      <header class="topbar">
+
+        <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+
+        <div class="topbar__heading">
+          <p class="topbar__eyebrow">
+            Cài đặt hệ thống và thông tin tài khoản
+          </p>
+
+          <h1>Cài đặt</h1>
+        </div>
+
+        <div class="topbar__profile">
+          <div class="profile__avatar">TL</div>
+
+          <div class="profile__info">
+            <span class="profile__name">
+              Trưởng nhóm kỹ thuật
+            </span>
+
+            <span class="profile__role">
+              Hỗ trợ IT nội bộ
+            </span>
+          </div>
+        </div>
+
+      </header>
+
+      <!-- Main content -->
+      <main class="content" id="main-content">
+
+        <section class="page-header tickets__hero">
+          <div>
+            <p class="topbar__eyebrow">
+              Cài đặt hệ thống và thông tin tài khoản
+            </p>
+
+            <h2>Thiết lập</h2>
+          </div>
+        </section>
+
+        <!-- Account + System settings -->
+        <section class="settings-grid">
+
+          <article class="settings-panel">
+
+            <h3>Tài khoản</h3>
+
+            <div class="settings-row">
+              <label for="account-name">
+                Tên tài khoản
+              </label>
+
+              <input id="account-name" type="text" value="Trưởng nhóm kỹ thuật">
+            </div>
+
+            <div class="settings-row">
+              <label for="account-email">
+                Email
+              </label>
+
+              <input id="account-email" type="email" value="lead@example.local">
+            </div>
+
+            <div class="settings-row">
+              <label for="account-password">
+                Đổi mật khẩu
+              </label>
+
+              <input id="account-password" type="password">
+            </div>
+
+            <div class="settings-actions">
+              <button class="button button--ghost" type="button">
+                Hủy
+              </button>
+
+              <button class="button button--primary" type="button">
+                Lưu
+              </button>
+            </div>
+
+          </article>
+
+          <article class="settings-panel">
+
+            <h3>Thiết lập hệ thống</h3>
+
+            <div class="settings-row">
+              <label for="company-name">
+                Tên công ty
+              </label>
+
+              <input id="company-name" type="text" value="Công ty Ví dụ">
+            </div>
+
+            <div class="settings-row">
+              <label for="timezone">
+                Múi giờ
+              </label>
+
+              <select id="timezone">
+                <option>UTC+7 (Hà Nội)</option>
+                <option>UTC+0</option>
+                <option>UTC+1</option>
+              </select>
+            </div>
+
+            <div class="settings-row">
+              <label for="language">
+                Ngôn ngữ
+              </label>
+
+              <select id="language">
+                <option>Tiếng Việt</option>
+                <option>English</option>
+              </select>
+            </div>
+
+            <div class="settings-actions">
+              <button class="button button--ghost" type="button">
+                Hủy
+              </button>
+
+              <button class="button button--primary" type="button">
+                Lưu thay đổi
+              </button>
+            </div>
+
+          </article>
+
+        </section>
+
+        <!-- Interface + Notifications -->
+        <section class="dashboard__grid settings__grid">
+
+          <article class="content__panel">
+
+            <div class="panel__header">
+              <h2>Tùy chọn giao diện</h2>
+
+              <p>
+                Chọn giao diện phù hợp với thói quen làm việc.
+              </p>
+            </div>
+
+            <div class="toggle-group">
+
+              <label class="toggle-card">
+                <input type="radio" name="theme" checked>
+
+                <div>
+                  <strong>Chế độ sáng</strong>
+
+                  <p>
+                    Giao diện sáng phù hợp môi trường văn phòng.
+                  </p>
+                </div>
+              </label>
+
+              <label class="toggle-card">
+                <input type="radio" name="theme">
+
+                <div>
+                  <strong>Chế độ tối</strong>
+
+                  <p>
+                    Giao diện tối giảm chói mắt khi làm việc ban đêm.
+                  </p>
+                </div>
+              </label>
+
+            </div>
+
+          </article>
+
+          <article class="content__panel">
+
+            <div class="panel__header">
+              <h2>Thông báo</h2>
+
+              <p>
+                Quản lý nhận thông báo từ hệ thống.
+              </p>
+            </div>
+
+            <div class="settings-checkboxes">
+
+              <label>
+                <input type="checkbox" checked>
+                Nhận thông báo khi có yêu cầu mới
+              </label>
+
+              <label>
+                <input type="checkbox" checked>
+                Nhận thông báo khi được phân công yêu cầu
+              </label>
+
+              <label>
+                <input type="checkbox" checked>
+                Nhận thông báo khi yêu cầu được cập nhật
+              </label>
+
+              <label>
+                <input type="checkbox">
+                Nhận thông báo qua email
+              </label>
+
+            </div>
+
+          </article>
+
+        </section>
+
+        <!-- Session + Danger zone -->
+        <section class="dashboard__grid settings__grid">
+
+          <article class="content__panel">
+
+            <div class="panel__header">
+              <h2>Phiên đăng nhập</h2>
+
+              <p>
+                Theo dõi phiên truy cập hiện tại và đăng xuất
+                từ các thiết bị khác.
+              </p>
+            </div>
+
+            <div class="session-card">
+
+              <div>
+                <p class="session-label">
+                  Thiết bị hiện tại
+                </p>
+
+                <strong>
+                  Laptop Windows
+                </strong>
+              </div>
+
+              <div>
+                <p class="session-label">
+                  Trình duyệt
+                </p>
+
+                <strong>
+                  Chrome
+                </strong>
+              </div>
+
+              <div>
+                <p class="session-label">
+                  Thời gian đăng nhập gần nhất
+                </p>
+
+                <strong>
+                  5 phút trước
+                </strong>
+              </div>
+
+            </div>
+
+            <button class="button button--ghost" type="button">
+              Đăng xuất khỏi tất cả thiết bị
+            </button>
+
+          </article>
+
+          <article class="content__panel settings-danger">
+
+            <div class="panel__header">
+
+              <h2>Vùng nguy hiểm</h2>
+
+              <p>
+                Hành động bên dưới có thể ảnh hưởng đến
+                quyền truy cập tài khoản.
+              </p>
+
+            </div>
+
+            <p class="danger-text">
+              Thao tác này không thể hoàn tác.
+            </p>
+
+            <button class="button button--ghost button--danger" type="button">
+              Xóa tài khoản
+            </button>
+
+          </article>
+
+        </section>
+
+      </main>
+
     </div>
-    <script src="../js/auth.js"></script>
-    <script src="../js/guard.js"></script>
-  </body>
+
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../js/auth.js"></script>
+  <script src="../js/permissions.js"></script>
+  <script src="../js/guard.js"></script>
+  <script src="../js/menu.js"></script>
+</body>
 </html>

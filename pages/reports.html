@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -21,13 +21,13 @@
 
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html" class="active" aria-current="page">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports" class="active" aria-current="page">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
 
@@ -133,21 +133,15 @@
               <div class="report-grid">
                 <div class="report-chart">
                   <h3 class="report-chart__title">Yêu cầu theo trạng thái</h3>
-                  <div class="report-chart__body">
-                    Biểu đồ trạng thái (placeholder)
-                  </div>
+                  <div class="report-chart__body">Biểu đồ trạng thái (placeholder)</div>
                 </div>
                 <div class="report-chart">
                   <h3 class="report-chart__title">Yêu cầu theo mức độ</h3>
-                  <div class="report-chart__body">
-                    Biểu đồ mức độ (placeholder)
-                  </div>
+                  <div class="report-chart__body">Biểu đồ mức độ (placeholder)</div>
                 </div>
                 <div class="report-chart report-chart--full">
                   <h3 class="report-chart__title">Yêu cầu theo danh mục</h3>
-                  <div class="report-chart__body">
-                    Biểu đồ danh mục (placeholder)
-                  </div>
+                  <div class="report-chart__body">Biểu đồ danh mục (placeholder)</div>
                 </div>
               </div>
             </article>
@@ -181,7 +175,7 @@
                 </article>
                 <article class="metric-card">
                   <div>
-                    <p class="metric-card__label">Ngừng sử dụng</p>
+                    <p class="metric-card__label">Ngưng sử dụng</p>
                     <p class="metric-card__value">31</p>
                   </div>
                   <span class="metric-card__delta metric-card__delta--danger">24%</span>
@@ -210,7 +204,7 @@
                     <tr>
                       <td>Máy in</td>
                       <td>18</td>
-                      <td>Ngừng sử dụng</td>
+                      <td>Ngưng sử dụng</td>
                     </tr>
                   </tbody>
                 </table>
@@ -334,6 +328,9 @@
       </div>
     </div>
     <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
     <script src="../js/guard.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>
+

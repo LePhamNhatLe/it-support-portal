@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -21,13 +21,13 @@
 
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html" class="active" aria-current="page">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices" class="active" aria-current="page">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
 
@@ -45,7 +45,7 @@
           </label>
 
           <div class="topbar__heading">
-            <p class="topbar__eyebrow">Quản lý tài sản IT nội bộ</p>
+            <p class="topbar__eyebrow">Quản lý tài sản và thiết bị công nghệ thông tin</p>
             <h1>Thiết bị</h1>
           </div>
 
@@ -95,7 +95,7 @@
                   <option>Đang bảo trì</option>
                   <option>Trong kho</option>
                   <option>Hỏng</option>
-                  <option>Ngừng sử dụng</option>
+                  <option>Ngưng sử dụng</option>
                 </select>
               </div>
               <div class="tickets__filter">
@@ -138,7 +138,7 @@
             </article>
             <article class="metric-card">
               <div>
-                <p class="metric-card__label">Ngừng sử dụng</p>
+                <p class="metric-card__label">Ngưng sử dụng</p>
                 <p class="metric-card__value">8</p>
               </div>
               <span class="metric-card__delta metric-card__delta--danger">3 thiết bị</span>
@@ -177,8 +177,8 @@
                     <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
                     <td>15/02/2024</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -191,8 +191,8 @@
                     <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
                     <td>08/11/2023</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -205,8 +205,8 @@
                     <td><span class="status-badge status-badge--maintenance">Đang bảo trì</span></td>
                     <td>20/05/2022</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -219,8 +219,8 @@
                     <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
                     <td>12/01/2024</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -233,8 +233,8 @@
                     <td><span class="status-badge status-badge--stored">Trong kho</span></td>
                     <td>03/09/2023</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -247,8 +247,8 @@
                     <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
                     <td>18/07/2022</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
@@ -261,22 +261,22 @@
                     <td><span class="status-badge status-badge--broken">Hỏng</span></td>
                     <td>10/04/2021</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                   <tr>
                     <td>TB008</td>
                     <td>LAP-ADMIN-03</td>
                     <td>Laptop</td>
-                    <td>Phòng Nhân sự</td>
+                    <td>Phòng Nhân Sự</td>
                     <td>Nhân sự</td>
                     <td>192.168.40.18</td>
-                    <td><span class="status-badge status-badge--retired">Ngừng sử dụng</span></td>
+                    <td><span class="status-badge status-badge--retired">Ngưng sử dụng</span></td>
                     <td>23/06/2020</td>
                     <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
                     </td>
                   </tr>
                 </tbody>
@@ -295,6 +295,9 @@
       </div>
     </div>
     <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
     <script src="../js/guard.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>
+

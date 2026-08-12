@@ -21,13 +21,13 @@
 
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html" class="active" aria-current="page">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets" class="active" aria-current="page">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
 
@@ -266,6 +266,9 @@
       </div>
     </div>
     <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
     <script src="../js/guard.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>
+

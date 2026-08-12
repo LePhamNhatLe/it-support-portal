@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -21,13 +21,13 @@
 
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
-            <li><a href="dashboard.html">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html" class="active" aria-current="page">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network" class="active" aria-current="page">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
 
@@ -45,7 +45,7 @@
           </label>
 
           <div class="topbar__heading">
-            <p class="topbar__eyebrow">Quản lý thiết bị và hạ tầng mạng</p>
+            <p class="topbar__eyebrow">Quản lý thiết bị và hệ thống mạng</p>
             <h1>Mạng</h1>
           </div>
 
@@ -61,7 +61,7 @@
         <main class="content" id="main-content">
           <section class="page-header tickets__hero">
             <div>
-              <p class="topbar__eyebrow">Quản lý thiết bị và hạ tầng mạng</p>
+              <p class="topbar__eyebrow">Quản lý thiết bị và hệ thống mạng</p>
               <h2>Quản lý mạng</h2>
             </div>
           </section>
@@ -91,7 +91,7 @@
                 <select id="network-status-filter">
                   <option>Tất cả trạng thái</option>
                   <option>Đang hoạt động</option>
-                  <option>Ngoại tuyến</option>
+                  <option>Ngoài tuyến</option>
                   <option>Đang bảo trì</option>
                   <option>Cảnh báo</option>
                 </select>
@@ -136,7 +136,7 @@
             </article>
             <article class="metric-card">
               <div>
-                <p class="metric-card__label">Đang ngoại tuyến</p>
+                <p class="metric-card__label">Ngoài tuyến</p>
                 <p class="metric-card__value">15</p>
               </div>
               <span class="metric-card__delta metric-card__delta--danger">2 thiết bị</span>
@@ -201,9 +201,9 @@
                       <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
                       <td>12 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -216,9 +216,9 @@
                       <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
                       <td>11 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -231,9 +231,9 @@
                       <td><span class="status-badge status-badge--maintenance">Đang bảo trì</span></td>
                       <td>5 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -246,9 +246,9 @@
                       <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
                       <td>7 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -261,9 +261,9 @@
                       <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
                       <td>15 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -273,12 +273,12 @@
                       <td>10.0.3.22</td>
                       <td>00:1A:2B:3C:4D:9D</td>
                       <td>Phòng kỹ thuật</td>
-                      <td><span class="status-badge status-badge--offline">Ngoại tuyến</span></td>
+                      <td><span class="status-badge status-badge--offline">Ngoài tuyến</span></td>
                       <td>0 giờ</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -291,9 +291,9 @@
                       <td><span class="status-badge status-badge--alert">Cảnh báo</span></td>
                       <td>3 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                     <tr>
@@ -306,9 +306,9 @@
                       <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
                       <td>9 ngày</td>
                       <td>
-                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">Xóa</button>
                       </td>
                     </tr>
                   </tbody>
@@ -318,7 +318,7 @@
               <div class="tickets__empty" hidden>
                 <div class="empty-state">
                   <h3>Không có thiết bị mạng</h3>
-                  <p>Hiện tại chưa có thiết bị mạng phù hợp. Thêm thiết bị mới hoặc thay đổi bộ lọc để hiển thị dữ liệu.</p>
+                  <p>Hiện tại chưa có thiết bị mạng phù hợp. Thử xóa bộ lọc hoặc thêm thiết bị mới.</p>
                   <button class="button button--primary" type="button">Thêm thiết bị</button>
                 </div>
               </div>
@@ -328,6 +328,9 @@
       </div>
     </div>
     <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
     <script src="../js/guard.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>
+

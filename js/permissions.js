@@ -91,7 +91,6 @@ function getAllowedPermissions() {
 
     return [...ROLES[role].permissions];
 }
-
 window.AppPermissions = {
     PERMISSIONS,
     ROLES,
