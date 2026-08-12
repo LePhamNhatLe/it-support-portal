@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phiếu hỗ trợ | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">IT</div>
+          <div>
+            <p class="sidebar__product">IT Support</p>
+            <span class="sidebar__subtitle">Portal</span>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Menu bên">
+          <ul>
+            <li><a href="dashboard.html">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" class="active" aria-current="page">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html">Thiết bị</a></li>
+            <li><a href="users.html">Người dùng</a></li>
+            <li><a href="network.html">Mạng</a></li>
+            <li><a href="reports.html">Báo cáo</a></li>
+            <li><a href="settings.html">Cài đặt</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__logout" type="button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div class="topbar__heading">
+            <p class="topbar__eyebrow">Chào mừng trở lại</p>
+            <h1>Phiếu hỗ trợ</h1>
+          </div>
+
+          <div class="topbar__profile">
+            <div class="profile__avatar">TL</div>
+            <div class="profile__info">
+              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
+              <span class="profile__role">Hỗ trợ IT nội bộ</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="page-header tickets__hero">
+            <div>
+              <p class="topbar__eyebrow">Quản lý và theo dõi yêu cầu hỗ trợ IT.</p>
+              <h2>Phiếu hỗ trợ</h2>
+            </div>
+          </section>
+
+          <section class="tickets__toolbar">
+            <label class="tickets__search" for="search-ticket">
+              <span class="visually-hidden">Tìm kiếm phiếu</span>
+              <input id="search-ticket" type="search" placeholder="Tìm kiếm phiếu" />
+            </label>
+
+            <div class="tickets__filters">
+              <div class="tickets__filter">
+                <label for="status-filter">Trạng thái</label>
+                <select id="status-filter">
+                  <option>Tất cả trạng thái</option>
+                  <option>Mở</option>
+                  <option>Đang xử lý</option>
+                  <option>Chờ</option>
+                  <option>Đã giải quyết</option>
+                  <option>Đã đóng</option>
+                </select>
+              </div>
+              <div class="tickets__filter">
+                <label for="priority-filter">Ưu tiên</label>
+                <select id="priority-filter">
+                  <option>Tất cả mức ưu tiên</option>
+                  <option>Thấp</option>
+                  <option>Trung bình</option>
+                  <option>Cao</option>
+                  <option>Khẩn cấp</option>
+                </select>
+              </div>
+              <div class="tickets__filter">
+                <label for="category-filter">Danh mục</label>
+                <select id="category-filter">
+                  <option>Tất cả danh mục</option>
+                  <option>Phần cứng</option>
+                  <option>Phần mềm</option>
+                  <option>Mạng</option>
+                  <option>Bảo mật</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="button button--primary" type="button">Tạo phiếu</button>
+          </section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Phiếu mở</p>
+                <p class="metric-card__value">34</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--danger">+12%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang xử lý</p>
+                <p class="metric-card__value">18</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--warning">+5%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang chờ</p>
+                <p class="metric-card__value">13</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--neutral">Ổn định</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đã giải quyết</p>
+                <p class="metric-card__value">282</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--success">+18%</span>
+            </article>
+          </section>
+
+          <section class="dashboard__panel">
+            <div class="panel__header">
+              <h2>Hàng đợi phiếu</h2>
+              <p>Duyệt, sắp xếp và xử lý các yêu cầu phiếu gửi qua cổng hỗ trợ IT.</p>
+            </div>
+
+            <div class="table-wrap">
+              <table class="dashboard-table tickets-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Mã phiếu</th>
+                    <th scope="col">Tiêu đề</th>
+                    <th scope="col">Người yêu cầu</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Ưu tiên</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Người phụ trách</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#T-1001</td>
+                    <td>Không kết nối được VPN</td>
+                    <td>Nguyễn Thị Mai</td>
+                    <td>Mạng</td>
+                    <td><span class="badge badge--critical">Khẩn cấp</span></td>
+                    <td><span class="status-badge status-badge--open">Mở</span></td>
+                    <td>Trần Minh</td>
+                    <td>2 giờ trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1003</td>
+                    <td>Thiết lập máy trạm mới</td>
+                    <td>Đinh Văn Hưng</td>
+                    <td>Phần cứng</td>
+                    <td><span class="badge badge--medium">Trung bình</span></td>
+                    <td><span class="status-badge status-badge--in-progress">Đang xử lý</span></td>
+                    <td>Lê Phương</td>
+                    <td>6 giờ trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1010</td>
+                    <td>Truy cập email doanh nghiệp</td>
+                    <td>Hà Tú</td>
+                    <td>Phần mềm</td>
+                    <td><span class="badge badge--medium">Trung bình</span></td>
+                    <td><span class="status-badge status-badge--pending">Chờ</span></td>
+                    <td>Nguyễn An</td>
+                    <td>1 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1022</td>
+                    <td>Lỗi hàng đợi máy in</td>
+                    <td>Phạm Quỳnh</td>
+                    <td>Phần cứng</td>
+                    <td><span class="badge badge--low">Thấp</span></td>
+                    <td><span class="status-badge status-badge--resolved">Đã giải quyết</span></td>
+                    <td>Hà Trang</td>
+                    <td>2 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1027</td>
+                    <td>Yêu cầu cài đặt phần mềm</td>
+                    <td>Trần Lan</td>
+                    <td>Phần mềm</td>
+                    <td><span class="badge badge--high">Cao</span></td>
+                    <td><span class="status-badge status-badge--open">Mở</span></td>
+                    <td>Nguyễn An</td>
+                    <td>2 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1034</td>
+                    <td>Xác nhận chính sách bảo mật</td>
+                    <td>Lê Hoàng</td>
+                    <td>Bảo mật</td>
+                    <td><span class="badge badge--medium">Trung bình</span></td>
+                    <td><span class="status-badge status-badge--pending">Chờ</span></td>
+                    <td>Lê Phương</td>
+                    <td>3 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1039</td>
+                    <td>Kiểm tra tốc độ mạng</td>
+                    <td>Vũ Minh</td>
+                    <td>Mạng</td>
+                    <td><span class="badge badge--low">Thấp</span></td>
+                    <td><span class="status-badge status-badge--resolved">Đã giải quyết</span></td>
+                    <td>Hà Trang</td>
+                    <td>3 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                  <tr>
+                    <td>#T-1045</td>
+                    <td>Yêu cầu đặt lại mật khẩu</td>
+                    <td>Đỗ Phương</td>
+                    <td>Phần mềm</td>
+                    <td><span class="badge badge--high">Cao</span></td>
+                    <td><span class="status-badge status-badge--open">Mở</span></td>
+                    <td>Lê Phương</td>
+                    <td>4 ngày trước</td>
+                    <td><button class="button button--ghost" type="button">Xem</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="tickets__empty" hidden>
+              <div class="empty-state">
+                <h3>Không có phiếu nào</h3>
+                <p>Hiện tại chưa có yêu cầu hỗ trợ trong hàng đợi. Tạo phiếu mới hoặc điều chỉnh bộ lọc để bắt đầu.</p>
+                <button class="button button--primary" type="button">Tạo phiếu đầu tiên</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

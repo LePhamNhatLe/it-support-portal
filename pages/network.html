@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mạng | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">IT</div>
+          <div>
+            <p class="sidebar__product">IT Support</p>
+            <span class="sidebar__subtitle">Portal</span>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Menu bên">
+          <ul>
+            <li><a href="dashboard.html">Bảng điều khiển</a></li>
+            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html">Thiết bị</a></li>
+            <li><a href="users.html">Người dùng</a></li>
+            <li><a href="network.html" class="active" aria-current="page">Mạng</a></li>
+            <li><a href="reports.html">Báo cáo</a></li>
+            <li><a href="settings.html">Cài đặt</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__logout" type="button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div class="topbar__heading">
+            <p class="topbar__eyebrow">Quản lý thiết bị và hạ tầng mạng</p>
+            <h1>Mạng</h1>
+          </div>
+
+          <div class="topbar__profile">
+            <div class="profile__avatar">TL</div>
+            <div class="profile__info">
+              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
+              <span class="profile__role">Hỗ trợ IT nội bộ</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="page-header tickets__hero">
+            <div>
+              <p class="topbar__eyebrow">Quản lý thiết bị và hạ tầng mạng</p>
+              <h2>Quản lý mạng</h2>
+            </div>
+          </section>
+
+          <section class="tickets__toolbar">
+            <label class="tickets__search" for="search-network-device">
+              <span class="visually-hidden">Tìm kiếm thiết bị mạng</span>
+              <input id="search-network-device" type="search" placeholder="Tìm kiếm thiết bị mạng" />
+            </label>
+
+            <div class="tickets__filters">
+              <div class="tickets__filter">
+                <label for="network-device-type-filter">Loại thiết bị</label>
+                <select id="network-device-type-filter">
+                  <option>Tất cả loại thiết bị</option>
+                  <option>Router</option>
+                  <option>Switch</option>
+                  <option>Access Point</option>
+                  <option>Firewall</option>
+                  <option>Máy chủ</option>
+                  <option>Modem</option>
+                  <option>Thiết bị khác</option>
+                </select>
+              </div>
+              <div class="tickets__filter">
+                <label for="network-status-filter">Trạng thái</label>
+                <select id="network-status-filter">
+                  <option>Tất cả trạng thái</option>
+                  <option>Đang hoạt động</option>
+                  <option>Ngoại tuyến</option>
+                  <option>Đang bảo trì</option>
+                  <option>Cảnh báo</option>
+                </select>
+              </div>
+              <div class="tickets__filter">
+                <label for="network-area-filter">Khu vực</label>
+                <select id="network-area-filter">
+                  <option>Tất cả khu vực</option>
+                  <option>Phòng máy chủ</option>
+                  <option>Tầng 1</option>
+                  <option>Tầng 2</option>
+                  <option>Văn phòng</option>
+                  <option>Phòng kỹ thuật</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="button button--primary" type="button">+ Thêm thiết bị</button>
+          </section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Tổng thiết bị mạng</p>
+                <p class="metric-card__value">86</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--neutral">Cập nhật</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang hoạt động</p>
+                <p class="metric-card__value">57</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--success">+6 thiết bị</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang bảo trì</p>
+                <p class="metric-card__value">14</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--warning">3 thiết bị</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang ngoại tuyến</p>
+                <p class="metric-card__value">15</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--danger">2 thiết bị</span>
+            </article>
+          </section>
+
+          <section class="dashboard__grid">
+            <article class="dashboard__panel">
+              <div class="panel__header">
+                <h2>Tổng quan mạng</h2>
+                <p>Thống kê nhanh số lượng thiết bị mạng theo loại và trạng thái hoạt động.</p>
+              </div>
+              <div class="device-overview">
+                <article class="device-card device-card--active">
+                  <h3>Tổng Router</h3>
+                  <p class="device-card__value">12</p>
+                </article>
+                <article class="device-card device-card--repair">
+                  <h3>Tổng Switch</h3>
+                  <p class="device-card__value">26</p>
+                </article>
+                <article class="device-card device-card--retired">
+                  <h3>Tổng Access Point</h3>
+                  <p class="device-card__value">18</p>
+                </article>
+                <article class="device-card device-card--active">
+                  <h3>Thiết bị đang hoạt động</h3>
+                  <p class="device-card__value">57</p>
+                </article>
+              </div>
+            </article>
+
+            <article class="dashboard__panel dashboard__panel--wide">
+              <div class="panel__header">
+                <h2>Bảng thiết bị mạng</h2>
+                <p>Danh sách thiết bị mạng nội bộ với trạng thái hoạt động và thông tin khu vực.</p>
+              </div>
+
+              <div class="table-wrap">
+                <table class="dashboard-table network-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Mã thiết bị</th>
+                      <th scope="col">Tên thiết bị</th>
+                      <th scope="col">Loại thiết bị</th>
+                      <th scope="col">Địa chỉ IP</th>
+                      <th scope="col">Địa chỉ MAC</th>
+                      <th scope="col">Khu vực</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Thời gian hoạt động</th>
+                      <th scope="col">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>NTR-CORE-01</td>
+                      <td>RTR-CORE-01</td>
+                      <td>Router</td>
+                      <td>10.0.0.1</td>
+                      <td>00:1A:2B:3C:4D:5E</td>
+                      <td>Phòng máy chủ</td>
+                      <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
+                      <td>12 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NSW-CORE-01</td>
+                      <td>SW-CORE-01</td>
+                      <td>Switch</td>
+                      <td>10.0.0.2</td>
+                      <td>00:1A:2B:3C:4D:5F</td>
+                      <td>Phòng máy chủ</td>
+                      <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
+                      <td>11 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NSW-F1-01</td>
+                      <td>SW-FLOOR1-01</td>
+                      <td>Switch</td>
+                      <td>10.0.1.10</td>
+                      <td>00:1A:2B:3C:4D:6A</td>
+                      <td>Tầng 1</td>
+                      <td><span class="status-badge status-badge--maintenance">Đang bảo trì</span></td>
+                      <td>5 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NAP-OFF-01</td>
+                      <td>AP-OFFICE-01</td>
+                      <td>Access Point</td>
+                      <td>10.0.2.15</td>
+                      <td>00:1A:2B:3C:4D:7B</td>
+                      <td>Văn phòng</td>
+                      <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
+                      <td>7 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NFW-01</td>
+                      <td>FW-01</td>
+                      <td>Firewall</td>
+                      <td>10.0.0.254</td>
+                      <td>00:1A:2B:3C:4D:8C</td>
+                      <td>Phòng máy chủ</td>
+                      <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
+                      <td>15 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NMDM-01</td>
+                      <td>MDM-01</td>
+                      <td>Modem</td>
+                      <td>10.0.3.22</td>
+                      <td>00:1A:2B:3C:4D:9D</td>
+                      <td>Phòng kỹ thuật</td>
+                      <td><span class="status-badge status-badge--offline">Ngoại tuyến</span></td>
+                      <td>0 giờ</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NRT-ACCESS-02</td>
+                      <td>RTR-ACCESS-02</td>
+                      <td>Router</td>
+                      <td>10.0.4.1</td>
+                      <td>00:1A:2B:3C:4D:AA</td>
+                      <td>Tầng 2</td>
+                      <td><span class="status-badge status-badge--alert">Cảnh báo</span></td>
+                      <td>3 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>NASW-F2-01</td>
+                      <td>SW-FLOOR2-01</td>
+                      <td>Switch</td>
+                      <td>10.0.2.45</td>
+                      <td>00:1A:2B:3C:4D:BB</td>
+                      <td>Tầng 2</td>
+                      <td><span class="status-badge status-badge--active">Đang hoạt động</span></td>
+                      <td>9 ngày</td>
+                      <td>
+                        <button class="button button--ghost" type="button" title="Xem thiết bị">🔍 Xem</button>
+                        <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">✏️ Chỉnh sửa</button>
+                        <button class="button button--ghost" type="button" title="Xóa thiết bị">🗑️ Xóa</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tickets__empty" hidden>
+                <div class="empty-state">
+                  <h3>Không có thiết bị mạng</h3>
+                  <p>Hiện tại chưa có thiết bị mạng phù hợp. Thêm thiết bị mới hoặc thay đổi bộ lọc để hiển thị dữ liệu.</p>
+                  <button class="button button--primary" type="button">Thêm thiết bị</button>
+                </div>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

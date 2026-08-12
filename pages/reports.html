@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Báo cáo | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">IT</div>
+          <div>
+            <p class="sidebar__product">IT Support</p>
+            <span class="sidebar__subtitle">Portal</span>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Menu bên">
+          <ul>
+            <li><a href="dashboard.html">Bảng điều khiển</a></li>
+            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html">Thiết bị</a></li>
+            <li><a href="users.html">Người dùng</a></li>
+            <li><a href="network.html">Mạng</a></li>
+            <li><a href="reports.html" class="active" aria-current="page">Báo cáo</a></li>
+            <li><a href="settings.html">Cài đặt</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__logout" type="button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div class="topbar__heading">
+            <p class="topbar__eyebrow">Theo dõi tình hình hỗ trợ và tài sản công nghệ thông tin</p>
+            <h1>Báo cáo</h1>
+          </div>
+
+          <div class="topbar__profile">
+            <div class="profile__avatar">TL</div>
+            <div class="profile__info">
+              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
+              <span class="profile__role">Hỗ trợ IT nội bộ</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="page-header tickets__hero">
+            <div>
+              <p class="topbar__eyebrow">Theo dõi tình hình hỗ trợ và tài sản công nghệ thông tin</p>
+              <h2>Báo cáo tổng quan</h2>
+            </div>
+          </section>
+
+          <section class="tickets__toolbar">
+            <div class="tickets__filters">
+              <div class="tickets__filter">
+                <label for="report-range">Khoảng thời gian</label>
+                <select id="report-range">
+                  <option>Hôm nay</option>
+                  <option>7 ngày qua</option>
+                  <option>30 ngày qua</option>
+                  <option>3 tháng qua</option>
+                  <option>Tùy chọn thời gian</option>
+                </select>
+              </div>
+              <div class="tickets__filter">
+                <label for="report-from">Từ ngày</label>
+                <input id="report-from" type="date" />
+              </div>
+              <div class="tickets__filter">
+                <label for="report-to">Đến ngày</label>
+                <input id="report-to" type="date" />
+              </div>
+            </div>
+            <div class="report-action-buttons">
+              <button class="button button--ghost" type="button">Đặt lại</button>
+              <button class="button button--primary" type="button">Áp dụng</button>
+            </div>
+          </section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Tổng yêu cầu</p>
+                <p class="metric-card__value">342</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--neutral">Báo cáo mẫu</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đã giải quyết</p>
+                <p class="metric-card__value">278</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--success">81%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Đang xử lý</p>
+                <p class="metric-card__value">44</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--warning">13%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Thời gian xử lý trung bình</p>
+                <p class="metric-card__value">3.2 giờ</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--neutral">Hôm nay</span>
+            </article>
+          </section>
+
+          <section class="dashboard__grid">
+            <article class="dashboard__panel">
+              <div class="panel__header">
+                <h2>Báo cáo yêu cầu hỗ trợ</h2>
+                <p>Thống kê số lượng yêu cầu theo trạng thái, mức độ ưu tiên và danh mục.</p>
+              </div>
+              <div class="report-grid">
+                <div class="report-chart">
+                  <h3 class="report-chart__title">Yêu cầu theo trạng thái</h3>
+                  <div class="report-chart__body">
+                    Biểu đồ trạng thái (placeholder)
+                  </div>
+                </div>
+                <div class="report-chart">
+                  <h3 class="report-chart__title">Yêu cầu theo mức độ</h3>
+                  <div class="report-chart__body">
+                    Biểu đồ mức độ (placeholder)
+                  </div>
+                </div>
+                <div class="report-chart report-chart--full">
+                  <h3 class="report-chart__title">Yêu cầu theo danh mục</h3>
+                  <div class="report-chart__body">
+                    Biểu đồ danh mục (placeholder)
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="dashboard__panel dashboard__panel--wide">
+              <div class="panel__header">
+                <h2>Báo cáo thiết bị</h2>
+                <p>Theo dõi tổng thiết bị, trạng thái hoạt động và bảo trì.</p>
+              </div>
+              <div class="dashboard__summary tickets__summary">
+                <article class="metric-card">
+                  <div>
+                    <p class="metric-card__label">Tổng thiết bị</p>
+                    <p class="metric-card__value">128</p>
+                  </div>
+                  <span class="metric-card__delta metric-card__delta--neutral">Số liệu mẫu</span>
+                </article>
+                <article class="metric-card">
+                  <div>
+                    <p class="metric-card__label">Đang sử dụng</p>
+                    <p class="metric-card__value">79</p>
+                  </div>
+                  <span class="metric-card__delta metric-card__delta--success">62%</span>
+                </article>
+                <article class="metric-card">
+                  <div>
+                    <p class="metric-card__label">Đang bảo trì</p>
+                    <p class="metric-card__value">18</p>
+                  </div>
+                  <span class="metric-card__delta metric-card__delta--warning">14%</span>
+                </article>
+                <article class="metric-card">
+                  <div>
+                    <p class="metric-card__label">Ngừng sử dụng</p>
+                    <p class="metric-card__value">31</p>
+                  </div>
+                  <span class="metric-card__delta metric-card__delta--danger">24%</span>
+                </article>
+              </div>
+              <div class="table-wrap">
+                <table class="dashboard-table reports-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Loại báo cáo</th>
+                      <th scope="col">Giá trị</th>
+                      <th scope="col">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Thiết bị mạng</td>
+                      <td>54</td>
+                      <td>Hoạt động</td>
+                    </tr>
+                    <tr>
+                      <td>Máy trạm</td>
+                      <td>38</td>
+                      <td>Đang bảo trì</td>
+                    </tr>
+                    <tr>
+                      <td>Máy in</td>
+                      <td>18</td>
+                      <td>Ngừng sử dụng</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section class="dashboard__grid">
+            <article class="dashboard__panel dashboard__panel--wide">
+              <div class="panel__header">
+                <h2>Hiệu suất nhân viên kỹ thuật</h2>
+                <p>Thống kê số yêu cầu và thời gian xử lý cho từng thành viên.</p>
+              </div>
+              <div class="table-wrap">
+                <table class="dashboard-table performance-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Nhân viên</th>
+                      <th scope="col">Yêu cầu giao</th>
+                      <th scope="col">Đã giải quyết</th>
+                      <th scope="col">Đang xử lý</th>
+                      <th scope="col">TG xử lý TB</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Nguyễn Văn An</td>
+                      <td>42</td>
+                      <td>37</td>
+                      <td>5</td>
+                      <td>2.7 giờ</td>
+                    </tr>
+                    <tr>
+                      <td>Trần Văn Bình</td>
+                      <td>38</td>
+                      <td>31</td>
+                      <td>7</td>
+                      <td>3.1 giờ</td>
+                    </tr>
+                    <tr>
+                      <td>Phạm Thị Hương</td>
+                      <td>29</td>
+                      <td>24</td>
+                      <td>5</td>
+                      <td>2.9 giờ</td>
+                    </tr>
+                    <tr>
+                      <td>Hoàng Văn Cường</td>
+                      <td>24</td>
+                      <td>20</td>
+                      <td>4</td>
+                      <td>3.4 giờ</td>
+                    </tr>
+                    <tr>
+                      <td>Nguyễn Thị Lan</td>
+                      <td>27</td>
+                      <td>22</td>
+                      <td>5</td>
+                      <td>3.0 giờ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section class="dashboard__grid">
+            <article class="dashboard__panel">
+              <div class="panel__header">
+                <h2>Yêu cầu theo danh mục</h2>
+                <p>Đánh giá số lượng yêu cầu trong từng loại danh mục.</p>
+              </div>
+              <div class="report-category-list">
+                <div class="report-category-item">
+                  <span>Phần cứng</span>
+                  <strong>96</strong>
+                </div>
+                <div class="report-category-item">
+                  <span>Phần mềm</span>
+                  <strong>82</strong>
+                </div>
+                <div class="report-category-item">
+                  <span>Mạng</span>
+                  <strong>58</strong>
+                </div>
+                <div class="report-category-item">
+                  <span>Tài khoản</span>
+                  <strong>42</strong>
+                </div>
+                <div class="report-category-item">
+                  <span>Máy in</span>
+                  <strong>28</strong>
+                </div>
+                <div class="report-category-item">
+                  <span>Khác</span>
+                  <strong>36</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="dashboard__panel">
+              <div class="panel__header">
+                <h2>Xuất báo cáo</h2>
+                <p>Chuẩn bị báo cáo tổng quan để in hoặc tải về.</p>
+              </div>
+              <div class="report-action-buttons">
+                <button class="button button--ghost" type="button">In báo cáo</button>
+                <button class="button button--primary" type="button">Xuất báo cáo</button>
+              </div>
+            </article>
+          </section>
+
+          <div class="tickets__empty" hidden>
+            <div class="empty-state">
+              <h3>Không có dữ liệu báo cáo</h3>
+              <p>Hiện tại chưa có dữ liệu báo cáo để hiển thị. Thử thay đổi khoảng thời gian hoặc thiết lập lại bộ lọc.</p>
+              <button class="button button--primary" type="button">Tải lại dữ liệu</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

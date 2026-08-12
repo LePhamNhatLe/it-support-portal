@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bảng điều khiển | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">IT</div>
+          <div>
+            <p class="sidebar__product">IT Support</p>
+            <span class="sidebar__subtitle">Portal</span>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Menu bên">
+          <ul>
+            <li><a href="dashboard.html" class="active" aria-current="page">Bảng điều khiển</a></li>
+            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html">Thiết bị</a></li>
+            <li><a href="users.html">Người dùng</a></li>
+            <li><a href="network.html">Mạng</a></li>
+            <li><a href="reports.html">Báo cáo</a></li>
+            <li><a href="settings.html">Cài đặt</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__logout" type="button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div class="topbar__heading">
+            <p class="topbar__eyebrow">Chào mừng trở lại</p>
+            <h1>Bảng điều khiển</h1>
+          </div>
+
+          <div class="topbar__profile">
+            <div class="profile__avatar">TL</div>
+            <div class="profile__info">
+              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
+              <span class="profile__role">Hỗ trợ IT nội bộ</span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="dashboard__summary">
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Phiếu mở</p>
+                <p class="metric-card__value">128</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--danger">+18%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Phiếu chờ</p>
+                <p class="metric-card__value">42</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--warning">+7%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Phiếu đã giải quyết</p>
+                <p class="metric-card__value">654</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--success">+24%</span>
+            </article>
+            <article class="metric-card">
+              <div>
+                <p class="metric-card__label">Tổng thiết bị</p>
+                <p class="metric-card__value">1.480</p>
+              </div>
+              <span class="metric-card__delta metric-card__delta--neutral">Ổn định</span>
+            </article>
+          </section>
+
+          <section class="dashboard__grid">
+            <article class="dashboard__panel dashboard__panel--wide">
+              <div class="panel__header">
+                <h2>Phiếu mới nhất</h2>
+                <p>Các vấn đề và phân công mới nhất trong hệ thống hỗ trợ IT.</p>
+              </div>
+              <div class="table-wrap">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Mã phiếu</th>
+                      <th scope="col">Tiêu đề</th>
+                      <th scope="col">Ưu tiên</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Người phụ trách</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>#P-1024</td>
+                      <td>Máy in bị ngắt kết nối tầng 5</td>
+                      <td>Cao</td>
+                      <td><span class="status-badge status-badge--open">Mở</span></td>
+                      <td>Hà Trang</td>
+                    </tr>
+                    <tr>
+                      <td>#P-1032</td>
+                      <td>Yêu cầu truy cập VPN</td>
+                      <td>Trung bình</td>
+                      <td><span class="status-badge status-badge--pending">Chờ</span></td>
+                      <td>Omar N.</td>
+                    </tr>
+                    <tr>
+                      <td>#P-1019</td>
+                      <td>Cập nhật phần mềm máy trạm</td>
+                      <td>Thấp</td>
+                      <td><span class="status-badge status-badge--resolved">Đã giải quyết</span></td>
+                      <td>Priya S.</td>
+                    </tr>
+                    <tr>
+                      <td>#P-1041</td>
+                      <td>Cảnh báo nhiệt độ máy chủ</td>
+                      <td>Khẩn cấp</td>
+                      <td><span class="status-badge status-badge--open">Mở</span></td>
+                      <td>Lucas K.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="dashboard__panel">
+              <div class="panel__header">
+                <h2>Tổng quan thiết bị</h2>
+                <p>Tình trạng hiện tại của phần cứng được quản lý.</p>
+              </div>
+              <div class="device-overview">
+                <article class="device-card device-card--active">
+                  <h3>Hoạt động</h3>
+                  <p class="device-card__value">1.102</p>
+                </article>
+                <article class="device-card device-card--repair">
+                  <h3>Sửa chữa</h3>
+                  <p class="device-card__value">86</p>
+                </article>
+                <article class="device-card device-card--retired">
+                  <h3>Ngưng sử dụng</h3>
+                  <p class="device-card__value">292</p>
+                </article>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
