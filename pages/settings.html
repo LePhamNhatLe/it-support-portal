@@ -100,16 +100,12 @@
         </div>
 
         <div class="topbar__profile">
-          <div class="profile__avatar">TL</div>
+          <div class="profile__avatar" data-user-avatar></div>
 
           <div class="profile__info">
-            <span class="profile__name">
-              Trưởng nhóm kỹ thuật
-            </span>
+            <span class="profile__name" data-user-name></span>
 
-            <span class="profile__role">
-              Hỗ trợ IT nội bộ
-            </span>
+            <span class="profile__role" data-user-role></span>
           </div>
         </div>
 
@@ -140,7 +136,7 @@
                 Tên tài khoản
               </label>
 
-              <input id="account-name" type="text" value="Trưởng nhóm kỹ thuật">
+              <input id="account-name" type="text" value="">
             </div>
 
             <div class="settings-row">
@@ -390,6 +386,7 @@
   <script src="../js/auth.js"></script>
   <script src="../js/permissions.js"></script>
   <script src="../js/guard.js"></script>
+  <script src="../js/profile.js"></script>
   <script src="../js/menu.js"></script>
 </body>
 </html>
