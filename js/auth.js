@@ -101,3 +101,40 @@ if (loginForm) {
         window.location.href = "../pages/dashboard.html";
     });
 }
+
+function logout() {
+    clearCurrentUser();
+    window.location.href = "../pages/login.html";
+}
+const logoutButtons = document.querySelectorAll(".sidebar__logout");
+
+logoutButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        logout();
+    });
+});
+function isValidSession() {
+    const user = getCurrentUser();
+
+    if (!user) {
+        return false;
+    }
+
+    if (
+        typeof user.email !== "string" ||
+        typeof user.name !== "string" ||
+        typeof user.role !== "string"
+    ) {
+        return false;
+    }
+
+    if (
+        !window.AppPermissions ||
+        !window.AppPermissions.ROLES ||
+        !window.AppPermissions.ROLES[user.role]
+    ) {
+        return false;
+    }
+
+    return true;
+}   
