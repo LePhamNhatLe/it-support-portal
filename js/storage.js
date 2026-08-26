@@ -1,6 +1,22 @@
 (function () {
     const TICKETS_STORAGE_KEY = "tickets";
 
+    const TICKET_CATEGORIES = [
+        "hardware",
+        "software",
+        "network",
+        "account",
+        "printer",
+        "other"
+    ];
+
+    const TICKET_PRIORITIES = [
+        "low",
+        "medium",
+        "high",
+        "critical"
+    ];
+
     const AppStorage = {
         get(key, fallbackValue = null) {
             if (typeof key !== "string" || key.trim() === "") {
@@ -115,10 +131,105 @@
         return saveTickets([...tickets, ticketToSave]);
     }
 
+    function updateTicket(id, changes) {
+        if (typeof id !== "string" || id.trim() === "") {
+            return null;
+        }
+
+        if (!changes || typeof changes !== "object" || Array.isArray(changes)) {
+            return null;
+        }
+
+        const normalizedId = id.trim();
+        const tickets = getTickets();
+        const ticketIndex = tickets.findIndex(function (ticket) {
+            return ticket && ticket.id === normalizedId;
+        });
+
+        if (ticketIndex === -1) {
+            return null;
+        }
+
+        const allowedChanges = {};
+
+        if (Object.prototype.hasOwnProperty.call(changes, "title")) {
+            if (typeof changes.title !== "string" || changes.title.trim() === "") {
+                return null;
+            }
+
+            allowedChanges.title = changes.title.trim();
+        }
+
+        if (Object.prototype.hasOwnProperty.call(changes, "description")) {
+            if (
+                typeof changes.description !== "string" ||
+                changes.description.trim() === ""
+            ) {
+                return null;
+            }
+
+            allowedChanges.description = changes.description.trim();
+        }
+
+        if (Object.prototype.hasOwnProperty.call(changes, "category")) {
+            if (!TICKET_CATEGORIES.includes(changes.category)) {
+                return null;
+            }
+
+            allowedChanges.category = changes.category;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(changes, "priority")) {
+            if (!TICKET_PRIORITIES.includes(changes.priority)) {
+                return null;
+            }
+
+            allowedChanges.priority = changes.priority;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(changes, "deviceId")) {
+            if (changes.deviceId === null) {
+                allowedChanges.deviceId = null;
+            } else if (typeof changes.deviceId === "string") {
+                const normalizedDeviceId = changes.deviceId.trim();
+                allowedChanges.deviceId = normalizedDeviceId || null;
+            } else {
+                return null;
+            }
+        }
+
+        if (Object.keys(allowedChanges).length === 0) {
+            return null;
+        }
+
+        const currentTicket = tickets[ticketIndex];
+        const updatedTicket = {
+            ...currentTicket,
+            ...allowedChanges,
+            id: currentTicket.id,
+            requesterEmail: currentTicket.requesterEmail,
+            status: currentTicket.status,
+            assigneeEmail: currentTicket.assigneeEmail,
+            createdAt: currentTicket.createdAt,
+            resolvedAt: currentTicket.resolvedAt,
+            updatedAt: new Date().toISOString()
+        };
+
+        const nextTickets = tickets.slice();
+        nextTickets[ticketIndex] = updatedTicket;
+
+        if (!saveTickets(nextTickets)) {
+            return null;
+        }
+
+        return updatedTicket;
+    }
+
     window.TicketStorage = {
         getTickets,
         saveTickets,
         getTicketById,
-        createTicket
+        createTicket,
+        updateTicket
     };
 })();
