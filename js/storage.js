@@ -17,6 +17,26 @@
         "critical"
     ];
 
+    const TICKET_STATUSES = [
+        "open",
+        "assigned",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+        "reopened"
+    ];
+
+    const TICKET_STATUS_TRANSITIONS = {
+        open: ["assigned"],
+        assigned: ["in_progress"],
+        in_progress: ["pending", "resolved"],
+        pending: ["in_progress", "resolved"],
+        resolved: ["closed"],
+        closed: ["reopened"],
+        reopened: ["assigned"]
+    };
+
     const AppStorage = {
         get(key, fallbackValue = null) {
             if (typeof key !== "string" || key.trim() === "") {
@@ -225,11 +245,95 @@
         return updatedTicket;
     }
 
+    function isValidTicketStatus(status) {
+        return typeof status === "string" && TICKET_STATUSES.includes(status.trim());
+    }
+
+    function canTransitionTicketStatus(id, nextStatus) {
+        if (typeof id !== "string" || id.trim() === "") {
+            return false;
+        }
+
+        if (!isValidTicketStatus(nextStatus)) {
+            return false;
+        }
+
+        const ticket = getTicketById(id);
+
+        if (!ticket || !isValidTicketStatus(ticket.status)) {
+            return false;
+        }
+
+        const normalizedNextStatus = nextStatus.trim();
+        const allowedNextStatuses = TICKET_STATUS_TRANSITIONS[ticket.status] || [];
+
+        if (!allowedNextStatuses.includes(normalizedNextStatus)) {
+            return false;
+        }
+
+        if (
+            normalizedNextStatus === "assigned" &&
+            (typeof ticket.assigneeEmail !== "string" || ticket.assigneeEmail.trim() === "")
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function updateTicketStatus(id, nextStatus) {
+        if (!canTransitionTicketStatus(id, nextStatus)) {
+            return null;
+        }
+
+        const normalizedId = id.trim();
+        const normalizedNextStatus = nextStatus.trim();
+        const tickets = getTickets();
+        const ticketIndex = tickets.findIndex(function (ticket) {
+            return ticket && ticket.id === normalizedId;
+        });
+
+        if (ticketIndex === -1) {
+            return null;
+        }
+
+        const currentTicket = tickets[ticketIndex];
+        const now = new Date().toISOString();
+        let resolvedAt = currentTicket.resolvedAt || null;
+
+        if (normalizedNextStatus === "resolved") {
+            resolvedAt = now;
+        }
+
+        if (normalizedNextStatus === "reopened") {
+            resolvedAt = null;
+        }
+
+        const updatedTicket = {
+            ...currentTicket,
+            status: normalizedNextStatus,
+            updatedAt: now,
+            resolvedAt
+        };
+
+        const nextTickets = tickets.slice();
+        nextTickets[ticketIndex] = updatedTicket;
+
+        if (!saveTickets(nextTickets)) {
+            return null;
+        }
+
+        return updatedTicket;
+    }
+
     window.TicketStorage = {
         getTickets,
         saveTickets,
         getTicketById,
         createTicket,
-        updateTicket
+        updateTicket,
+        isValidTicketStatus,
+        canTransitionTicketStatus,
+        updateTicketStatus
     };
 })();
