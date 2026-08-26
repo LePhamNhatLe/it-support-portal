@@ -73,22 +73,52 @@
 
         return AppStorage.set(TICKETS_STORAGE_KEY, tickets);
     }
-function getTicketById(id) {
-    if (typeof id !== "string" || id.trim() === "") {
-        return null;
+
+    function getTicketById(id) {
+        if (typeof id !== "string" || id.trim() === "") {
+            return null;
+        }
+
+        const normalizedId = id.trim();
+        const tickets = getTickets();
+
+        return tickets.find(
+            (ticket) => ticket && ticket.id === normalizedId
+        ) || null;
     }
 
-    const normalizedId = id.trim();
-    const tickets = getTickets();
+    function createTicket(ticket) {
+        if (!ticket || typeof ticket !== "object" || Array.isArray(ticket)) {
+            return false;
+        }
 
-    return tickets.find(
-        (ticket) => ticket && ticket.id === normalizedId
-    ) || null;
-}
+        if (typeof ticket.id !== "string" || ticket.id.trim() === "") {
+            return false;
+        }
+
+        const normalizedId = ticket.id.trim();
+        const tickets = getTickets();
+
+        const idExists = tickets.some(function (existingTicket) {
+            return existingTicket && existingTicket.id === normalizedId;
+        });
+
+        if (idExists) {
+            return false;
+        }
+
+        const ticketToSave = {
+            ...ticket,
+            id: normalizedId
+        };
+
+        return saveTickets([...tickets, ticketToSave]);
+    }
 
     window.TicketStorage = {
         getTickets,
         saveTickets,
-        getTicketById
+        getTicketById,
+        createTicket
     };
 })();
