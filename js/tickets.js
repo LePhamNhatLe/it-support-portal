@@ -198,18 +198,193 @@
         tableBody.appendChild(fragment);
     }
 
+    function generateNextTicketId() {
+        const tickets = getAllTickets();
+
+        const highestNumber = tickets.reduce(function (highest, ticket) {
+            if (!ticket || typeof ticket.id !== "string") {
+                return highest;
+            }
+
+            const match = /^TKT-(\d+)$/.exec(ticket.id.trim());
+
+            if (!match) {
+                return highest;
+            }
+
+            const ticketNumber = Number(match[1]);
+            return Number.isFinite(ticketNumber)
+                ? Math.max(highest, ticketNumber)
+                : highest;
+        }, 0);
+
+        return "TKT-" + String(highestNumber + 1).padStart(4, "0");
+    }
+
+    function showFeedback(message) {
+        const feedback = document.getElementById("ticket-feedback");
+
+        if (!feedback) {
+            return;
+        }
+
+        feedback.textContent = message;
+        feedback.hidden = !message;
+    }
+
+    function showCreateError(message) {
+        const errorElement = document.getElementById("create-ticket-error");
+
+        if (!errorElement) {
+            return;
+        }
+
+        errorElement.textContent = message;
+        errorElement.hidden = !message;
+    }
+
+    function openCreateTicketPanel() {
+        const panel = document.getElementById("create-ticket-panel");
+
+        if (!panel) {
+            return;
+        }
+
+        showFeedback("");
+        showCreateError("");
+        panel.hidden = false;
+
+        const titleInput = document.getElementById("ticket-title");
+        if (titleInput) {
+            titleInput.focus();
+        }
+    }
+
+    function closeCreateTicketPanel() {
+        const panel = document.getElementById("create-ticket-panel");
+        const form = document.getElementById("create-ticket-form");
+
+        if (form) {
+            form.reset();
+        }
+
+        showCreateError("");
+
+        if (panel) {
+            panel.hidden = true;
+        }
+    }
+
+    function buildTicketFromForm(form) {
+        if (!form) {
+            return null;
+        }
+
+        if (typeof window.getCurrentUser !== "function") {
+            return null;
+        }
+
+        const currentUser = window.getCurrentUser();
+
+        if (!currentUser || typeof currentUser.email !== "string") {
+            return null;
+        }
+
+        const title = (form.elements.title.value || "").trim();
+        const description = (form.elements.description.value || "").trim();
+        const category = (form.elements.category.value || "").trim();
+        const priority = (form.elements.priority.value || "").trim();
+        const deviceIdValue = (form.elements.deviceId.value || "").trim();
+
+        if (!title || !description || !CATEGORY_LABELS[category] || !PRIORITY_LABELS[priority]) {
+            return null;
+        }
+
+        const now = new Date().toISOString();
+
+        return {
+            id: generateNextTicketId(),
+            title,
+            description,
+            category,
+            priority,
+            status: "open",
+            requesterEmail: currentUser.email,
+            assigneeEmail: null,
+            deviceId: deviceIdValue || null,
+            createdAt: now,
+            updatedAt: now,
+            resolvedAt: null
+        };
+    }
+
+    function handleCreateTicketSubmit(event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const ticket = buildTicketFromForm(form);
+
+        if (!ticket) {
+            showCreateError("Vui lòng nhập đầy đủ và đúng thông tin phiếu hỗ trợ.");
+            return;
+        }
+
+        if (
+            !window.TicketStorage ||
+            typeof window.TicketStorage.createTicket !== "function"
+        ) {
+            showCreateError("Không thể truy cập bộ lưu trữ phiếu hỗ trợ.");
+            return;
+        }
+
+        const saved = window.TicketStorage.createTicket(ticket);
+
+        if (!saved) {
+            showCreateError("Không thể lưu phiếu hỗ trợ. Vui lòng thử lại.");
+            return;
+        }
+
+        closeCreateTicketPanel();
+        renderTicketList();
+        showFeedback("Đã tạo phiếu " + ticket.id + " thành công.");
+    }
+
+    function initCreateTicket() {
+        const openButtons = document.querySelectorAll('[data-action="open-create-ticket"]');
+        const cancelButton = document.getElementById("cancel-create-ticket");
+        const form = document.getElementById("create-ticket-form");
+
+        openButtons.forEach(function (button) {
+            button.addEventListener("click", openCreateTicketPanel);
+        });
+
+        if (cancelButton) {
+            cancelButton.addEventListener("click", closeCreateTicketPanel);
+        }
+
+        if (form) {
+            form.addEventListener("submit", handleCreateTicketSubmit);
+        }
+    }
+
+    function initTicketsPage() {
+        renderTicketList();
+        initCreateTicket();
+    }
+
     window.TicketsPage = {
         getAllTickets,
         renderTicketList,
         getStatusLabel,
         getPriorityLabel,
         getCategoryLabel,
-        formatDateTime
+        formatDateTime,
+        generateNextTicketId
     };
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", renderTicketList);
+        document.addEventListener("DOMContentLoaded", initTicketsPage);
     } else {
-        renderTicketList();
+        initTicketsPage();
     }
 })();
