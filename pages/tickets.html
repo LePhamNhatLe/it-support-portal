@@ -106,7 +106,66 @@
               </div>
             </div>
 
-            <button class="button button--primary" type="button">Tạo phiếu</button>
+            <button class="button button--primary" type="button" data-action="open-create-ticket">Tạo phiếu</button>
+          </section>
+
+          <p id="ticket-feedback" role="status" hidden></p>
+
+          <section class="content__panel" id="create-ticket-panel" hidden>
+            <div class="panel__header">
+              <h2>Tạo phiếu hỗ trợ</h2>
+              <p>Nhập thông tin sự cố hoặc yêu cầu cần bộ phận IT hỗ trợ.</p>
+            </div>
+
+            <form id="create-ticket-form">
+              <div class="tickets__filters">
+                <div class="tickets__filter">
+                  <label for="ticket-title">Tiêu đề</label>
+                  <input id="ticket-title" name="title" type="text" maxlength="120" required />
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-category">Danh mục</label>
+                  <select id="ticket-category" name="category" required>
+                    <option value="">Chọn danh mục</option>
+                    <option value="hardware">Phần cứng</option>
+                    <option value="software">Phần mềm</option>
+                    <option value="network">Mạng</option>
+                    <option value="account">Tài khoản</option>
+                    <option value="printer">Máy in</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-priority">Mức ưu tiên</label>
+                  <select id="ticket-priority" name="priority" required>
+                    <option value="">Chọn mức ưu tiên</option>
+                    <option value="low">Thấp</option>
+                    <option value="medium">Trung bình</option>
+                    <option value="high">Cao</option>
+                    <option value="critical">Khẩn cấp</option>
+                  </select>
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-device-id">Mã thiết bị (không bắt buộc)</label>
+                  <input id="ticket-device-id" name="deviceId" type="text" placeholder="Ví dụ: DEV-001" />
+                </div>
+              </div>
+
+              <div class="tickets__filter">
+                <label for="ticket-description">Mô tả</label>
+                <textarea id="ticket-description" name="description" rows="5" maxlength="1000" required></textarea>
+              </div>
+
+              <p id="create-ticket-error" role="alert" hidden></p>
+
+              <div class="tickets__filters">
+                <button class="button button--primary" type="submit">Lưu phiếu</button>
+                <button class="button button--ghost" id="cancel-create-ticket" type="button">Hủy</button>
+              </div>
+            </form>
           </section>
 
           <section class="dashboard__summary tickets__summary">
@@ -169,7 +228,7 @@
               <div class="empty-state">
                 <h3>Không có phiếu nào</h3>
                 <p>Chưa có phiếu hỗ trợ.</p>
-                <button class="button button--primary" type="button">Tạo phiếu đầu tiên</button>
+                <button class="button button--primary" type="button" data-action="open-create-ticket">Tạo phiếu đầu tiên</button>
               </div>
             </div>
           </section>
