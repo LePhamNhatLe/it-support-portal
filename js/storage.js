@@ -37,6 +37,8 @@
         reopened: ["assigned"]
     };
 
+    const SUPPORTED_TICKET_ROLES = ["technical_lead", "technician", "user"];
+
     const AppStorage = {
         get(key, fallbackValue = null) {
             if (typeof key !== "string" || key.trim() === "") {
@@ -393,6 +395,98 @@
         return updatedTicket;
     }
 
+    function normalizeEmail(email) {
+        return typeof email === "string" ? email.trim().toLowerCase() : "";
+    }
+
+    function getTicketAccessUser() {
+        if (typeof window.getCurrentUser !== "function") {
+            return null;
+        }
+
+        const user = window.getCurrentUser();
+
+        if (
+            !user ||
+            typeof user !== "object" ||
+            !SUPPORTED_TICKET_ROLES.includes(user.role) ||
+            !normalizeEmail(user.email)
+        ) {
+            return null;
+        }
+
+        return user;
+    }
+
+    function canViewTicket(ticket, user) {
+        if (!ticket || typeof ticket !== "object") {
+            return false;
+        }
+
+        const currentUser = user || getTicketAccessUser();
+
+        if (!currentUser) {
+            return false;
+        }
+
+        if (currentUser.role === "technical_lead") {
+            return true;
+        }
+
+        const currentEmail = normalizeEmail(currentUser.email);
+
+        if (currentUser.role === "technician") {
+            return normalizeEmail(ticket.assigneeEmail) === currentEmail;
+        }
+
+        if (currentUser.role === "user") {
+            return normalizeEmail(ticket.requesterEmail) === currentEmail;
+        }
+
+        return false;
+    }
+
+    function getVisibleTickets() {
+        const currentUser = getTicketAccessUser();
+
+        if (!currentUser) {
+            return [];
+        }
+
+        return getTickets().filter(function (ticket) {
+            return canViewTicket(ticket, currentUser);
+        });
+    }
+
+    function getVisibleTicketById(id) {
+        const ticket = getTicketById(id);
+        return ticket && canViewTicket(ticket) ? ticket : null;
+    }
+
+    function getTicketAccessState(id) {
+        if (typeof id !== "string" || id.trim() === "") {
+            return { ok: false, reason: "invalid_id", ticket: null };
+        }
+
+        const currentUser = getTicketAccessUser();
+
+        if (!currentUser) {
+            return { ok: false, reason: "unauthenticated", ticket: null };
+        }
+
+        const ticket = getTicketById(id.trim());
+
+        if (!ticket) {
+            return { ok: false, reason: "not_found", ticket: null };
+        }
+
+        if (!canViewTicket(ticket, currentUser)) {
+            return { ok: false, reason: "forbidden", ticket: null };
+        }
+
+        return { ok: true, reason: null, ticket };
+    }
+
     window.TicketStorage = {
         getTickets,
         saveTickets,
@@ -404,5 +498,13 @@
         updateTicketStatus,
         isValidAssigneeEmail,
         assignTicket
+    };
+
+    window.TicketAccess = {
+        getCurrentUser: getTicketAccessUser,
+        canViewTicket,
+        getVisibleTickets,
+        getVisibleTicketById,
+        getTicketAccessState
     };
 })();
