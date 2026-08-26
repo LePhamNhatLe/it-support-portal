@@ -326,6 +326,73 @@
         return updatedTicket;
     }
 
+    function isValidAssigneeEmail(email) {
+        if (typeof email !== "string") {
+            return false;
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+
+        if (!normalizedEmail) {
+            return false;
+        }
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
+    }
+
+    function assignTicket(id, assigneeEmail) {
+        if (typeof id !== "string" || id.trim() === "") {
+            return null;
+        }
+
+        if (!isValidAssigneeEmail(assigneeEmail)) {
+            return null;
+        }
+
+        const normalizedId = id.trim();
+        const normalizedAssigneeEmail = assigneeEmail.trim().toLowerCase();
+        const tickets = getTickets();
+        const ticketIndex = tickets.findIndex(function (ticket) {
+            return ticket && ticket.id === normalizedId;
+        });
+
+        if (ticketIndex === -1) {
+            return null;
+        }
+
+        const currentTicket = tickets[ticketIndex];
+
+        if (!isValidTicketStatus(currentTicket.status)) {
+            return null;
+        }
+
+        if (["resolved", "closed"].includes(currentTicket.status)) {
+            return null;
+        }
+
+        let nextStatus = currentTicket.status;
+
+        if (["open", "reopened"].includes(currentTicket.status)) {
+            nextStatus = "assigned";
+        }
+
+        const updatedTicket = {
+            ...currentTicket,
+            assigneeEmail: normalizedAssigneeEmail,
+            status: nextStatus,
+            updatedAt: new Date().toISOString()
+        };
+
+        const nextTickets = tickets.slice();
+        nextTickets[ticketIndex] = updatedTicket;
+
+        if (!saveTickets(nextTickets)) {
+            return null;
+        }
+
+        return updatedTicket;
+    }
+
     window.TicketStorage = {
         getTickets,
         saveTickets,
@@ -334,6 +401,8 @@
         updateTicket,
         isValidTicketStatus,
         canTransitionTicketStatus,
-        updateTicketStatus
+        updateTicketStatus,
+        isValidAssigneeEmail,
+        assignTicket
     };
 })();
