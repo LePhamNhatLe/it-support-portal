@@ -25,13 +25,13 @@
         }
 
         if (
-            !window.TicketStorage ||
-            typeof window.TicketStorage.getTicketById !== "function"
+            !window.TicketAccess ||
+            typeof window.TicketAccess.getVisibleTicketById !== "function"
         ) {
             return null;
         }
 
-        return window.TicketStorage.getTicketById(id.trim());
+        return window.TicketAccess.getVisibleTicketById(id.trim());
     }
 
     function getCurrentTicket() {
@@ -64,31 +64,17 @@
         }
 
         if (
-            !window.TicketStorage ||
-            typeof window.TicketStorage.getTicketById !== "function"
+            !window.TicketAccess ||
+            typeof window.TicketAccess.getTicketAccessState !== "function"
         ) {
             return {
                 ok: false,
-                reason: "storage_unavailable",
+                reason: "access_unavailable",
                 ticket: null
             };
         }
 
-        const ticket = window.TicketStorage.getTicketById(id);
-
-        if (!ticket) {
-            return {
-                ok: false,
-                reason: "not_found",
-                ticket: null
-            };
-        }
-
-        return {
-            ok: true,
-            reason: null,
-            ticket
-        };
+        return window.TicketAccess.getTicketAccessState(id);
     }
 
     window.TicketDetail = {
