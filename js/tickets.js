@@ -9,6 +9,16 @@
         reopened: "Mở lại"
     };
 
+    const STATUS_FILTER_LABELS = {
+        open: "Mở",
+        assigned: "Đã phân công",
+        in_progress: "Đang xử lý",
+        pending: "Đang chờ",
+        resolved: "Đã giải quyết",
+        closed: "Đã đóng",
+        reopened: "Mở lại"
+    };
+
     const STATUS_CLASSES = {
         open: "status-badge--open",
         assigned: "status-badge--pending",
@@ -73,6 +83,183 @@
 
     function getCategoryLabel(category) {
         return CATEGORY_LABELS[category] || "Khác";
+    }
+
+    function normalizeSearchText(value) {
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+    }
+
+    function normalizeFilterCriteria(criteria) {
+        const source = criteria && typeof criteria === "object" ? criteria : {};
+        const status = typeof source.status === "string" ? source.status.trim() : "";
+        const priority = typeof source.priority === "string" ? source.priority.trim() : "";
+        const category = typeof source.category === "string" ? source.category.trim() : "";
+
+        return {
+            query: normalizeSearchText(source.query),
+            status: Object.prototype.hasOwnProperty.call(STATUS_LABELS, status) ? status : "",
+            priority: Object.prototype.hasOwnProperty.call(PRIORITY_LABELS, priority) ? priority : "",
+            category: Object.prototype.hasOwnProperty.call(CATEGORY_LABELS, category) ? category : ""
+        };
+    }
+
+    function ticketMatchesQuery(ticket, normalizedQuery) {
+        if (!normalizedQuery) {
+            return true;
+        }
+
+        if (!ticket || typeof ticket !== "object") {
+            return false;
+        }
+
+        const searchableValues = [
+            ticket.id,
+            ticket.title,
+            ticket.description,
+            ticket.requesterEmail,
+            ticket.assigneeEmail,
+            ticket.deviceId,
+            ticket.category,
+            ticket.priority,
+            ticket.status,
+            getCategoryLabel(ticket.category),
+            getPriorityLabel(ticket.priority),
+            getStatusLabel(ticket.status)
+        ];
+
+        return searchableValues.some(function (value) {
+            return normalizeSearchText(value).includes(normalizedQuery);
+        });
+    }
+
+    function filterTickets(tickets, criteria) {
+        if (!Array.isArray(tickets)) {
+            return [];
+        }
+
+        const normalizedCriteria = normalizeFilterCriteria(criteria);
+
+        return tickets.filter(function (ticket) {
+            if (!ticket || typeof ticket !== "object") {
+                return false;
+            }
+
+            if (
+                normalizedCriteria.status &&
+                ticket.status !== normalizedCriteria.status
+            ) {
+                return false;
+            }
+
+            if (
+                normalizedCriteria.priority &&
+                ticket.priority !== normalizedCriteria.priority
+            ) {
+                return false;
+            }
+
+            if (
+                normalizedCriteria.category &&
+                ticket.category !== normalizedCriteria.category
+            ) {
+                return false;
+            }
+
+            return ticketMatchesQuery(ticket, normalizedCriteria.query);
+        });
+    }
+
+    function getFilterCriteriaFromDom() {
+        const searchInput = document.getElementById("search-ticket");
+        const statusFilter = document.getElementById("status-filter");
+        const priorityFilter = document.getElementById("priority-filter");
+        const categoryFilter = document.getElementById("category-filter");
+
+        return normalizeFilterCriteria({
+            query: searchInput ? searchInput.value : "",
+            status: statusFilter ? statusFilter.value : "",
+            priority: priorityFilter ? priorityFilter.value : "",
+            category: categoryFilter ? categoryFilter.value : ""
+        });
+    }
+
+    function getFilteredTickets(criteria) {
+        const activeCriteria = criteria || getFilterCriteriaFromDom();
+        return filterTickets(getAllTickets(), activeCriteria);
+    }
+
+    function createOption(value, label) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        return option;
+    }
+
+    function populateFilterSelect(select, allLabel, labels) {
+        if (!select) {
+            return;
+        }
+
+        const previousValue = select.value;
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(createOption("", allLabel));
+
+        Object.keys(labels).forEach(function (value) {
+            fragment.appendChild(createOption(value, labels[value]));
+        });
+
+        select.replaceChildren(fragment);
+
+        if (Object.prototype.hasOwnProperty.call(labels, previousValue)) {
+            select.value = previousValue;
+        }
+    }
+
+    function configureFilterSelects() {
+        populateFilterSelect(
+            document.getElementById("status-filter"),
+            "Tất cả trạng thái",
+            STATUS_FILTER_LABELS
+        );
+
+        populateFilterSelect(
+            document.getElementById("priority-filter"),
+            "Tất cả mức ưu tiên",
+            PRIORITY_LABELS
+        );
+
+        populateFilterSelect(
+            document.getElementById("category-filter"),
+            "Tất cả danh mục",
+            CATEGORY_LABELS
+        );
+    }
+
+    function resetTicketFilters() {
+        const searchInput = document.getElementById("search-ticket");
+        const statusFilter = document.getElementById("status-filter");
+        const priorityFilter = document.getElementById("priority-filter");
+        const categoryFilter = document.getElementById("category-filter");
+
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        [statusFilter, priorityFilter, categoryFilter].forEach(function (filter) {
+            if (filter) {
+                filter.value = "";
+            }
+        });
+
+        renderTicketList();
     }
 
     function formatDateTime(value) {
@@ -159,7 +346,8 @@
             return;
         }
 
-        const tickets = getAllTickets();
+        const visibleTickets = getAllTickets();
+        const tickets = filterTickets(visibleTickets, getFilterCriteriaFromDom());
         tableBody.replaceChildren();
 
         if (tickets.length === 0) {
@@ -170,8 +358,11 @@
             if (emptyState) {
                 emptyState.hidden = false;
                 const message = emptyState.querySelector(".empty-state p");
+
                 if (message) {
-                    message.textContent = "Chưa có phiếu hỗ trợ phù hợp với tài khoản hiện tại.";
+                    message.textContent = visibleTickets.length > 0
+                        ? "Không có phiếu phù hợp với tìm kiếm hoặc bộ lọc hiện tại."
+                        : "Chưa có phiếu hỗ trợ phù hợp với tài khoản hiện tại.";
                 }
             }
 
@@ -378,13 +569,39 @@
         }
     }
 
+    function initTicketFilters() {
+        configureFilterSelects();
+
+        const searchInput = document.getElementById("search-ticket");
+        const statusFilter = document.getElementById("status-filter");
+        const priorityFilter = document.getElementById("priority-filter");
+        const categoryFilter = document.getElementById("category-filter");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", renderTicketList);
+        }
+
+        [statusFilter, priorityFilter, categoryFilter].forEach(function (filter) {
+            if (filter) {
+                filter.addEventListener("change", renderTicketList);
+            }
+        });
+    }
+
     function initTicketsPage() {
+        initTicketFilters();
         renderTicketList();
         initCreateTicket();
     }
 
     window.TicketsPage = {
         getAllTickets,
+        getFilteredTickets,
+        filterTickets,
+        normalizeSearchText,
+        normalizeFilterCriteria,
+        getFilterCriteriaFromDom,
+        resetTicketFilters,
         renderTicketList,
         getStatusLabel,
         getPriorityLabel,
