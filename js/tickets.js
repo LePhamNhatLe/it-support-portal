@@ -42,26 +42,25 @@
         other: "Khác"
     };
 
-    function getAllTickets() {
-        if (
-            !window.TicketStorage ||
-            typeof window.TicketStorage.getTickets !== "function"
-        ) {
-            console.error("tickets.js: TicketStorage chưa được load.");
-            return [];
-        }
-
-        const tickets = window.TicketStorage.getTickets();
-
-        if (!Array.isArray(tickets)) {
-            return [];
-        }
-
+    function sortTicketsNewestFirst(tickets) {
         return tickets.slice().sort(function (a, b) {
             const timeA = Date.parse(a && a.createdAt ? a.createdAt : "") || 0;
             const timeB = Date.parse(b && b.createdAt ? b.createdAt : "") || 0;
             return timeB - timeA;
         });
+    }
+
+    function getAllTickets() {
+        if (
+            !window.TicketAccess ||
+            typeof window.TicketAccess.getVisibleTickets !== "function"
+        ) {
+            console.error("tickets.js: TicketAccess chưa sẵn sàng.");
+            return [];
+        }
+
+        const tickets = window.TicketAccess.getVisibleTickets();
+        return Array.isArray(tickets) ? sortTicketsNewestFirst(tickets) : [];
     }
 
     function getStatusLabel(status) {
@@ -172,7 +171,7 @@
                 emptyState.hidden = false;
                 const message = emptyState.querySelector(".empty-state p");
                 if (message) {
-                    message.textContent = "Chưa có phiếu hỗ trợ.";
+                    message.textContent = "Chưa có phiếu hỗ trợ phù hợp với tài khoản hiện tại.";
                 }
             }
 
@@ -199,7 +198,18 @@
     }
 
     function generateNextTicketId() {
-        const tickets = getAllTickets();
+        if (
+            !window.TicketStorage ||
+            typeof window.TicketStorage.getTickets !== "function"
+        ) {
+            return null;
+        }
+
+        const tickets = window.TicketStorage.getTickets();
+
+        if (!Array.isArray(tickets)) {
+            return null;
+        }
 
         const highestNumber = tickets.reduce(function (highest, ticket) {
             if (!ticket || typeof ticket.id !== "string") {
@@ -276,17 +286,18 @@
     }
 
     function buildTicketFromForm(form) {
-        if (!form) {
-            return null;
-        }
-
-        if (typeof window.getCurrentUser !== "function") {
+        if (!form || typeof window.getCurrentUser !== "function") {
             return null;
         }
 
         const currentUser = window.getCurrentUser();
+        const nextId = generateNextTicketId();
 
-        if (!currentUser || typeof currentUser.email !== "string") {
+        if (
+            !currentUser ||
+            typeof currentUser.email !== "string" ||
+            typeof nextId !== "string"
+        ) {
             return null;
         }
 
@@ -303,7 +314,7 @@
         const now = new Date().toISOString();
 
         return {
-            id: generateNextTicketId(),
+            id: nextId,
             title,
             description,
             category,
