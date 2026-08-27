@@ -60,6 +60,7 @@
 
         <main class="content" id="main-content">
           <p id="ticket-detail-state" role="alert" hidden></p>
+          <p id="ticket-action-feedback" role="status" hidden></p>
 
           <section class="detail__header" data-ticket-content>
             <div class="detail__header-left">
@@ -76,8 +77,90 @@
 
             <div class="detail__actions">
               <button class="button button--ghost" type="button" data-action="edit-ticket">Chỉnh sửa</button>
+              <button class="button button--ghost" type="button" data-action="assign-ticket">Phân công</button>
               <button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button>
             </div>
+          </section>
+
+          <section class="content__panel" id="edit-ticket-panel" hidden>
+            <div class="panel__header">
+              <h2>Chỉnh sửa phiếu</h2>
+              <p>Chỉ các trường nghiệp vụ được phép mới có thể thay đổi.</p>
+            </div>
+            <form id="edit-ticket-form">
+              <div class="tickets__filters">
+                <div class="tickets__filter">
+                  <label for="edit-ticket-title">Tiêu đề</label>
+                  <input id="edit-ticket-title" name="title" type="text" maxlength="120" required />
+                </div>
+                <div class="tickets__filter">
+                  <label for="edit-ticket-category">Danh mục</label>
+                  <select id="edit-ticket-category" name="category" required>
+                    <option value="hardware">Phần cứng</option>
+                    <option value="software">Phần mềm</option>
+                    <option value="network">Mạng</option>
+                    <option value="account">Tài khoản</option>
+                    <option value="printer">Máy in</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="edit-ticket-priority">Ưu tiên</label>
+                  <select id="edit-ticket-priority" name="priority" required>
+                    <option value="low">Thấp</option>
+                    <option value="medium">Trung bình</option>
+                    <option value="high">Cao</option>
+                    <option value="critical">Khẩn cấp</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="edit-ticket-device">Mã thiết bị</label>
+                  <input id="edit-ticket-device" name="deviceId" type="text" placeholder="Không bắt buộc" />
+                </div>
+              </div>
+              <div class="tickets__filter">
+                <label for="edit-ticket-description">Mô tả</label>
+                <textarea id="edit-ticket-description" name="description" rows="5" maxlength="1000" required></textarea>
+              </div>
+              <div class="detail__actions-row">
+                <button class="button button--primary" type="submit">Lưu thay đổi</button>
+                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="content__panel" id="assign-ticket-panel" hidden>
+            <div class="panel__header">
+              <h2>Phân công kỹ thuật viên</h2>
+              <p>Nhập email người phụ trách phiếu hỗ trợ.</p>
+            </div>
+            <form id="assign-ticket-form">
+              <div class="tickets__filter">
+                <label for="assign-ticket-email">Email người phụ trách</label>
+                <input id="assign-ticket-email" name="assigneeEmail" type="email" placeholder="technician@itsupport.local" required />
+              </div>
+              <div class="detail__actions-row">
+                <button class="button button--primary" type="submit">Lưu phân công</button>
+                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="content__panel" id="status-ticket-panel" hidden>
+            <div class="panel__header">
+              <h2>Thay đổi trạng thái</h2>
+              <p>Chỉ hiển thị các trạng thái tiếp theo hợp lệ với tài khoản hiện tại.</p>
+            </div>
+            <form id="status-ticket-form">
+              <div class="tickets__filter">
+                <label for="status-ticket-value">Trạng thái tiếp theo</label>
+                <select id="status-ticket-value" name="status" required></select>
+              </div>
+              <div class="detail__actions-row">
+                <button class="button button--primary" type="submit">Cập nhật trạng thái</button>
+                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
+              </div>
+            </form>
           </section>
 
           <section class="detail__info-grid" data-ticket-content>
@@ -144,7 +227,7 @@
                   <p class="detail__label">Nhân viên phụ trách</p>
                   <p class="detail__value" data-ticket-workflow-assignee></p>
                 </div>
-                <div class="detail__note">
+                <div class="detail__note" data-work-note-control>
                   <p class="detail__label">Ghi chú xử lý</p>
                   <textarea id="ticket-work-note" placeholder="Nhập ghi chú xử lý..."></textarea>
                 </div>
