@@ -1,5 +1,6 @@
 (function () {
     const TICKETS_STORAGE_KEY = "tickets";
+    const TICKET_ACTIVITY_STORAGE_KEY = "ticketActivities";
 
     const TICKET_CATEGORIES = [
         "hardware",
@@ -99,6 +100,104 @@
 
     window.AppStorage = AppStorage;
 
+    function normalizeEmail(email) {
+        return typeof email === "string" ? email.trim().toLowerCase() : "";
+    }
+
+    function getAuditActor() {
+        if (typeof window.getCurrentUser !== "function") {
+            return null;
+        }
+
+        const user = window.getCurrentUser();
+
+        if (
+            !user ||
+            typeof user !== "object" ||
+            !normalizeEmail(user.email) ||
+            typeof user.name !== "string" ||
+            !user.name.trim() ||
+            typeof user.role !== "string" ||
+            !user.role.trim()
+        ) {
+            return null;
+        }
+
+        return {
+            email: normalizeEmail(user.email),
+            name: user.name.trim(),
+            role: user.role.trim()
+        };
+    }
+
+    function createSystemActivityId(ticketId, activities) {
+        const highestNumber = activities.reduce(function (highest, activity) {
+            if (!activity || typeof activity.id !== "string") {
+                return highest;
+            }
+
+            const match = /-(\d{4,})$/.exec(activity.id.trim());
+
+            if (!match) {
+                return highest;
+            }
+
+            const activityNumber = Number(match[1]);
+            return Number.isFinite(activityNumber)
+                ? Math.max(highest, activityNumber)
+                : highest;
+        }, 0);
+
+        return "ACT-" + ticketId + "-" + String(highestNumber + 1).padStart(4, "0");
+    }
+
+    function recordSystemActivity(ticketId, message, metadata) {
+        if (
+            typeof ticketId !== "string" ||
+            !ticketId.trim() ||
+            typeof message !== "string" ||
+            !message.trim()
+        ) {
+            return false;
+        }
+
+        const actor = getAuditActor();
+
+        if (!actor) {
+            return false;
+        }
+
+        const normalizedTicketId = ticketId.trim();
+        const stored = AppStorage.get(TICKET_ACTIVITY_STORAGE_KEY, {});
+        const activityStore =
+            stored && typeof stored === "object" && !Array.isArray(stored)
+                ? stored
+                : {};
+        const currentActivities = Array.isArray(activityStore[normalizedTicketId])
+            ? activityStore[normalizedTicketId].slice()
+            : [];
+
+        const activity = {
+            id: createSystemActivityId(normalizedTicketId, currentActivities),
+            ticketId: normalizedTicketId,
+            type: "system",
+            message: message.trim(),
+            actorEmail: actor.email,
+            actorName: actor.name,
+            actorRole: actor.role,
+            createdAt: new Date().toISOString(),
+            metadata:
+                metadata && typeof metadata === "object" && !Array.isArray(metadata)
+                    ? { ...metadata }
+                    : null
+        };
+
+        return AppStorage.set(TICKET_ACTIVITY_STORAGE_KEY, {
+            ...activityStore,
+            [normalizedTicketId]: [...currentActivities, activity]
+        });
+    }
+
     function getTickets() {
         const tickets = AppStorage.get(TICKETS_STORAGE_KEY, []);
         return Array.isArray(tickets) ? tickets : [];
@@ -150,7 +249,19 @@
             id: normalizedId
         };
 
-        return saveTickets([...tickets, ticketToSave]);
+        if (!saveTickets([...tickets, ticketToSave])) {
+            return false;
+        }
+
+        recordSystemActivity(
+            normalizedId,
+            "Đã tạo phiếu hỗ trợ.",
+            {
+                action: "created"
+            }
+        );
+
+        return true;
     }
 
     function updateTicket(id, changes) {
@@ -244,6 +355,24 @@
             return null;
         }
 
+        const changeDetails = {};
+
+        Object.keys(allowedChanges).forEach(function (field) {
+            changeDetails[field] = {
+                from: currentTicket[field] ?? null,
+                to: updatedTicket[field] ?? null
+            };
+        });
+
+        recordSystemActivity(
+            normalizedId,
+            "Đã cập nhật thông tin phiếu hỗ trợ.",
+            {
+                action: "updated",
+                changes: changeDetails
+            }
+        );
+
         return updatedTicket;
     }
 
@@ -325,6 +454,16 @@
             return null;
         }
 
+        recordSystemActivity(
+            normalizedId,
+            "Đã thay đổi trạng thái phiếu hỗ trợ.",
+            {
+                action: "status_changed",
+                fromStatus: currentTicket.status,
+                toStatus: normalizedNextStatus
+            }
+        );
+
         return updatedTicket;
     }
 
@@ -392,11 +531,24 @@
             return null;
         }
 
-        return updatedTicket;
-    }
+        const previousAssigneeEmail = normalizeEmail(currentTicket.assigneeEmail) || null;
+        const assignmentAction = previousAssigneeEmail ? "reassigned" : "assigned";
 
-    function normalizeEmail(email) {
-        return typeof email === "string" ? email.trim().toLowerCase() : "";
+        recordSystemActivity(
+            normalizedId,
+            previousAssigneeEmail
+                ? "Đã thay đổi người phụ trách phiếu hỗ trợ."
+                : "Đã phân công người phụ trách phiếu hỗ trợ.",
+            {
+                action: assignmentAction,
+                fromAssigneeEmail: previousAssigneeEmail,
+                toAssigneeEmail: normalizedAssigneeEmail,
+                fromStatus: currentTicket.status,
+                toStatus: nextStatus
+            }
+        );
+
+        return updatedTicket;
     }
 
     function getTicketAccessUser() {
