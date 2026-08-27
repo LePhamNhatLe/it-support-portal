@@ -59,26 +59,28 @@
         </header>
 
         <main class="content" id="main-content">
-          <section class="detail__header">
+          <p id="ticket-detail-state" role="alert" hidden></p>
+
+          <section class="detail__header" data-ticket-content>
             <div class="detail__header-left">
               <a href="tickets.html" class="button button--ghost">Quay lại danh sách</a>
               <div class="detail__meta">
-                <p class="detail__code">Mã yêu cầu: <strong>#P-1001</strong></p>
-                <h2>Máy tính không thể kết nối Internet</h2>
+                <p class="detail__code">Mã yêu cầu: <strong data-ticket-id></strong></p>
+                <h2 data-ticket-title></h2>
                 <div class="detail__labels">
-                  <span class="status-badge status-badge--open">Mở</span>
-                  <span class="badge badge--critical">Khẩn cấp</span>
+                  <span class="status-badge" data-ticket-status></span>
+                  <span class="badge" data-ticket-priority></span>
                 </div>
               </div>
             </div>
 
             <div class="detail__actions">
-              <button class="button button--ghost" type="button">Chỉnh sửa</button>
-              <button class="button button--primary" type="button">Thay đổi trạng thái</button>
+              <button class="button button--ghost" type="button" data-action="edit-ticket">Chỉnh sửa</button>
+              <button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button>
             </div>
           </section>
 
-          <section class="detail__info-grid">
+          <section class="detail__info-grid" data-ticket-content>
             <article class="dashboard__panel detail__section">
               <div class="panel__header">
                 <h2>Thông tin yêu cầu</h2>
@@ -86,35 +88,35 @@
               <div class="detail__fields">
                 <div>
                   <p class="detail__label">Người yêu cầu</p>
-                  <p class="detail__value">Nguyễn Thị Mai</p>
+                  <p class="detail__value" data-ticket-requester-name></p>
                 </div>
                 <div>
                   <p class="detail__label">Email</p>
-                  <p class="detail__value">mai.nguyen@company.vn</p>
+                  <p class="detail__value" data-ticket-requester-email></p>
                 </div>
                 <div>
                   <p class="detail__label">Phòng ban</p>
-                  <p class="detail__value">Phòng Kinh doanh</p>
+                  <p class="detail__value" data-ticket-department></p>
                 </div>
                 <div>
                   <p class="detail__label">Danh mục</p>
-                  <p class="detail__value">Mạng</p>
+                  <p class="detail__value" data-ticket-category></p>
                 </div>
                 <div>
                   <p class="detail__label">Thiết bị liên quan</p>
-                  <p class="detail__value">Máy tính để bàn HP</p>
+                  <p class="detail__value" data-ticket-device></p>
                 </div>
                 <div>
                   <p class="detail__label">Nhân viên xử lý</p>
-                  <p class="detail__value">Trần Minh</p>
+                  <p class="detail__value" data-ticket-assignee></p>
                 </div>
                 <div>
                   <p class="detail__label">Ngày tạo</p>
-                  <p class="detail__value">03/11/2026</p>
+                  <p class="detail__value" data-ticket-created-at></p>
                 </div>
                 <div>
                   <p class="detail__label">Cập nhật lần cuối</p>
-                  <p class="detail__value">04/11/2026, 09:30</p>
+                  <p class="detail__value" data-ticket-updated-at></p>
                 </div>
               </div>
             </article>
@@ -123,13 +125,11 @@
               <div class="panel__header">
                 <h2>Mô tả vấn đề</h2>
               </div>
-              <p class="detail__description">
-                Máy tính không thể kết nối Internet. Người dùng đã thử khởi động lại máy nhưng vẫn không truy cập được mạng.
-              </p>
+              <p class="detail__description" data-ticket-description></p>
             </article>
           </section>
 
-          <section class="detail__workflow detail__section">
+          <section class="detail__workflow detail__section" data-ticket-content>
             <article class="dashboard__panel">
               <div class="panel__header">
                 <h2>Khu vực xử lý</h2>
@@ -138,78 +138,42 @@
               <div class="detail__workflow-grid">
                 <div>
                   <p class="detail__label">Trạng thái xử lý</p>
-                  <p class="detail__value">Đang xử lý</p>
+                  <p class="detail__value" data-ticket-workflow-status></p>
                 </div>
                 <div>
                   <p class="detail__label">Nhân viên phụ trách</p>
-                  <p class="detail__value">Trần Minh</p>
+                  <p class="detail__value" data-ticket-workflow-assignee></p>
                 </div>
                 <div class="detail__note">
                   <p class="detail__label">Ghi chú xử lý</p>
-                  <textarea placeholder="Nhập ghi chú xử lý..."></textarea>
+                  <textarea id="ticket-work-note" placeholder="Nhập ghi chú xử lý..."></textarea>
                 </div>
               </div>
 
               <div class="detail__actions-row">
-                <button class="button button--ghost" type="button">Thêm ghi chú</button>
-                <button class="button button--primary" type="button">Thay đổi trạng thái</button>
+                <button class="button button--ghost" type="button" data-action="add-work-note">Thêm ghi chú</button>
+                <button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button>
               </div>
             </article>
           </section>
 
-          <section class="dashboard__panel detail__section">
+          <section class="dashboard__panel detail__section" data-ticket-content>
             <div class="panel__header">
               <h2>Lịch sử xử lý</h2>
             </div>
-            <div class="timeline">
-              <article class="timeline__item">
-                <span class="timeline__time">03/11/2026 08:12</span>
-                <div>
-                  <p class="timeline__actor">Người dùng</p>
-                  <p class="timeline__text">Tạo yêu cầu máy tính không kết nối Internet.</p>
-                </div>
-              </article>
-              <article class="timeline__item">
-                <span class="timeline__time">03/11/2026 09:00</span>
-                <div>
-                  <p class="timeline__actor">Trưởng nhóm</p>
-                  <p class="timeline__text">Phân công kỹ thuật viên Trần Minh xử lý.</p>
-                </div>
-              </article>
-              <article class="timeline__item">
-                <span class="timeline__time">03/11/2026 09:20</span>
-                <div>
-                  <p class="timeline__actor">Kỹ thuật viên</p>
-                  <p class="timeline__text">Bắt đầu kiểm tra kết nối mạng và cổng switch.</p>
-                </div>
-              </article>
-              <article class="timeline__item">
-                <span class="timeline__time">04/11/2026 09:30</span>
-                <div>
-                  <p class="timeline__actor">Kỹ thuật viên</p>
-                  <p class="timeline__text">Cập nhật kết quả kiểm tra, đang chờ thay cáp mạng.</p>
-                </div>
-              </article>
-            </div>
+            <div class="timeline" data-ticket-history></div>
           </section>
 
-          <section class="dashboard__panel detail__section">
+          <section class="dashboard__panel detail__section" data-ticket-content>
             <div class="panel__header">
               <h2>Bình luận</h2>
             </div>
             <div class="comments">
               <div class="comments__input">
-                <textarea placeholder="Nhập bình luận..."></textarea>
-                <button class="button button--primary" type="button">Gửi bình luận</button>
+                <textarea id="ticket-comment" placeholder="Nhập bình luận..."></textarea>
+                <button class="button button--primary" type="button" data-action="add-comment">Gửi bình luận</button>
               </div>
-              <article class="comment-item">
-                <p class="comment-item__meta">Trần Minh • 04/11/2026 09:35</p>
-                <p>Đã kiểm tra switch và cáp mạng. Cần thay cáp mới tại bàn làm việc.</p>
-              </article>
-              <article class="comment-item">
-                <p class="comment-item__meta">Nguyễn Thị Mai • 04/11/2026 09:40</p>
-                <p>Đã rõ, xin cảm ơn. Vui lòng báo khi hoàn thành.</p>
-              </article>
+              <div data-ticket-comments-list></div>
             </div>
           </section>
         </main>
