@@ -77,11 +77,86 @@
         return window.TicketAccess.getTicketAccessState(id);
     }
 
+    function getCurrentTicketActivities() {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.getTicketActivities !== "function"
+        ) {
+            return [];
+        }
+
+        return window.TicketActivity.getTicketActivities(id);
+    }
+
+    function getCurrentTicketComments() {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.getComments !== "function"
+        ) {
+            return [];
+        }
+
+        return window.TicketActivity.getComments(id);
+    }
+
+    function getCurrentTicketWorkNotes() {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.getWorkNotes !== "function"
+        ) {
+            return [];
+        }
+
+        return window.TicketActivity.getWorkNotes(id);
+    }
+
+    function addCurrentTicketComment(message) {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.addComment !== "function"
+        ) {
+            return null;
+        }
+
+        return window.TicketActivity.addComment(id, message);
+    }
+
+    function addCurrentTicketWorkNote(message) {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.addWorkNote !== "function"
+        ) {
+            return null;
+        }
+
+        return window.TicketActivity.addWorkNote(id, message);
+    }
+
     window.TicketDetail = {
         getTicketIdFromUrl,
         isValidTicketId,
         getTicketById,
         getCurrentTicket,
-        getTicketDetailState
+        getTicketDetailState,
+        getCurrentTicketActivities,
+        getCurrentTicketComments,
+        getCurrentTicketWorkNotes,
+        addCurrentTicketComment,
+        addCurrentTicketWorkNote
     };
 })();
