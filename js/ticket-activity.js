@@ -206,7 +206,9 @@
     }
 
     function getHistory(ticketId) {
-        return getTicketActivities(ticketId);
+        return getTicketActivities(ticketId).filter(function (activity) {
+            return activity.type === "work_note" || activity.type === "system";
+        });
     }
 
     window.TicketActivity = {
