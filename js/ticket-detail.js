@@ -119,6 +119,20 @@
         return window.TicketActivity.getWorkNotes(id);
     }
 
+    function getCurrentTicketHistory() {
+        const id = getTicketIdFromUrl();
+
+        if (
+            !id ||
+            !window.TicketActivity ||
+            typeof window.TicketActivity.getHistory !== "function"
+        ) {
+            return [];
+        }
+
+        return window.TicketActivity.getHistory(id);
+    }
+
     function addCurrentTicketComment(message) {
         const id = getTicketIdFromUrl();
 
@@ -156,6 +170,7 @@
         getCurrentTicketActivities,
         getCurrentTicketComments,
         getCurrentTicketWorkNotes,
+        getCurrentTicketHistory,
         addCurrentTicketComment,
         addCurrentTicketWorkNote
     };
