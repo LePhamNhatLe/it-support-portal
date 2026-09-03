@@ -6,6 +6,8 @@
         "Đã giải quyết": "resolved"
     };
 
+    const VALID_PRIORITIES = ["low", "medium", "high", "critical"];
+
     function getVisibleTickets() {
         if (
             !window.TicketAccess ||
@@ -27,11 +29,11 @@
                     return summary;
                 }
 
-                if (ticket.status === "open") {
+                if (["open", "reopened"].includes(ticket.status)) {
                     summary.open += 1;
                 }
 
-                if (ticket.status === "in_progress") {
+                if (["assigned", "in_progress"].includes(ticket.status)) {
                     summary.inProgress += 1;
                 }
 
@@ -39,7 +41,7 @@
                     summary.pending += 1;
                 }
 
-                if (ticket.status === "resolved") {
+                if (["resolved", "closed"].includes(ticket.status)) {
                     summary.resolved += 1;
                 }
 
@@ -104,6 +106,22 @@
 
         element.textContent = message || "";
         element.hidden = !message;
+    }
+
+    function getDefaultPriority() {
+        if (!window.AppStorage || typeof window.AppStorage.get !== "function") {
+            return "medium";
+        }
+        const settings = window.AppStorage.get("systemSettings", null);
+        const priority = settings && typeof settings === "object" ? settings.defaultPriority : null;
+        return VALID_PRIORITIES.includes(priority) ? priority : "medium";
+    }
+
+    function applyDefaultPriority() {
+        const select = document.getElementById("ticket-priority");
+        if (select) {
+            select.value = getDefaultPriority();
+        }
     }
 
     function generateNextTicketId() {
@@ -247,6 +265,11 @@
             form.addEventListener("submit", handleCreateSubmit, true);
         }
 
+        document.querySelectorAll('[data-action="open-create-ticket"]').forEach(function (button) {
+            button.addEventListener("click", applyDefaultPriority);
+        });
+
+        applyDefaultPriority();
         renderTicketSummary();
     }
 
@@ -254,6 +277,8 @@
         getVisibleTickets,
         getTicketSummary,
         renderTicketSummary,
+        getDefaultPriority,
+        applyDefaultPriority,
         buildTicketFromForm
     };
 
