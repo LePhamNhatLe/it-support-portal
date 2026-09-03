@@ -4,72 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cổng IT Support</title>
-    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+    <main>
+      <p>Đang chuyển đến Cổng IT Support...</p>
+    </main>
 
-    <div class="layout">
-      <aside class="sidebar" aria-label="Điều hướng chính">
-        <div class="sidebar__brand">
-          <div class="sidebar__logo">IT</div>
-          <div>
-            <p class="sidebar__product">IT Support</p>
-            <span class="sidebar__subtitle">Portal</span>
-          </div>
-        </div>
-
-        <nav class="sidebar__nav" aria-label="Menu bên">
-          <ul>
-            <li><a href="dashboard.html" class="active" aria-current="page">Bảng điều khiển</a></li>
-            <li><a href="tickets.html">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html">Thiết bị</a></li>
-            <li><a href="users.html">Người dùng</a></li>
-            <li><a href="network.html">Mạng</a></li>
-            <li><a href="reports.html">Báo cáo</a></li>
-            <li><a href="settings.html">Cài đặt</a></li>
-          </ul>
-        </nav>
-
-        <div class="sidebar__footer">
-          <button class="sidebar__logout" type="button">Đăng xuất</button>
-        </div>
-      </aside>
-
-      <div class="workspace">
-        <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-
-          <div class="topbar__heading">
-            <p class="topbar__eyebrow">Chào mừng trở lại</p>
-            <h1>Bảng điều khiển</h1>
-          </div>
-
-          <div class="topbar__profile">
-            <div class="profile__avatar">TL</div>
-            <div class="profile__info">
-              <span class="profile__name">Trưởng nhóm kỹ thuật</span>
-              <span class="profile__role">Hỗ trợ IT nội bộ</span>
-            </div>
-          </div>
-        </header>
-
-        <main class="content" id="main-content">
-          <section class="content__panel">
-            <div class="panel__header">
-              <h2>Tổng quan cổng</h2>
-              <p>
-                Sử dụng thanh bên để điều hướng qua bảng điều khiển, phiếu hỗ trợ, thiết bị, người dùng, mạng,
-                báo cáo và cài đặt.
-              </p>
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
+    <script src="data/seed-data.js"></script>
+    <script src="js/permissions.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
