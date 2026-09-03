@@ -3,6 +3,14 @@
     const PRIORITY_LABELS = { low: "Thấp", medium: "Trung bình", high: "Cao", critical: "Khẩn cấp" };
     const CATEGORY_LABELS = { hardware: "Phần cứng", software: "Phần mềm", network: "Mạng", account: "Tài khoản", printer: "Máy in", other: "Khác" };
 
+    function notify(message, type) {
+        if (window.AppUI && typeof window.AppUI.notify === "function") {
+            window.AppUI.notify(message, type || "info");
+            return;
+        }
+        window.alert(message);
+    }
+
     function read(key) {
         if (!window.AppStorage || typeof window.AppStorage.get !== "function") return [];
         const value = window.AppStorage.get(key, []);
@@ -171,10 +179,11 @@
     function applyFilters() {
         const range = resolveRange();
         if (!range.valid) {
-            window.alert(range.message);
+            notify(range.message, "error");
             return false;
         }
         render();
+        notify("Đã áp dụng bộ lọc báo cáo.", "success");
         return true;
     }
 
@@ -186,6 +195,7 @@
         if (from) from.value = "";
         if (to) to.value = "";
         render();
+        notify("Đã đặt lại bộ lọc báo cáo.", "info");
     }
 
     function protectSpreadsheetFormula(value) {
@@ -201,7 +211,7 @@
     function exportCsv() {
         const range = resolveRange();
         if (!range.valid) {
-            window.alert(range.message);
+            notify(range.message, "error");
             return false;
         }
 
@@ -220,7 +230,7 @@
         link.click();
         link.remove();
         window.setTimeout(function () { URL.revokeObjectURL(url); }, 0);
-        window.alert("Đã xuất báo cáo CSV.");
+        notify("Đã xuất báo cáo CSV.", "success");
         return true;
     }
 
