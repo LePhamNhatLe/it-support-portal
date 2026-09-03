@@ -12,6 +12,7 @@ The project simulates an internal IT support system used by a company to manage 
 - Manage and assign tickets
 - Manage devices
 - Manage users
+- Manage network inventory
 - View reports
 - Manage system settings
 
@@ -21,6 +22,7 @@ The project simulates an internal IT support system used by a company to manage 
 - Update ticket status
 - Add troubleshooting notes
 - Manage device information
+- Manage network inventory
 
 ### User
 - Create support tickets
@@ -70,10 +72,23 @@ The project simulates an internal IT support system used by a company to manage 
 - Delete protection for users linked to tickets or devices
 - User regression runner
 
+### P14 - Network Inventory
+- Network device seed data and LocalStorage CRUD
+- Router, switch, access point, firewall, server, modem and other device types
+- IPv4, MAC, VLAN, subnet/CIDR and gateway validation
+- Duplicate IP/MAC protection
+- Search and filter by type, status and area
+- Dynamic network summary
+- Network device detail view
+- Create and edit actions
+- Technical Lead and Technician management permissions
+- Delete restricted to Technical Lead
+- Alert-based operation feedback for the current logic-first phase
+- Network regression runner
+
 ## Remaining Modules
 
 - Dashboard integration
-- Network inventory
 - Reports
 - Settings
 - Full project regression
@@ -100,4 +115,5 @@ The project simulates an internal IT support system used by a company to manage 
 - P11 Ticket Module: DONE
 - P12 Device Management: DONE
 - P13 User Management: DONE
-- Next: P14 Network Inventory
+- P14 Network Inventory: DONE
+- Next: P15 Dashboard Integration
