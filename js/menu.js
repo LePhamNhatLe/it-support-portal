@@ -1,26 +1,30 @@
 (function () {
-  function loadPolishStyles() {
-    if (document.querySelector('link[data-ui-polish="true"]')) return;
-
+  function resolveAsset(path) {
     const currentScript = document.currentScript;
-    const href = currentScript && currentScript.src
-      ? currentScript.src.replace(/\/js\/menu\.js(?:\?.*)?$/, "/css/polish.css")
-      : "../css/polish.css";
+    if (currentScript && currentScript.src) {
+      return currentScript.src.replace(/\/js\/menu\.js(?:\?.*)?$/, path);
+    }
+    return ".." + path;
+  }
+
+  function loadStyleOnce(href, dataAttribute) {
+    if (document.querySelector('link[' + dataAttribute + '="true"]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
-    link.dataset.uiPolish = "true";
+    link.setAttribute(dataAttribute, "true");
     document.head.appendChild(link);
+  }
+
+  function loadPolishStyles() {
+    loadStyleOnce(resolveAsset("/css/polish.css"), "data-ui-polish");
+    loadStyleOnce(resolveAsset("/css/global-surface.css"), "data-global-surface");
   }
 
   function loadPanelModalAdapter() {
     if (document.querySelector('script[data-panel-modal-adapter="true"]')) return;
-    const currentScript = document.currentScript;
-    const src = currentScript && currentScript.src
-      ? currentScript.src.replace(/\/js\/menu\.js(?:\?.*)?$/, "/js/panel-modal-adapter.js")
-      : "../js/panel-modal-adapter.js";
     const script = document.createElement("script");
-    script.src = src;
+    script.src = resolveAsset("/js/panel-modal-adapter.js");
     script.defer = true;
     script.dataset.panelModalAdapter = "true";
     document.head.appendChild(script);
