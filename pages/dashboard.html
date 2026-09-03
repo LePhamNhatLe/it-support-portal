@@ -8,17 +8,12 @@
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
-
     <div class="layout">
       <aside class="sidebar" aria-label="Điều hướng chính">
         <div class="sidebar__brand">
           <div class="sidebar__logo">IT</div>
-          <div>
-            <p class="sidebar__product">IT Support</p>
-            <span class="sidebar__subtitle">Portal</span>
-          </div>
+          <div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div>
         </div>
-
         <nav class="sidebar__nav" aria-label="Menu bên">
           <ul>
             <li><a href="dashboard.html" data-permission="dashboard" class="active" aria-current="page">Bảng điều khiển</a></li>
@@ -30,141 +25,62 @@
             <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
           </ul>
         </nav>
-
-        <div class="sidebar__footer">
-          <button class="sidebar__logout" type="button">Đăng xuất</button>
-        </div>
+        <div class="sidebar__footer"><button class="sidebar__logout" type="button">Đăng xuất</button></div>
       </aside>
 
       <div class="workspace">
         <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-
-          <div class="topbar__heading">
-            <p class="topbar__eyebrow">Chào mừng trở lại</p>
-            <h1>Bảng điều khiển</h1>
-          </div>
-
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
+          <div class="topbar__heading"><p class="topbar__eyebrow">Chào mừng trở lại</p><h1>Bảng điều khiển</h1></div>
           <div class="topbar__profile">
             <div class="profile__avatar" data-user-avatar></div>
-            <div class="profile__info">
-              <span class="profile__name" data-user-name></span>
-              <span class="profile__role" data-user-role></span>
-            </div>
+            <div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div>
           </div>
         </header>
 
         <main class="content" id="main-content">
           <section class="dashboard__summary">
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Phiếu mở</p>
-                <p class="metric-card__value">128</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--danger">+18%</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Phiếu chờ</p>
-                <p class="metric-card__value">42</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--warning">+7%</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Phiếu đã giải quyết</p>
-                <p class="metric-card__value">654</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--success">+24%</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Tổng thiết bị</p>
-                <p class="metric-card__value">1.480</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--neutral">Ổn định</span>
-            </article>
+            <article class="metric-card"><div><p class="metric-card__label">Tổng phiếu</p><p class="metric-card__value" data-dashboard="tickets-total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Phiếu mở</p><p class="metric-card__value" data-dashboard="tickets-open">0</p></div><span class="metric-card__delta metric-card__delta--danger">Open / Reopened</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value" data-dashboard="tickets-processing">0</p></div><span class="metric-card__delta metric-card__delta--warning">Assigned / Pending</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đã xử lý</p><p class="metric-card__value" data-dashboard="tickets-resolved">0</p></div><span class="metric-card__delta metric-card__delta--success">Resolved / Closed</span></article>
           </section>
 
           <section class="dashboard__grid">
             <article class="dashboard__panel dashboard__panel--wide">
-              <div class="panel__header">
-                <h2>Phiếu mới nhất</h2>
-                <p>Các vấn đề và phân công mới nhất trong hệ thống hỗ trợ IT.</p>
-              </div>
+              <div class="panel__header"><h2>Phiếu mới nhất</h2><p>Dữ liệu lấy trực tiếp từ LocalStorage theo phạm vi quyền của tài khoản.</p></div>
               <div class="table-wrap">
                 <table class="dashboard-table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Mã phiếu</th>
-                      <th scope="col">Tiêu đề</th>
-                      <th scope="col">Ưu tiên</th>
-                      <th scope="col">Trạng thái</th>
-                      <th scope="col">Người phụ trách</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>#P-1024</td>
-                      <td>Máy in bị ngắt kết nối tầng 5</td>
-                      <td>Cao</td>
-                      <td><span class="status-badge status-badge--open">Mở</span></td>
-                      <td>Hà Trang</td>
-                    </tr>
-                    <tr>
-                      <td>#P-1032</td>
-                      <td>Yêu cầu truy cập VPN</td>
-                      <td>Trung bình</td>
-                      <td><span class="status-badge status-badge--pending">Chờ</span></td>
-                      <td>Omar N.</td>
-                    </tr>
-                    <tr>
-                      <td>#P-1019</td>
-                      <td>Cập nhật phần mềm máy trạm</td>
-                      <td>Thấp</td>
-                      <td><span class="status-badge status-badge--resolved">Đã giải quyết</span></td>
-                      <td>Priya S.</td>
-                    </tr>
-                    <tr>
-                      <td>#P-1041</td>
-                      <td>Cảnh báo nhiệt độ máy chủ</td>
-                      <td>Khẩn cấp</td>
-                      <td><span class="status-badge status-badge--open">Mở</span></td>
-                      <td>Lucas K.</td>
-                    </tr>
-                  </tbody>
+                  <thead><tr><th scope="col">Mã phiếu</th><th scope="col">Tiêu đề</th><th scope="col">Ưu tiên</th><th scope="col">Trạng thái</th><th scope="col">Người phụ trách</th></tr></thead>
+                  <tbody id="dashboard-recent-tickets"></tbody>
                 </table>
+              </div>
+              <p id="dashboard-ticket-empty" hidden>Không có phiếu hỗ trợ phù hợp.</p>
+            </article>
+
+            <article class="dashboard__panel">
+              <div class="panel__header"><h2>Tổng quan thiết bị</h2><p>Tình trạng tài sản IT hiện tại.</p></div>
+              <div class="device-overview">
+                <article class="device-card device-card--active"><h3>Tổng thiết bị</h3><p class="device-card__value" data-dashboard="devices-total">0</p></article>
+                <article class="device-card device-card--active"><h3>Đang sử dụng</h3><p class="device-card__value" data-dashboard="devices-in-use">0</p></article>
+                <article class="device-card device-card--repair"><h3>Bảo trì</h3><p class="device-card__value" data-dashboard="devices-maintenance">0</p></article>
+                <article class="device-card device-card--retired"><h3>Ngưng sử dụng</h3><p class="device-card__value" data-dashboard="devices-retired">0</p></article>
               </div>
             </article>
 
             <article class="dashboard__panel">
-              <div class="panel__header">
-                <h2>Tổng quan thiết bị</h2>
-                <p>Tình trạng hiện tại của phần cứng được quản lý.</p>
-              </div>
+              <div class="panel__header"><h2>Tổng quan hệ thống</h2><p>Người dùng và hạ tầng mạng đang được quản lý.</p></div>
               <div class="device-overview">
-                <article class="device-card device-card--active">
-                  <h3>Hoạt động</h3>
-                  <p class="device-card__value">1.102</p>
-                </article>
-                <article class="device-card device-card--repair">
-                  <h3>Sửa chữa</h3>
-                  <p class="device-card__value">86</p>
-                </article>
-                <article class="device-card device-card--retired">
-                  <h3>Ngưng sử dụng</h3>
-                  <p class="device-card__value">292</p>
-                </article>
+                <article class="device-card device-card--active"><h3>User hoạt động</h3><p class="device-card__value" data-dashboard="users-active">0</p></article>
+                <article class="device-card device-card--active"><h3>Network online</h3><p class="device-card__value" data-dashboard="network-online">0</p></article>
+                <article class="device-card device-card--repair"><h3>Network cảnh báo/offline</h3><p class="device-card__value" data-dashboard="network-alert">0</p></article>
               </div>
             </article>
           </section>
         </main>
       </div>
     </div>
+
     <script src="../data/seed-data.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/auth.js"></script>
@@ -172,6 +88,6 @@
     <script src="../js/guard.js"></script>
     <script src="../js/profile.js"></script>
     <script src="../js/menu.js"></script>
+    <script src="../js/dashboard.js"></script>
   </body>
 </html>
-
