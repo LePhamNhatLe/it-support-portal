@@ -1,32 +1,74 @@
-﻿const demoAccounts = [
+const demoAccounts = [
     {
-        role: "technical_lead",
-        name: "Nguyễn Văn An",
         email: "lead@itsupport.local",
         password: "123456"
     },
     {
-        role: "technician",
-        name: "Trần Văn Bình",
         email: "technician@itsupport.local",
         password: "123456"
     },
     {
-        role: "user",
-        name: "Lê Minh Anh",
         email: "user@itsupport.local",
         password: "123456"
     }
 ];
 
-function saveCurrentUser(user) {
-    const safeUser = {
-        email: user.email,
-        name: user.name,
-        role: user.role
-    };
+function normalizeAuthEmail(value) {
+    return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
 
-    localStorage.setItem("currentUser", JSON.stringify(safeUser));
+function getDirectoryUsers() {
+    try {
+        const raw = localStorage.getItem("users");
+        if (!raw) {
+            return [];
+        }
+        const users = JSON.parse(raw);
+        return Array.isArray(users) ? users : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function getDirectoryUserByEmail(email) {
+    const target = normalizeAuthEmail(email);
+    if (!target) {
+        return null;
+    }
+
+    return getDirectoryUsers().find(function (user) {
+        return user && normalizeAuthEmail(user.email) === target;
+    }) || null;
+}
+
+function buildSessionUser(user) {
+    if (!user || typeof user !== "object") {
+        return null;
+    }
+
+    const email = normalizeAuthEmail(user.email);
+    const name = typeof user.name === "string" ? user.name.trim() : "";
+    const role = typeof user.role === "string" ? user.role.trim() : "";
+
+    if (!email || !name || !role) {
+        return null;
+    }
+
+    return { email, name, role };
+}
+
+function saveCurrentUser(user) {
+    const safeUser = buildSessionUser(user);
+    if (!safeUser) {
+        return false;
+    }
+
+    try {
+        localStorage.setItem("currentUser", JSON.stringify(safeUser));
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 function getCurrentUser() {
@@ -37,58 +79,122 @@ function getCurrentUser() {
     }
 
     try {
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : null;
     } catch (error) {
         return null;
     }
 }
 
 function isLoggedIn() {
-    const user = getCurrentUser();
-
-    return Boolean(
-        user &&
-        typeof user.email === "string" &&
-        typeof user.name === "string" &&
-        typeof user.role === "string"
-    );
+    return Boolean(buildSessionUser(getCurrentUser()));
 }
 
 function clearCurrentUser() {
     localStorage.removeItem("currentUser");
 }
 
+function authenticateDemoAccount(email, password) {
+    const normalizedEmail = normalizeAuthEmail(email);
+    const credential = demoAccounts.find(function (account) {
+        return account.email === normalizedEmail && account.password === password;
+    });
+
+    if (!credential) {
+        return { ok: false, reason: "invalid_credentials", message: "Email hoặc mật khẩu không chính xác.", user: null };
+    }
+
+    const directoryUser = getDirectoryUserByEmail(normalizedEmail);
+    if (!directoryUser) {
+        return { ok: false, reason: "account_not_found", message: "Tài khoản không còn tồn tại trong danh sách người dùng.", user: null };
+    }
+
+    if (directoryUser.status === "locked") {
+        return { ok: false, reason: "account_locked", message: "Tài khoản đang bị khóa.", user: null };
+    }
+
+    if (directoryUser.status !== "active") {
+        return { ok: false, reason: "account_disabled", message: "Tài khoản đã bị vô hiệu hóa.", user: null };
+    }
+
+    const sessionUser = buildSessionUser(directoryUser);
+    if (!sessionUser) {
+        return { ok: false, reason: "invalid_account", message: "Thông tin tài khoản không hợp lệ.", user: null };
+    }
+
+    return { ok: true, reason: null, message: "Đăng nhập thành công.", user: sessionUser };
+}
+
+function isValidSession() {
+    const current = buildSessionUser(getCurrentUser());
+
+    if (!current) {
+        return false;
+    }
+
+    if (
+        !window.AppPermissions ||
+        !window.AppPermissions.ROLES
+    ) {
+        return false;
+    }
+
+    const directoryUser = getDirectoryUserByEmail(current.email);
+    if (!directoryUser || directoryUser.status !== "active") {
+        return false;
+    }
+
+    const canonical = buildSessionUser(directoryUser);
+    if (!canonical || !window.AppPermissions.ROLES[canonical.role]) {
+        return false;
+    }
+
+    if (
+        current.name !== canonical.name ||
+        current.role !== canonical.role ||
+        current.email !== canonical.email
+    ) {
+        saveCurrentUser(canonical);
+    }
+
+    return true;
+}
+
+function logout() {
+    clearCurrentUser();
+    window.location.href = "login.html";
+}
+
 const loginForm = document.querySelector(".login-form");
 const errorElement = document.getElementById("login-error");
 
 if (
-    isLoggedIn() &&
-    window.location.pathname.endsWith("login.html")
+    window.location.pathname.endsWith("login.html") &&
+    isValidSession()
 ) {
-    window.location.href = "../pages/dashboard.html";
+    window.location.href = "dashboard.html";
 }
 
 if (loginForm) {
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const email = (loginForm.email.value || "").trim();
+        const email = loginForm.email.value || "";
         const password = loginForm.password.value || "";
+        const result = authenticateDemoAccount(email, password);
 
-        const account = demoAccounts.find(function (account) {
-            return (
-                account.email.toLowerCase() === email.toLowerCase() &&
-                account.password === password
-            );
-        });
-
-        if (!account) {
+        if (!result.ok || !result.user) {
             if (errorElement) {
-                errorElement.textContent =
-                    "Email hoặc mật khẩu không chính xác.";
+                errorElement.textContent = result.message;
             }
-
             loginForm.password.value = "";
+            return;
+        }
+
+        if (!saveCurrentUser(result.user)) {
+            if (errorElement) {
+                errorElement.textContent = "Không thể lưu phiên đăng nhập trên trình duyệt.";
+            }
             return;
         }
 
@@ -96,45 +202,25 @@ if (loginForm) {
             errorElement.textContent = "";
         }
 
-        saveCurrentUser(account);
-
-        window.location.href = "../pages/dashboard.html";
+        window.location.href = "dashboard.html";
     });
 }
 
-function logout() {
-    clearCurrentUser();
-    window.location.href = "../pages/login.html";
-}
 const logoutButtons = document.querySelectorAll(".sidebar__logout");
-
 logoutButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-        logout();
-    });
+    button.addEventListener("click", logout);
 });
-function isValidSession() {
-    const user = getCurrentUser();
 
-    if (!user) {
-        return false;
-    }
-
-    if (
-        typeof user.email !== "string" ||
-        typeof user.name !== "string" ||
-        typeof user.role !== "string"
-    ) {
-        return false;
-    }
-
-    if (
-        !window.AppPermissions ||
-        !window.AppPermissions.ROLES ||
-        !window.AppPermissions.ROLES[user.role]
-    ) {
-        return false;
-    }
-
-    return true;
-}   
+window.AppAuth = {
+    demoAccounts,
+    normalizeEmail: normalizeAuthEmail,
+    getDirectoryUsers,
+    getDirectoryUserByEmail,
+    buildSessionUser,
+    authenticateDemoAccount,
+    saveCurrentUser,
+    getCurrentUser,
+    isLoggedIn,
+    isValidSession,
+    clearCurrentUser
+};
