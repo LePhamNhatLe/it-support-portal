@@ -45,10 +45,18 @@
         } else {
             to = null;
         }
-        return { from, to };
+
+        const valid = !(from && to && from > to);
+        return {
+            from,
+            to,
+            valid,
+            message: valid ? "" : "Từ ngày không được lớn hơn Đến ngày."
+        };
     }
 
     function filterTicketsByRange(tickets, range) {
+        if (!range || range.valid === false) return [];
         return tickets.filter(function (ticket) {
             const created = parseDate(ticket && ticket.createdAt);
             if (!created) return false;
@@ -123,7 +131,7 @@
         technicians.forEach(function (user) {
             const assigned = tickets.filter(function (ticket) { return String(ticket.assigneeEmail || "").toLowerCase() === String(user.email || "").toLowerCase(); });
             const resolved = assigned.filter(function (ticket) { return ticket.status === "resolved" || ticket.status === "closed"; });
-            const processing = assigned.length - resolved.length;
+            const processing = assigned.filter(function (ticket) { return ["assigned", "in_progress", "pending"].includes(ticket.status); }).length;
             const avg = averageResolutionHours(resolved);
             const row = document.createElement("tr");
             [user.name || user.email, assigned.length, resolved.length, processing, avg ? avg.toFixed(1) + " giờ" : "-"].forEach(function (value) {
@@ -160,6 +168,16 @@
         return { tickets, devices, network, users, range };
     }
 
+    function applyFilters() {
+        const range = resolveRange();
+        if (!range.valid) {
+            window.alert(range.message);
+            return false;
+        }
+        render();
+        return true;
+    }
+
     function resetFilters() {
         const range = document.getElementById("report-range");
         const from = document.getElementById("report-from");
@@ -170,12 +188,23 @@
         render();
     }
 
-    function escapeCsv(value) {
+    function protectSpreadsheetFormula(value) {
         const text = String(value == null ? "" : value);
+        return /^[\t\r ]*[=+\-@]/.test(text) ? "'" + text : text;
+    }
+
+    function escapeCsv(value) {
+        const text = protectSpreadsheetFormula(value);
         return '"' + text.replace(/"/g, '""') + '"';
     }
 
     function exportCsv() {
+        const range = resolveRange();
+        if (!range.valid) {
+            window.alert(range.message);
+            return false;
+        }
+
         const data = render();
         const rows = [["Mã phiếu", "Tiêu đề", "Danh mục", "Ưu tiên", "Trạng thái", "Người yêu cầu", "Người phụ trách", "Ngày tạo", "Ngày giải quyết"]];
         data.tickets.forEach(function (ticket) {
@@ -190,18 +219,29 @@
         document.body.appendChild(link);
         link.click();
         link.remove();
-        URL.revokeObjectURL(url);
+        window.setTimeout(function () { URL.revokeObjectURL(url); }, 0);
         window.alert("Đã xuất báo cáo CSV.");
+        return true;
     }
 
     function init() {
-        document.getElementById("report-apply")?.addEventListener("click", render);
+        document.getElementById("report-apply")?.addEventListener("click", applyFilters);
         document.getElementById("report-reset")?.addEventListener("click", resetFilters);
         document.getElementById("report-export")?.addEventListener("click", exportCsv);
         document.getElementById("report-print")?.addEventListener("click", function () { window.print(); });
         render();
     }
 
-    window.ReportsModule = { render, exportCsv, resetFilters, resolveRange, filterTicketsByRange, averageResolutionHours };
+    window.ReportsModule = {
+        render,
+        applyFilters,
+        exportCsv,
+        resetFilters,
+        resolveRange,
+        filterTicketsByRange,
+        averageResolutionHours,
+        protectSpreadsheetFormula,
+        escapeCsv
+    };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
