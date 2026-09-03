@@ -38,17 +38,11 @@
 
       <div class="workspace">
         <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
           <div class="topbar__heading">
             <p class="topbar__eyebrow">Quản lý người dùng và quyền truy cập</p>
             <h1>Người dùng</h1>
           </div>
-
           <div class="topbar__profile">
             <div class="profile__avatar" data-user-avatar></div>
             <div class="profile__info">
@@ -61,7 +55,7 @@
         <main class="content" id="main-content">
           <section class="page-header tickets__hero">
             <div>
-              <p class="topbar__eyebrow">Quản lý người dùng và quyền truy cập</p>
+              <p class="topbar__eyebrow">Quản lý tài khoản nội bộ, vai trò, trạng thái và liên kết tài sản.</p>
               <h2>Danh sách người dùng</h2>
             </div>
           </section>
@@ -69,182 +63,112 @@
           <section class="tickets__toolbar">
             <label class="tickets__search" for="user-search">
               <span class="visually-hidden">Tìm kiếm người dùng</span>
-              <input id="user-search" type="search" placeholder="Tìm kiếm người dùng" />
+              <input id="user-search" type="search" placeholder="Tìm mã, tên, email, phòng ban..." />
             </label>
             <div class="tickets__filters">
               <div class="tickets__filter">
                 <label for="role-filter">Vai trò</label>
-                <select id="role-filter">
-                  <option>Tất cả vai trò</option>
-                  <option>Người dùng</option>
-                  <option>Quản trị viên</option>
-                  <option>Kỹ thuật</option>
-                </select>
+                <select id="role-filter"></select>
               </div>
               <div class="tickets__filter">
                 <label for="status-filter">Trạng thái</label>
-                <select id="status-filter">
-                  <option>Tất cả trạng thái</option>
-                  <option>Hoạt động</option>
-                  <option>Vô hiệu</option>
-                  <option>Khóa</option>
-                </select>
+                <select id="status-filter"></select>
               </div>
             </div>
-            <button class="button button--primary" type="button">+ Thêm người dùng</button>
+            <button class="button button--primary" type="button" data-action="open-create-user">+ Thêm người dùng</button>
+          </section>
+
+          <p id="user-feedback" role="status" hidden></p>
+
+          <section class="content__panel" id="user-editor-panel" hidden>
+            <div class="panel__header">
+              <h2>Thông tin người dùng</h2>
+              <p>Tạo hoặc cập nhật tài khoản người dùng nội bộ.</p>
+            </div>
+            <form id="user-form" data-mode="create">
+              <div class="tickets__filters">
+                <div class="tickets__filter">
+                  <label for="user-id">Mã người dùng</label>
+                  <input id="user-id" name="id" type="text" required />
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-name">Họ tên</label>
+                  <input id="user-name" name="name" type="text" maxlength="120" required />
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-email">Email</label>
+                  <input id="user-email" name="email" type="email" required />
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-department">Phòng ban</label>
+                  <select id="user-department" name="department" required>
+                    <option>IT</option><option>Kỹ thuật</option><option>Kinh doanh</option><option>Hành chính</option><option>Kế toán</option><option>Nhân sự</option><option>Marketing</option><option>Vận hành</option><option selected>Khác</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-role">Vai trò</label>
+                  <select id="user-role" name="role" required>
+                    <option value="technical_lead">Trưởng nhóm kỹ thuật</option>
+                    <option value="technician">Nhân viên kỹ thuật</option>
+                    <option value="user" selected>Người dùng</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-phone">Số điện thoại</label>
+                  <input id="user-phone" name="phone" type="text" />
+                </div>
+                <div class="tickets__filter">
+                  <label for="user-status">Trạng thái</label>
+                  <select id="user-status" name="status" required>
+                    <option value="active">Hoạt động</option>
+                    <option value="disabled">Vô hiệu</option>
+                    <option value="locked">Đã khóa</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tickets__filters">
+                <button class="button button--primary" type="submit">Lưu người dùng</button>
+                <button class="button button--ghost" id="cancel-user-form" type="button">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="content__panel" id="user-detail-panel" hidden>
+            <div class="panel__header">
+              <h2>Chi tiết người dùng</h2>
+              <button class="button button--ghost" id="close-user-detail" type="button">Đóng</button>
+            </div>
+            <div class="detail__fields" id="user-detail-content"></div>
+          </section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card"><div><p class="metric-card__label">Tổng người dùng</p><p class="metric-card__value" data-user-summary="total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Hoạt động</p><p class="metric-card__value" data-user-summary="active">0</p></div><span class="metric-card__delta metric-card__delta--success">Có thể sử dụng</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Kỹ thuật viên</p><p class="metric-card__value" data-user-summary="technician">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Nhân sự kỹ thuật</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đã khóa</p><p class="metric-card__value" data-user-summary="locked">0</p></div><span class="metric-card__delta metric-card__delta--danger">Không truy cập</span></article>
           </section>
 
           <section class="dashboard__grid">
             <article class="dashboard__panel dashboard__panel--wide">
               <div class="panel__header">
                 <h2>Danh sách người dùng</h2>
-                <p>Quản lý tài khoản, vai trò và trạng thái truy cập.</p>
+                <p>Dữ liệu được lưu bằng LocalStorage và liên kết với ticket/device qua email.</p>
               </div>
               <div class="table-wrap">
                 <table class="dashboard-table users-table">
                   <thead>
                     <tr>
-                      <th scope="col">Mã</th>
-                      <th scope="col">Tên</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Phòng ban</th>
-                      <th scope="col">Vai trò</th>
-                      <th scope="col">SĐT</th>
-                      <th scope="col">Trạng thái</th>
-                      <th scope="col">Ngày tạo</th>
-                      <th scope="col">Thao tác</th>
+                      <th scope="col">Mã</th><th scope="col">Tên</th><th scope="col">Email</th><th scope="col">Phòng ban</th><th scope="col">Vai trò</th><th scope="col">SĐT</th><th scope="col">Trạng thái</th><th scope="col">Ngày tạo</th><th scope="col">Thao tác</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>U001</td>
-                      <td>Nguyễn Văn An</td>
-                      <td>an@example.local</td>
-                      <td>IT</td>
-                      <td>Kỹ thuật</td>
-                      <td>0912 123 456</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>01/01/2021</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U002</td>
-                      <td>Trần Văn Bình</td>
-                      <td>binh.tran@itsupport.local</td>
-                      <td>IT</td>
-                      <td>Nhân viên kỹ thuật</td>
-                      <td>0912 345 678</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>05/08/2022</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U003</td>
-                      <td>Lê Minh Anh</td>
-                      <td>anh.le@business.local</td>
-                      <td>Kinh doanh</td>
-                      <td>Người dùng</td>
-                      <td>0908 765 432</td>
-                      <td><span class="status-badge status-badge--pending">Chờ kích hoạt</span></td>
-                      <td>22/11/2023</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U004</td>
-                      <td>Phạm Thị Hương</td>
-                      <td>huong.pham@hr.local</td>
-                      <td>Nhân sự</td>
-                      <td>Người dùng</td>
-                      <td>0975 210 987</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>16/04/2022</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U005</td>
-                      <td>Hoàng Văn Cường</td>
-                      <td>cuong.hoang@accounting.local</td>
-                      <td>Kế toán</td>
-                      <td>Người dùng</td>
-                      <td>0944 778 221</td>
-                      <td><span class="status-badge status-badge--locked">Đã khóa</span></td>
-                      <td>30/09/2021</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U006</td>
-                      <td>Nguyễn Thị Lan</td>
-                      <td>lan.nguyen@marketing.local</td>
-                      <td>Marketing</td>
-                      <td>Người dùng</td>
-                      <td>0931 555 010</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>12/12/2022</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U007</td>
-                      <td>Đinh Văn Long</td>
-                      <td>long.dinh@operation.local</td>
-                      <td>Vận hành</td>
-                      <td>Nhân viên kỹ thuật</td>
-                      <td>0964 900 221</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>28/01/2023</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>U008</td>
-                      <td>Vũ Minh Quân</td>
-                      <td>quan.vu@itsupport.local</td>
-                      <td>IT</td>
-                      <td>Nhân viên kỹ thuật</td>
-                      <td>0922 334 556</td>
-                      <td><span class="status-badge status-badge--active">Hoạt động</span></td>
-                      <td>09/06/2023</td>
-                      <td>
-                        <button class="button button--ghost" type="button" title="Xem người dùng">Xem</button>
-                        <button class="button button--ghost" type="button" title="Chỉnh sửa người dùng">Chỉnh sửa</button>
-                        <button class="button button--ghost" type="button" title="Khóa tài khoản">Khóa</button>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
-
-              <div class="tickets__empty" hidden>
+              <div class="tickets__empty users__empty" hidden>
                 <div class="empty-state">
                   <h3>Không có người dùng nào</h3>
-                  <p>Hiện tại chưa có người dùng phù hợp với bộ lọc. Thêm người dùng mới hoặc điều chỉnh bộ lọc để tiếp tục.</p>
-                  <button class="button button--primary" type="button">Thêm người dùng</button>
+                  <p>Không có người dùng phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p>
+                  <button class="button button--primary" type="button" data-action="open-create-user">Thêm người dùng</button>
                 </div>
               </div>
             </article>
@@ -252,6 +176,7 @@
         </main>
       </div>
     </div>
+
     <script src="../data/seed-data.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/auth.js"></script>
@@ -259,5 +184,8 @@
     <script src="../js/guard.js"></script>
     <script src="../js/profile.js"></script>
     <script src="../js/menu.js"></script>
+    <script src="../js/devices.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="../js/user-regression.js"></script>
   </body>
 </html>
