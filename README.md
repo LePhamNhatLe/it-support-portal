@@ -86,10 +86,28 @@ The project simulates an internal IT support system used by a company to manage 
 - Alert-based operation feedback for the current logic-first phase
 - Network regression runner
 
+### P15 - Dashboard Integration
+- Dashboard metrics loaded from current LocalStorage data
+- Role-scoped ticket totals through TicketAccess
+- Open, processing and resolved ticket summaries
+- Recent ticket table sorted by latest activity
+- Device status summary
+- Active user count
+- Network online and issue summary
+
+### P16 - Reports
+- Ticket reporting from current LocalStorage data
+- Date-range filtering for today, 7, 30, 90 days and custom range
+- Ticket distribution by status, priority and category
+- Resolution and processing rates
+- Average ticket resolution time from resolved ticket timestamps
+- Device and network inventory summaries
+- Technician performance table based on ticket assignee email
+- Print report action
+- CSV ticket export using the active date filter
+
 ## Remaining Modules
 
-- Dashboard integration
-- Reports
 - Settings
 - Full project regression
 - UI polish and portfolio release
@@ -116,4 +134,6 @@ The project simulates an internal IT support system used by a company to manage 
 - P12 Device Management: DONE
 - P13 User Management: DONE
 - P14 Network Inventory: DONE
-- Next: P15 Dashboard Integration
+- P15 Dashboard Integration: DONE
+- P16 Reports: DONE
+- Next: P17 Settings
