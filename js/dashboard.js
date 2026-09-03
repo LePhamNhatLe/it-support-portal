@@ -22,6 +22,14 @@
         return Array.isArray(value) ? value : [];
     }
 
+    function hasPermission(permission) {
+        return Boolean(
+            window.AppPermissions &&
+            typeof window.AppPermissions.hasPermission === "function" &&
+            window.AppPermissions.hasPermission(permission)
+        );
+    }
+
     function getVisibleTickets() {
         if (window.TicketAccess && typeof window.TicketAccess.getVisibleTickets === "function") {
             return window.TicketAccess.getVisibleTickets();
@@ -41,6 +49,38 @@
         if (element) element.textContent = String(value);
     }
 
+    function setMetricCardVisibility(metricKey, visible) {
+        const metric = document.querySelector('[data-dashboard="' + metricKey + '"]');
+        const card = metric ? metric.closest(".device-card") : null;
+        if (card) {
+            card.hidden = !visible;
+        }
+    }
+
+    function applyMetricPermissions() {
+        const canViewDevices = hasPermission("devices");
+        const canViewUsers = hasPermission("users");
+        const canViewNetwork = hasPermission("network");
+
+        const deviceMetric = document.querySelector('[data-dashboard="devices-total"]');
+        const devicePanel = deviceMetric ? deviceMetric.closest(".dashboard__panel") : null;
+        if (devicePanel) {
+            devicePanel.hidden = !canViewDevices;
+        }
+
+        setMetricCardVisibility("users-active", canViewUsers);
+        setMetricCardVisibility("network-online", canViewNetwork);
+        setMetricCardVisibility("network-alert", canViewNetwork);
+
+        const systemMetric = document.querySelector('[data-dashboard="users-active"]');
+        const systemPanel = systemMetric ? systemMetric.closest(".dashboard__panel") : null;
+        if (systemPanel) {
+            systemPanel.hidden = !canViewUsers && !canViewNetwork;
+        }
+
+        return { canViewDevices, canViewUsers, canViewNetwork };
+    }
+
     function renderMetrics() {
         const tickets = getVisibleTickets();
         const devices = read("devices");
@@ -57,7 +97,7 @@
         setText('[data-dashboard="devices-retired"]', countBy(devices, "status", "retired"));
         setText('[data-dashboard="users-active"]', countBy(users, "status", "active"));
         setText('[data-dashboard="network-online"]', countBy(network, "status", "online"));
-        setText('[data-dashboard="network-alert"]', countBy(network, "status", "warning") + countBy(network, "status", "offline"));
+        setText('[data-dashboard="network-alert"]', countBy(network, "status", "warning") + countBy(network, "status", "offline") + countBy(network, "status", "maintenance"));
 
         return { tickets, devices, users, network };
     }
@@ -94,10 +134,15 @@
     function render() {
         const data = renderMetrics();
         renderRecentTickets(data.tickets);
+        applyMetricPermissions();
         return data;
     }
 
-    window.DashboardIntegration = { render, getVisibleTickets };
+    window.DashboardIntegration = {
+        render,
+        getVisibleTickets,
+        applyMetricPermissions
+    };
 
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render); else render();
 })();
