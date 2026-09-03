@@ -57,10 +57,22 @@ The project simulates an internal IT support system used by a company to manage 
 - Delete protection for devices linked to tickets
 - Device regression runner
 
+### P13 - User Management
+- User seed data aligned with demo accounts
+- User LocalStorage CRUD
+- Search and filter by role and status
+- Dynamic user summary
+- User detail view
+- Create and edit UI
+- Role and status management
+- Lock and unlock actions
+- Self-lock and self-delete protection
+- Delete protection for users linked to tickets or devices
+- User regression runner
+
 ## Remaining Modules
 
 - Dashboard integration
-- User management
 - Network inventory
 - Reports
 - Settings
@@ -87,4 +99,5 @@ The project simulates an internal IT support system used by a company to manage 
 
 - P11 Ticket Module: DONE
 - P12 Device Management: DONE
-- Next: P13 User Management
+- P13 User Management: DONE
+- Next: P14 Network Inventory
