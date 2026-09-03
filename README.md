@@ -1,56 +1,80 @@
 # IT Support Portal
 
-IT Support Portal is a web-based internal system for managing IT support tickets, devices, users, and network infrastructure.
+A browser-based practice project that simulates an internal IT Helpdesk workflow for creating, assigning, tracking, and resolving technical support requests.
 
-## Project Purpose
+## Current Features
 
-The project simulates an internal IT support system used by a company to manage technical support requests and IT assets.
+- Create tickets with title, category, priority, requester, and issue description
+- Generate incident IDs automatically
+- Assign a technician
+- Move tickets through the support workflow
+- Record troubleshooting and resolution notes
+- Filter tickets by status
+- View totals for all, open, in-progress, and resolved tickets
+- Delete tickets
+- Save prototype data in browser LocalStorage
+- Responsive layout for desktop and mobile
 
-## User Roles
+## Ticket Workflow
 
-### Technical Lead
-- Manage tickets
-- Assign technicians
-- Manage users
-- Manage devices
-- View reports
-- Manage system settings
+`New → Assigned → In Progress → Waiting for User → Resolved → Closed`
 
-### Technician
-- View assigned tickets
-- Handle technical issues
-- Update ticket status
-- Add troubleshooting information
-- Update ticket resolution
+Each ticket can contain:
 
-### User
-- Create support tickets
-- View own tickets
-- Add comments
-- Reopen unresolved tickets
-- View assigned devices
-
-## Main Modules
-
-- Login
-- Dashboard
-- Tickets
-- Devices
-- Users
-- Network
-- Reports
-- Settings
+- Category and priority
+- Requester and assigned technician
+- Symptoms and issue details
+- Troubleshooting steps
+- Resolution notes
+- Current status
 
 ## Technology
 
 - HTML5
 - CSS3
-- JavaScript ES6+
+- JavaScript
 - LocalStorage
-- Git
-- GitHub
-- GitHub Copilot
+- Git and GitHub
+
+## Run Locally
+
+No installation or backend is required.
+
+```bash
+git clone https://github.com/LePhamNhatLe/it-support-portal.git
+cd it-support-portal
+```
+
+Open `index.html` in a modern web browser.
 
 ## Project Status
 
-Development
+**Working prototype.**
+
+The current version demonstrates the main ticket lifecycle. Planned improvements include:
+
+- [ ] Separate Technical Lead, Technician, and End User roles
+- [ ] User and device records
+- [ ] Ticket comments and status history
+- [ ] Search, category filters, and SLA indicators
+- [ ] Backend API and database
+- [ ] Authentication and role-based access control
+- [ ] Reports and asset-management modules
+
+## Purpose
+
+This project supports practical learning in:
+
+- IT Helpdesk ticket workflows
+- Incident prioritization
+- Technician assignment
+- Troubleshooting documentation
+- Root-cause and resolution recording
+- Basic IT support system design
+
+## Author
+
+**Lê Phạm Nhật Lễ**  
+CPE & Network Support / IT Helpdesk
+
+[GitHub Profile](https://github.com/LePhamNhatLe)
