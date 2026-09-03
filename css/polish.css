@@ -108,6 +108,34 @@ input:disabled,select:disabled,textarea:disabled,button:disabled { cursor: not-a
 .ui-button--danger:hover{filter:brightness(.94)}
 @keyframes ui-modal-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
 
+.ui-promoted-panel {
+  display: block !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.ui-promoted-panel:hover { box-shadow: none !important; }
+.ui-promoted-panel > form { display: grid; gap: 1rem; }
+.ui-promoted-panel .tickets__filters { gap: 1rem; }
+.ui-promoted-panel .tickets__filter { flex: 1 1 220px; min-width: 0; }
+.ui-promoted-panel .tickets__filter input,
+.ui-promoted-panel .tickets__filter select,
+.ui-promoted-panel .tickets__filter textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: .78rem .9rem;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+  font: inherit;
+}
+.ui-promoted-panel .tickets__filter textarea { min-height: 120px; resize: vertical; }
+.ui-promoted-panel .detail__fields { gap: 1rem 1.25rem; }
+
 .ui-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
 .ui-field{display:grid;gap:.42rem;min-width:0}
 .ui-field--full{grid-column:1/-1}
@@ -173,6 +201,7 @@ html[data-theme="dark"] .dashboard-table tbody tr:hover,html[data-theme="dark"] 
   .settings-preference-list{grid-template-columns:1fr 1fr}
   .settings-card__header{flex-direction:column}
   .settings-card__header .button{width:100%}
+  .ui-promoted-panel .detail__fields { grid-template-columns: 1fr; }
 }
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
