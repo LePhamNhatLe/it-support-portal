@@ -1,7 +1,7 @@
 // Route / Page permission guard
 // - Session không hợp lệ -> login.html
 // - Không có quyền -> dashboard.html
-// - Dùng auth.js + permissions.js
+// - Thiếu dependency bảo mật -> login.html thay vì tiếp tục hiển thị trang
 
 (function () {
     function getFileName() {
@@ -11,43 +11,41 @@
     }
 
     function redirectToLogin() {
-        window.location.href = "login.html";
+        window.location.replace("login.html");
     }
 
     function redirectToDashboard() {
-        window.location.href = "dashboard.html";
+        window.location.replace("dashboard.html");
     }
 
     const file = getFileName();
 
-    // Không guard trang login
     if (!file || file === "login.html") {
         return;
     }
 
-    // Kiểm tra auth.js
-    if (typeof isValidSession !== "function") {
-        console.error("guard.js: isValidSession() chưa được load.");
-        return;
-    }
-
-    // Session không hợp lệ
-    if (!isValidSession()) {
+    if (typeof window.isValidSession !== "function") {
+        console.error("guard.js: isValidSession() chưa được load. Từ chối truy cập để tránh fail-open.");
         redirectToLogin();
         return;
     }
 
-    // Kiểm tra permissions.js
+    if (!window.isValidSession()) {
+        redirectToLogin();
+        return;
+    }
+
     if (
         !window.AppPermissions ||
-        typeof window.AppPermissions.hasPermission !== "function"
+        typeof window.AppPermissions.hasPermission !== "function" ||
+        !window.AppPermissions.PERMISSIONS
     ) {
-        console.error("guard.js: AppPermissions chưa được load.");
+        console.error("guard.js: AppPermissions chưa được load. Từ chối truy cập để tránh fail-open.");
+        redirectToLogin();
         return;
     }
 
     const P = window.AppPermissions.PERMISSIONS;
-
     const pageToPermission = {
         "dashboard.html": P.DASHBOARD,
         "tickets.html": P.TICKETS,
@@ -60,15 +58,11 @@
     };
 
     const requiredPermission = pageToPermission[file];
-
-    // Trang không nằm trong danh sách phân quyền
     if (!requiredPermission) {
         return;
     }
 
-    // Không có quyền
     if (!window.AppPermissions.hasPermission(requiredPermission)) {
         redirectToDashboard();
-        return;
     }
 })();
