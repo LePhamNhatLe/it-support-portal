@@ -9,10 +9,9 @@ The project simulates an internal IT support system used by a company to manage 
 ## User Roles
 
 ### Technical Lead
-- Manage tickets
-- Assign technicians
-- Manage users
+- Manage and assign tickets
 - Manage devices
+- Manage users
 - View reports
 - Manage system settings
 
@@ -20,26 +19,53 @@ The project simulates an internal IT support system used by a company to manage 
 - View assigned tickets
 - Handle technical issues
 - Update ticket status
-- Add troubleshooting information
-- Update ticket resolution
+- Add troubleshooting notes
+- Manage device information
 
 ### User
 - Create support tickets
 - View own tickets
 - Add comments
-- Reopen unresolved tickets
-- View assigned devices
 
-## Main Modules
+## Completed Modules
 
-- Login
-- Dashboard
-- Tickets
-- Devices
-- Users
-- Network
+### P11 - Ticket Module
+- Ticket seed data and LocalStorage persistence
+- Create and edit ticket
+- Search and filter
+- Ticket detail rendering
+- Status workflow
+- Technician assignment
+- Role-based visibility
+- Action permissions
+- Structured operation results and validation
+- Comments and work notes
+- Automatic system activity history
+- Ticket summary integration
+- Ticket regression runner
+
+### P12 - Device Management
+- Device seed data linked to ticket `deviceId`
+- Device LocalStorage CRUD
+- Device validation
+- IPv4 validation
+- Search and filter by type, status and department
+- Dynamic device summary
+- Device detail view
+- Create and edit UI
+- Role-based device management
+- Delete protection for devices linked to tickets
+- Device regression runner
+
+## Remaining Modules
+
+- Dashboard integration
+- User management
+- Network inventory
 - Reports
 - Settings
+- Full project regression
+- UI polish and portfolio release
 
 ## Technology
 
@@ -51,6 +77,14 @@ The project simulates an internal IT support system used by a company to manage 
 - GitHub
 - GitHub Copilot
 
+## Demo Accounts
+
+- Technical Lead: `lead@itsupport.local` / `123456`
+- Technician: `technician@itsupport.local` / `123456`
+- User: `user@itsupport.local` / `123456`
+
 ## Project Status
 
-Development
+- P11 Ticket Module: DONE
+- P12 Device Management: DONE
+- Next: P13 User Management
