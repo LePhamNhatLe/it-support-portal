@@ -106,9 +106,19 @@ The project simulates an internal IT support system used by a company to manage 
 - Print report action
 - CSV ticket export using the active date filter
 
+### P17 - Settings
+- Current account profile name update
+- Email kept immutable in the frontend demo to protect linked data
+- Per-user preferences stored by account
+- Notification preferences
+- Theme preference stored for later UI polish
+- Technical Lead-only system settings
+- Company name, timezone, language, default priority and SLA settings
+- Frontend limitations documented for password, account deletion and multi-device sessions
+- Alert-based save and validation feedback
+
 ## Remaining Modules
 
-- Settings
 - Full project regression
 - UI polish and portfolio release
 
@@ -136,4 +146,5 @@ The project simulates an internal IT support system used by a company to manage 
 - P14 Network Inventory: DONE
 - P15 Dashboard Integration: DONE
 - P16 Reports: DONE
-- Next: P17 Settings
+- P17 Settings: DONE
+- Next: P18 Full Project Regression
