@@ -39,9 +39,7 @@
       <div class="workspace">
         <header class="topbar">
           <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
           </label>
 
           <div class="topbar__heading">
@@ -61,7 +59,7 @@
         <main class="content" id="main-content">
           <section class="page-header tickets__hero">
             <div>
-              <p class="topbar__eyebrow">Quản lý tài sản và thiết bị công nghệ thông tin</p>
+              <p class="topbar__eyebrow">Theo dõi tài sản, người sử dụng, IP và trạng thái thiết bị.</p>
               <h2>Danh sách thiết bị</h2>
             </div>
           </section>
@@ -69,95 +67,161 @@
           <section class="tickets__toolbar">
             <label class="tickets__search" for="search-device">
               <span class="visually-hidden">Tìm kiếm thiết bị</span>
-              <input id="search-device" type="search" placeholder="Tìm kiếm thiết bị" />
+              <input id="search-device" type="search" placeholder="Tìm mã, tên, IP, serial, người dùng..." />
             </label>
 
             <div class="tickets__filters">
               <div class="tickets__filter">
                 <label for="device-type-filter">Loại thiết bị</label>
-                <select id="device-type-filter">
-                  <option>Tất cả loại thiết bị</option>
-                  <option>Máy tính để bàn</option>
-                  <option>Laptop</option>
-                  <option>Máy in</option>
-                  <option>Router</option>
-                  <option>Switch</option>
-                  <option>Access Point</option>
-                  <option>Máy chủ</option>
-                  <option>Thiết bị khác</option>
-                </select>
+                <select id="device-type-filter"></select>
               </div>
               <div class="tickets__filter">
                 <label for="device-status-filter">Trạng thái</label>
-                <select id="device-status-filter">
-                  <option>Tất cả trạng thái</option>
-                  <option>Đang sử dụng</option>
-                  <option>Đang bảo trì</option>
-                  <option>Trong kho</option>
-                  <option>Hỏng</option>
-                  <option>Ngưng sử dụng</option>
-                </select>
+                <select id="device-status-filter"></select>
               </div>
               <div class="tickets__filter">
                 <label for="device-department-filter">Phòng ban</label>
-                <select id="device-department-filter">
-                  <option>Tất cả phòng ban</option>
-                  <option>Hành chính</option>
-                  <option>Kinh doanh</option>
-                  <option>Kỹ thuật</option>
-                  <option>Kế toán</option>
-                  <option>Nhân sự</option>
-                </select>
+                <select id="device-department-filter"></select>
               </div>
             </div>
 
-            <button class="button button--primary" type="button">+ Thêm thiết bị</button>
+            <button class="button button--primary" type="button" data-action="open-create-device">+ Thêm thiết bị</button>
+          </section>
+
+          <p id="device-feedback" role="status" hidden></p>
+
+          <section class="content__panel" id="device-editor-panel" hidden>
+            <div class="panel__header">
+              <h2>Thông tin thiết bị</h2>
+              <p>Thêm hoặc cập nhật thông tin tài sản IT.</p>
+            </div>
+
+            <form id="device-form" data-mode="create">
+              <div class="tickets__filters">
+                <div class="tickets__filter">
+                  <label for="device-id">Mã thiết bị</label>
+                  <input id="device-id" name="id" type="text" required />
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-name">Tên thiết bị</label>
+                  <input id="device-name" name="name" type="text" required maxlength="120" />
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-type">Loại thiết bị</label>
+                  <select id="device-type" name="type" required>
+                    <option value="desktop">Máy tính để bàn</option>
+                    <option value="laptop">Laptop</option>
+                    <option value="printer">Máy in</option>
+                    <option value="router">Router</option>
+                    <option value="switch">Switch</option>
+                    <option value="access_point">Access Point</option>
+                    <option value="server">Máy chủ</option>
+                    <option value="other">Thiết bị khác</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-status">Trạng thái</label>
+                  <select id="device-status" name="status" required>
+                    <option value="in_use">Đang sử dụng</option>
+                    <option value="maintenance">Đang bảo trì</option>
+                    <option value="storage">Trong kho</option>
+                    <option value="broken">Hỏng</option>
+                    <option value="retired">Ngưng sử dụng</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-user-email">Người sử dụng</label>
+                  <input id="device-user-email" name="userEmail" type="email" placeholder="user@itsupport.local" />
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-department">Phòng ban</label>
+                  <select id="device-department" name="department" required>
+                    <option>Hành chính</option>
+                    <option>Kinh doanh</option>
+                    <option>Kỹ thuật</option>
+                    <option>Kế toán</option>
+                    <option>Nhân sự</option>
+                    <option selected>Khác</option>
+                  </select>
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-ip-address">Địa chỉ IPv4</label>
+                  <input id="device-ip-address" name="ipAddress" type="text" placeholder="192.168.1.10" />
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-serial-number">Serial Number</label>
+                  <input id="device-serial-number" name="serialNumber" type="text" />
+                </div>
+                <div class="tickets__filter">
+                  <label for="device-purchase-date">Ngày mua</label>
+                  <input id="device-purchase-date" name="purchaseDate" type="date" />
+                </div>
+              </div>
+
+              <div class="tickets__filter">
+                <label for="device-notes">Ghi chú</label>
+                <textarea id="device-notes" name="notes" rows="4" maxlength="1000"></textarea>
+              </div>
+
+              <div class="tickets__filters">
+                <button class="button button--primary" type="submit">Lưu thiết bị</button>
+                <button class="button button--ghost" id="cancel-device-form" type="button">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="content__panel" id="device-detail-panel" hidden>
+            <div class="panel__header">
+              <h2>Chi tiết thiết bị</h2>
+              <button class="button button--ghost" id="close-device-detail" type="button">Đóng</button>
+            </div>
+            <div class="detail__fields" id="device-detail-content"></div>
           </section>
 
           <section class="dashboard__summary tickets__summary">
             <article class="metric-card">
               <div>
                 <p class="metric-card__label">Tổng thiết bị</p>
-                <p class="metric-card__value">98</p>
+                <p class="metric-card__value" data-device-summary="total">0</p>
               </div>
-              <span class="metric-card__delta metric-card__delta--neutral">Cập nhật</span>
+              <span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span>
             </article>
             <article class="metric-card">
               <div>
                 <p class="metric-card__label">Đang sử dụng</p>
-                <p class="metric-card__value">61</p>
+                <p class="metric-card__value" data-device-summary="in_use">0</p>
               </div>
-              <span class="metric-card__delta metric-card__delta--success">+5 thiết bị</span>
+              <span class="metric-card__delta metric-card__delta--success">Đang hoạt động</span>
             </article>
             <article class="metric-card">
               <div>
                 <p class="metric-card__label">Đang bảo trì</p>
-                <p class="metric-card__value">12</p>
+                <p class="metric-card__value" data-device-summary="maintenance">0</p>
               </div>
-              <span class="metric-card__delta metric-card__delta--warning">2 thiết bị</span>
+              <span class="metric-card__delta metric-card__delta--warning">Cần theo dõi</span>
             </article>
             <article class="metric-card">
               <div>
                 <p class="metric-card__label">Ngưng sử dụng</p>
-                <p class="metric-card__value">8</p>
+                <p class="metric-card__value" data-device-summary="retired">0</p>
               </div>
-              <span class="metric-card__delta metric-card__delta--danger">3 thiết bị</span>
+              <span class="metric-card__delta metric-card__delta--danger">Đã nghỉ hưu</span>
             </article>
           </section>
 
           <section class="dashboard__panel">
             <div class="panel__header">
               <h2>Bảng thiết bị</h2>
-              <p>Danh sách thiết bị IT, trạng thái và phòng ban. Chỉ hiển thị dữ liệu mẫu để trình diễn giao diện.</p>
+              <p>Dữ liệu được lưu bằng LocalStorage và liên kết với phiếu hỗ trợ qua mã DEV.</p>
             </div>
 
             <div class="table-wrap">
               <table class="dashboard-table devices-table">
                 <thead>
                   <tr>
-                    <th scope="col">Mã tài sản</th>
+                    <th scope="col">Mã thiết bị</th>
                     <th scope="col">Tên thiết bị</th>
-                    <th scope="col">Loại thiết bị</th>
+                    <th scope="col">Loại</th>
                     <th scope="col">Người sử dụng</th>
                     <th scope="col">Phòng ban</th>
                     <th scope="col">Địa chỉ IP</th>
@@ -166,134 +230,22 @@
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>TB001</td>
-                    <td>LAPTOP-IT-001</td>
-                    <td>Laptop</td>
-                    <td>Hà Trang</td>
-                    <td>Kỹ thuật</td>
-                    <td>192.168.10.21</td>
-                    <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
-                    <td>15/02/2024</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB002</td>
-                    <td>PC-IT-002</td>
-                    <td>Máy tính để bàn</td>
-                    <td>Nguyễn An</td>
-                    <td>Kế toán</td>
-                    <td>192.168.10.35</td>
-                    <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
-                    <td>08/11/2023</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB003</td>
-                    <td>SW-CORE-01</td>
-                    <td>Switch</td>
-                    <td>Phòng Mạng</td>
-                    <td>Kỹ thuật</td>
-                    <td>10.0.0.2</td>
-                    <td><span class="status-badge status-badge--maintenance">Đang bảo trì</span></td>
-                    <td>20/05/2022</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB004</td>
-                    <td>RTR-01</td>
-                    <td>Router</td>
-                    <td>Phòng Mạng</td>
-                    <td>Kỹ thuật</td>
-                    <td>10.0.0.1</td>
-                    <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
-                    <td>12/01/2024</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB005</td>
-                    <td>AP-OFFICE-01</td>
-                    <td>Access Point</td>
-                    <td>Phòng Hành chính</td>
-                    <td>Hành chính</td>
-                    <td>192.168.20.15</td>
-                    <td><span class="status-badge status-badge--stored">Trong kho</span></td>
-                    <td>03/09/2023</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB006</td>
-                    <td>SRV-DB-01</td>
-                    <td>Máy chủ</td>
-                    <td>Phòng Máy chủ</td>
-                    <td>Kỹ thuật</td>
-                    <td>10.0.1.10</td>
-                    <td><span class="status-badge status-badge--active">Đang sử dụng</span></td>
-                    <td>18/07/2022</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB007</td>
-                    <td>PRN-2F-01</td>
-                    <td>Máy in</td>
-                    <td>Phòng Tiếp tân</td>
-                    <td>Hành chính</td>
-                    <td>192.168.30.45</td>
-                    <td><span class="status-badge status-badge--broken">Hỏng</span></td>
-                    <td>10/04/2021</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>TB008</td>
-                    <td>LAP-ADMIN-03</td>
-                    <td>Laptop</td>
-                    <td>Phòng Nhân Sự</td>
-                    <td>Nhân sự</td>
-                    <td>192.168.40.18</td>
-                    <td><span class="status-badge status-badge--retired">Ngưng sử dụng</span></td>
-                    <td>23/06/2020</td>
-                    <td>
-                      <button class="button button--ghost" type="button" title="Xem thiết bị">Xem</button>
-                      <button class="button button--ghost" type="button" title="Chỉnh sửa thiết bị">Chỉnh sửa</button>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
 
-            <div class="tickets__empty" hidden>
+            <div class="tickets__empty devices__empty" hidden>
               <div class="empty-state">
                 <h3>Không có thiết bị nào</h3>
-                <p>Hiện tại chưa có thiết bị phù hợp với bộ lọc. Thử xóa bộ lọc hoặc thêm thiết bị mới.</p>
-                <button class="button button--primary" type="button">Thêm thiết bị</button>
+                <p>Không có thiết bị phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p>
+                <button class="button button--primary" type="button" data-action="open-create-device">Thêm thiết bị</button>
               </div>
             </div>
           </section>
         </main>
       </div>
     </div>
+
     <script src="../data/seed-data.js"></script>
     <script src="../js/storage.js"></script>
     <script src="../js/auth.js"></script>
@@ -301,6 +253,6 @@
     <script src="../js/guard.js"></script>
     <script src="../js/profile.js"></script>
     <script src="../js/menu.js"></script>
+    <script src="../js/devices.js"></script>
   </body>
 </html>
-
