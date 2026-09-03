@@ -22,6 +22,22 @@
         notifyEmail: false
     };
 
+    function notify(message, ok) {
+        if (window.AppUI && typeof window.AppUI.notify === "function") {
+            window.AppUI.notify(message, ok ? "success" : "error");
+            return;
+        }
+        window.alert(message);
+    }
+
+    function applyTheme(theme) {
+        if (window.AppUI && typeof window.AppUI.applyTheme === "function") {
+            window.AppUI.applyTheme(theme);
+            return;
+        }
+        document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
+    }
+
     function getActor() {
         return typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
     }
@@ -218,6 +234,7 @@
         if (accountEmail) accountEmail.value = actor.email || "";
 
         const userSettings = getUserSettings();
+        applyTheme(userSettings.theme);
         document.querySelectorAll('input[name="theme"]').forEach(function (radio) {
             radio.checked = radio.value === userSettings.theme;
         });
@@ -260,7 +277,7 @@
         document.getElementById("account-form")?.addEventListener("submit", function (event) {
             event.preventDefault();
             const result = updateProfileName(document.getElementById("account-name")?.value || "");
-            window.alert(result.message);
+            notify(result.message, result.ok);
         });
 
         document.getElementById("system-settings-form")?.addEventListener("submit", function (event) {
@@ -272,7 +289,7 @@
                 defaultPriority: document.getElementById("default-priority")?.value,
                 slaHours: document.getElementById("sla-hours")?.value
             });
-            window.alert(result.message);
+            notify(result.message, result.ok);
         });
 
         document.getElementById("preference-form")?.addEventListener("submit", function (event) {
@@ -285,9 +302,10 @@
                 notifyUpdated: document.getElementById("notify-updated")?.checked,
                 notifyEmail: document.getElementById("notify-email")?.checked
             });
-            window.alert(result.ok
-                ? result.message + " Giao diện sáng/tối sẽ được áp dụng ở P19 UI Polish."
-                : result.message);
+            if (result.ok) {
+                applyTheme(result.data.theme);
+            }
+            notify(result.message, result.ok);
         });
 
         document.getElementById("reset-user-settings")?.addEventListener("click", function () {
@@ -295,11 +313,11 @@
             if (!actor || !window.AppStorage || typeof window.AppStorage.remove !== "function") return;
             const removed = window.AppStorage.remove(getUserKey(actor.email));
             if (!removed) {
-                window.alert("Không thể đặt lại tùy chọn cá nhân.");
+                notify("Không thể đặt lại tùy chọn cá nhân.", false);
                 return;
             }
             render();
-            window.alert("Đã đặt lại tùy chọn cá nhân về mặc định.");
+            notify("Đã đặt lại tùy chọn cá nhân về mặc định.", true);
         });
     }
 
