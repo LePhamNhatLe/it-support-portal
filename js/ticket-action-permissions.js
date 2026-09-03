@@ -1,5 +1,6 @@
 (function () {
     const SUPPORTED_ROLES = ["technical_lead", "technician", "user"];
+    const ASSIGNEE_ROLES = ["technical_lead", "technician"];
     const TECHNICIAN_STATUS_TARGETS = ["in_progress", "pending", "resolved"];
 
     if (!window.TicketStorage) {
@@ -17,6 +18,29 @@
 
     function normalizeEmail(email) {
         return typeof email === "string" ? email.trim().toLowerCase() : "";
+    }
+
+    function getDirectoryUser(email) {
+        if (!window.AppStorage || typeof window.AppStorage.get !== "function") {
+            return null;
+        }
+        const users = window.AppStorage.get("users", []);
+        const target = normalizeEmail(email);
+        if (!Array.isArray(users) || !target) {
+            return null;
+        }
+        return users.find(function (user) {
+            return user && normalizeEmail(user.email) === target;
+        }) || null;
+    }
+
+    function isAssignableUser(email) {
+        const user = getDirectoryUser(email);
+        return Boolean(
+            user &&
+            user.status === "active" &&
+            ASSIGNEE_ROLES.includes(user.role)
+        );
     }
 
     function getCurrentActor() {
@@ -145,6 +169,10 @@
             return false;
         }
 
+        if (!isAssignableUser(assigneeEmail)) {
+            return false;
+        }
+
         return !["resolved", "closed"].includes(ticket.status);
     }
 
@@ -257,6 +285,7 @@
 
     window.TicketActionPermissions = {
         getCurrentActor,
+        isAssignableUser,
         canCreateTicket,
         canEditTicket,
         canAssignTicket,
