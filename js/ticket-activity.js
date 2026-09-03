@@ -31,6 +31,11 @@
         };
     }
 
+    function isStaffActor(actor) {
+        const current = actor || getCurrentActor();
+        return Boolean(current && STAFF_ROLES.includes(current.role));
+    }
+
     function getActivityStore() {
         if (!window.AppStorage || typeof window.AppStorage.get !== "function") {
             return {};
@@ -108,9 +113,14 @@
             return [];
         }
 
+        const canViewWorkNotes = isStaffActor();
+
         return activities
             .filter(function (activity) {
-                return activity && typeof activity === "object";
+                if (!activity || typeof activity !== "object") {
+                    return false;
+                }
+                return canViewWorkNotes || activity.type !== "work_note";
             })
             .slice()
             .sort(function (a, b) {
@@ -144,7 +154,7 @@
             return null;
         }
 
-        if (type === "work_note" && !STAFF_ROLES.includes(actor.role)) {
+        if (type === "work_note" && !isStaffActor(actor)) {
             return null;
         }
 
@@ -200,6 +210,9 @@
     }
 
     function getWorkNotes(ticketId) {
+        if (!isStaffActor()) {
+            return [];
+        }
         return getTicketActivities(ticketId).filter(function (activity) {
             return activity.type === "work_note";
         });
@@ -213,6 +226,7 @@
 
     window.TicketActivity = {
         getCurrentActor,
+        isStaffActor,
         getTicketActivities,
         getComments,
         getWorkNotes,
