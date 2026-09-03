@@ -12,6 +12,26 @@
         }
     }
 
+    function notify(message, type) {
+        if (window.AppUI && typeof window.AppUI.notify === "function") {
+            window.AppUI.notify(message, type || "info");
+            return;
+        }
+        window.alert(message);
+    }
+
+    function confirmAction(message) {
+        if (window.AppUI && typeof window.AppUI.confirm === "function") {
+            return window.AppUI.confirm({
+                title: "Xóa người dùng",
+                message,
+                confirmText: "Xóa",
+                cancelText: "Hủy"
+            });
+        }
+        return Promise.resolve(window.confirm(message));
+    }
+
     function normalizeEmail(value) {
         return typeof value === "string" ? value.trim().toLowerCase() : "";
     }
@@ -120,7 +140,7 @@
         event.preventDefault();
         event.stopImmediatePropagation();
         setFeedback(message, true);
-        window.alert(message);
+        notify(message, "error");
     }
 
     function handleSelfLockAction(event) {
@@ -138,10 +158,10 @@
         event.stopImmediatePropagation();
         const message = "Không thể tự khóa tài khoản đang đăng nhập.";
         setFeedback(message, true);
-        window.alert(message);
+        notify(message, "error");
     }
 
-    function handleDeleteAction(event) {
+    async function handleDeleteAction(event) {
         const button = event.target.closest('button[data-action="delete-user"][data-user-id]');
         if (!button) {
             return;
@@ -151,21 +171,25 @@
         event.stopImmediatePropagation();
 
         if (!window.UserStorage) {
-            setFeedback("Chức năng quản lý người dùng chưa sẵn sàng.", true);
+            const message = "Chức năng quản lý người dùng chưa sẵn sàng.";
+            setFeedback(message, true);
+            notify(message, "error");
             return;
         }
 
         const userId = button.dataset.userId;
         const user = window.UserStorage.getUserById(userId);
         if (!user) {
-            setFeedback("Không tìm thấy người dùng.", true);
+            const message = "Không tìm thấy người dùng.";
+            setFeedback(message, true);
+            notify(message, "error");
             return;
         }
 
         if (isCurrentUser(user)) {
             const message = "Không thể xóa " + user.id + " vì đây là tài khoản đang đăng nhập.";
             setFeedback(message, true);
-            window.alert(message);
+            notify(message, "error");
             return;
         }
 
@@ -173,11 +197,12 @@
         if (links.tickets > 0 || links.devices > 0) {
             const message = "Không thể xóa " + user.id + " vì đang liên kết với " + links.tickets + " phiếu hỗ trợ và " + links.devices + " thiết bị.";
             setFeedback(message, true);
-            window.alert(message);
+            notify(message, "error");
             return;
         }
 
-        if (!window.confirm("Xóa người dùng " + user.id + " - " + user.name + "?")) {
+        const confirmed = await confirmAction("Xóa người dùng " + user.id + " - " + user.name + "?");
+        if (!confirmed) {
             return;
         }
 
@@ -186,9 +211,7 @@
             window.UsersPage.renderAll();
         }
         setFeedback(result.message, !result.ok);
-        if (!result.ok) {
-            window.alert(result.message);
-        }
+        notify(result.message, result.ok ? "success" : "error");
     }
 
     patchUserStorage();
