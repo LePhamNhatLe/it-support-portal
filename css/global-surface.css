@@ -97,6 +97,28 @@
   height: 100%;
 }
 
+/* Dashboard system overview has 3 values, so do not force the 4-column device rhythm. */
+.dashboard__panel--system {
+  grid-column: 1 / -1;
+}
+
+.dashboard__system-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.dashboard__system-overview .device-card {
+  min-height: 118px;
+  padding: 1.05rem 1.15rem;
+}
+
+.dashboard__system-overview .device-card h3 {
+  max-width: none;
+  line-height: 1.35;
+}
+
 /* Tables sit inside the card instead of visually bleeding into its edges. */
 .dashboard__panel > .table-wrap,
 .content__panel > .table-wrap {
@@ -174,6 +196,16 @@ html[data-theme="dark"] .content__panel > .table-wrap {
   .dashboard__panel,
   .content__panel {
     padding: 1.2rem;
+  }
+
+  .dashboard__system-overview {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard__system-overview {
+    grid-template-columns: 1fr;
   }
 }
 
