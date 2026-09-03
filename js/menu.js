@@ -13,6 +13,19 @@
     document.head.appendChild(link);
   }
 
+  function loadPanelModalAdapter() {
+    if (document.querySelector('script[data-panel-modal-adapter="true"]')) return;
+    const currentScript = document.currentScript;
+    const src = currentScript && currentScript.src
+      ? currentScript.src.replace(/\/js\/menu\.js(?:\?.*)?$/, "/js/panel-modal-adapter.js")
+      : "../js/panel-modal-adapter.js";
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.dataset.panelModalAdapter = "true";
+    document.head.appendChild(script);
+  }
+
   function getCurrentUser() {
     return typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
   }
@@ -228,6 +241,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     applyTheme();
     initSidebarBackdrop();
+    loadPanelModalAdapter();
 
     if (!window.AppPermissions || typeof window.AppPermissions.hasPermission !== "function") {
       console.error("AppPermissions chưa được load.");
