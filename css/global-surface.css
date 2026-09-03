@@ -1,0 +1,201 @@
+/* P19 shared page-surface polish.
+   Gives every module the same card rhythm as Settings without changing business logic. */
+
+.content {
+  gap: 1.35rem;
+}
+
+/* Every major content block should read as a contained card, not a flat horizontal strip. */
+.content > .dashboard__panel,
+.content > .content__panel,
+.content > .tickets__hero,
+.content > .report-filter-bar,
+.content > .settings-overview,
+.content > .dashboard__summary,
+.content > .tickets__summary,
+.content > .dashboard__grid,
+.content > .report-distribution-grid,
+.content > .report-export-panel {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard__panel,
+.content__panel,
+.tickets__hero,
+.metric-card,
+.device-card,
+.report-filter-bar,
+.settings-card {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.dashboard__panel,
+.content__panel,
+.tickets__hero,
+.report-filter-bar {
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(31, 45, 61, 0.05);
+}
+
+.dashboard__panel,
+.content__panel {
+  padding: 1.35rem;
+}
+
+.panel__header {
+  margin-bottom: 1rem;
+}
+
+.panel__header h2,
+.panel__header h3 {
+  margin-top: 0;
+}
+
+.panel__header p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* Toolbars should also feel contained instead of floating between cards. */
+.tickets__toolbar {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(31, 45, 61, 0.04);
+}
+
+/* Keep summary cards visually separated from the page background. */
+.dashboard__summary,
+.tickets__summary {
+  gap: 1rem;
+}
+
+.metric-card {
+  min-width: 0;
+  background: var(--surface);
+  padding: 1.15rem 1.2rem;
+  box-shadow: 0 10px 24px rgba(31, 45, 61, 0.04);
+}
+
+.metric-card__value {
+  margin-top: .45rem;
+}
+
+/* Any dashboard grid becomes a proper card grid with visible breathing room. */
+.dashboard__grid,
+.report-distribution-grid {
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.dashboard__grid > .dashboard__panel,
+.report-distribution-grid > .dashboard__panel {
+  height: 100%;
+}
+
+/* Tables sit inside the card instead of visually bleeding into its edges. */
+.dashboard__panel > .table-wrap,
+.content__panel > .table-wrap {
+  margin-top: .25rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: auto;
+  background: var(--surface-strong);
+}
+
+.dashboard-table,
+.tickets-table,
+.users-table,
+.devices-table,
+.network-table,
+.performance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Network overview uses all available width with balanced spacing. */
+.dashboard__panel--wide .device-overview,
+.device-overview {
+  width: 100%;
+}
+
+.device-overview .device-card {
+  width: 100%;
+}
+
+/* Avoid large empty horizontal bands on content pages. */
+.content > section:not(.ui-modal-backdrop) {
+  min-width: 0;
+}
+
+/* Detail blocks inside modal are clearly separated and fill the available area. */
+.ui-promoted-panel .detail__fields {
+  width: 100%;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ui-promoted-panel .detail__fields > * {
+  width: 100%;
+  min-height: 82px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ui-promoted-panel .detail__description {
+  min-height: 96px;
+}
+
+html[data-theme="dark"] .dashboard__panel,
+html[data-theme="dark"] .content__panel,
+html[data-theme="dark"] .tickets__toolbar,
+html[data-theme="dark"] .report-filter-bar,
+html[data-theme="dark"] .metric-card,
+html[data-theme="dark"] .device-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .dashboard__panel > .table-wrap,
+html[data-theme="dark"] .content__panel > .table-wrap {
+  background: var(--surface-strong);
+}
+
+@media (max-width: 980px) {
+  .content {
+    gap: 1.15rem;
+  }
+
+  .dashboard__panel,
+  .content__panel {
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    gap: 1rem;
+  }
+
+  .tickets__toolbar,
+  .dashboard__panel,
+  .content__panel,
+  .tickets__hero,
+  .report-filter-bar {
+    border-radius: 16px;
+  }
+
+  .dashboard__panel,
+  .content__panel {
+    padding: 1rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+}
