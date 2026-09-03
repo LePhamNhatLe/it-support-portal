@@ -18,6 +18,7 @@
         "closed",
         "reopened"
     ];
+    const ASSIGNEE_ROLES = ["technical_lead", "technician"];
 
     const STATUS_TRANSITIONS = {
         open: ["assigned"],
@@ -46,7 +47,8 @@
         forbidden: "Tài khoản hiện tại không có quyền thực hiện thao tác này.",
         invalid_status: "Trạng thái phiếu không hợp lệ.",
         invalid_transition: "Không thể chuyển sang trạng thái được yêu cầu từ trạng thái hiện tại.",
-        invalid_assignee: "Email người phụ trách không hợp lệ.",
+        invalid_assignee: "Người phụ trách phải là tài khoản kỹ thuật đang hoạt động.",
+        invalid_device: "Thiết bị liên quan không tồn tại hoặc mã thiết bị không hợp lệ.",
         invalid_changes: "Thông tin cập nhật không hợp lệ.",
         save_failed: "Không thể lưu thay đổi phiếu hỗ trợ."
     };
@@ -97,6 +99,61 @@
         return window.TicketStorage.getTicketById(id.trim());
     }
 
+    function readCollection(key) {
+        if (!window.AppStorage || typeof window.AppStorage.get !== "function") {
+            return [];
+        }
+        const value = window.AppStorage.get(key, []);
+        return Array.isArray(value) ? value : [];
+    }
+
+    function normalizeEmail(value) {
+        return typeof value === "string" ? value.trim().toLowerCase() : "";
+    }
+
+    function getDirectoryUser(email) {
+        const target = normalizeEmail(email);
+        if (!target) {
+            return null;
+        }
+        return readCollection("users").find(function (user) {
+            return user && normalizeEmail(user.email) === target;
+        }) || null;
+    }
+
+    function isValidAssigneeAccount(email) {
+        const user = getDirectoryUser(email);
+        return Boolean(
+            user &&
+            user.status === "active" &&
+            ASSIGNEE_ROLES.includes(user.role)
+        );
+    }
+
+    function getDeviceById(deviceId) {
+        const target = typeof deviceId === "string" ? deviceId.trim() : "";
+        if (!target) {
+            return null;
+        }
+        return readCollection("devices").find(function (device) {
+            return device && device.id === target;
+        }) || null;
+    }
+
+    function isValidDeviceReference(deviceId, allowEmpty) {
+        if (deviceId === null || deviceId === undefined) {
+            return true;
+        }
+        if (typeof deviceId !== "string") {
+            return false;
+        }
+        const normalized = deviceId.trim();
+        if (!normalized) {
+            return Boolean(allowEmpty);
+        }
+        return /^DEV-\d{3,}$/.test(normalized) && Boolean(getDeviceById(normalized));
+    }
+
     function isValidTicketId(id) {
         return typeof id === "string" && /^TKT-\d{4,}$/.test(id.trim());
     }
@@ -130,12 +187,8 @@
             return failure("invalid_input");
         }
 
-        if (
-            ticket.deviceId !== null &&
-            ticket.deviceId !== undefined &&
-            typeof ticket.deviceId !== "string"
-        ) {
-            return failure("invalid_input");
+        if (!isValidDeviceReference(ticket.deviceId, false)) {
+            return failure("invalid_device", { field: "deviceId" });
         }
 
         return success(ticket);
@@ -182,13 +235,11 @@
             return failure("invalid_changes", { field: "priority" });
         }
 
-        if (Object.prototype.hasOwnProperty.call(changes, "deviceId")) {
-            if (
-                changes.deviceId !== null &&
-                typeof changes.deviceId !== "string"
-            ) {
-                return failure("invalid_changes", { field: "deviceId" });
-            }
+        if (
+            Object.prototype.hasOwnProperty.call(changes, "deviceId") &&
+            !isValidDeviceReference(changes.deviceId, true)
+        ) {
+            return failure("invalid_device", { field: "deviceId" });
         }
 
         return success(changes);
@@ -293,7 +344,8 @@
 
         if (
             typeof window.TicketStorage.isValidAssigneeEmail !== "function" ||
-            !window.TicketStorage.isValidAssigneeEmail(assigneeEmail)
+            !window.TicketStorage.isValidAssigneeEmail(assigneeEmail) ||
+            !isValidAssigneeAccount(assigneeEmail)
         ) {
             return failure("invalid_assignee");
         }
@@ -305,7 +357,7 @@
             return failure("forbidden");
         }
 
-        const updatedTicket = window.TicketStorage.assignTicket(id, assigneeEmail);
+        const updatedTicket = window.TicketStorage.assignTicket(id, normalizeEmail(assigneeEmail));
 
         return updatedTicket
             ? success(updatedTicket, "Đã phân công người phụ trách thành công.")
@@ -386,6 +438,8 @@
     window.TicketOperations = {
         validateCreateTicket,
         validateChanges,
+        isValidAssigneeAccount,
+        isValidDeviceReference,
         createTicket,
         updateTicket,
         assignTicket,
