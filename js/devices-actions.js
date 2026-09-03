@@ -10,6 +10,26 @@
         element.dataset.state = isError ? "error" : "success";
     }
 
+    function notify(message, type) {
+        if (window.AppUI && typeof window.AppUI.notify === "function") {
+            window.AppUI.notify(message, type || "info");
+            return;
+        }
+        window.alert(message);
+    }
+
+    function confirmAction(message) {
+        if (window.AppUI && typeof window.AppUI.confirm === "function") {
+            return window.AppUI.confirm({
+                title: "Xóa thiết bị",
+                message,
+                confirmText: "Xóa",
+                cancelText: "Hủy"
+            });
+        }
+        return Promise.resolve(window.confirm(message));
+    }
+
     function normalizeEmail(value) {
         return typeof value === "string" ? value.trim().toLowerCase() : "";
     }
@@ -104,7 +124,7 @@
         event.preventDefault();
         event.stopImmediatePropagation();
         setFeedback(validation.message, true);
-        window.alert(validation.message);
+        notify(validation.message, "error");
     }
 
     function scrollPanelIntoView(id) {
@@ -120,10 +140,10 @@
         if (feedback) {
             feedback.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-        window.alert(message);
+        notify(message, "error");
     }
 
-    function handleDeviceAction(event) {
+    async function handleDeviceAction(event) {
         const button = event.target.closest("button[data-action][data-device-id]");
         if (!button) {
             return;
@@ -141,6 +161,7 @@
 
         if (!window.DevicesPage || !window.DeviceStorage) {
             setFeedback("Chức năng thiết bị chưa sẵn sàng.", true);
+            notify("Chức năng thiết bị chưa sẵn sàng.", "error");
             return;
         }
 
@@ -175,7 +196,7 @@
                 return;
             }
 
-            const confirmed = window.confirm(
+            const confirmed = await confirmAction(
                 "Xóa thiết bị " + deviceId + " - " + (device.name || "") + "?"
             );
 
@@ -193,6 +214,7 @@
                 window.DevicesPage.renderAll();
             }
             setFeedback(result.message, false);
+            notify(result.message, "success");
         }
     }
 
