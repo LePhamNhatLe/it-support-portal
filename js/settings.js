@@ -1,6 +1,10 @@
 (function () {
     const SYSTEM_KEY = "systemSettings";
     const USER_PREFIX = "userSettings:";
+    const ALLOWED_TIMEZONES = ["Asia/Ho_Chi_Minh", "UTC"];
+    const ALLOWED_LANGUAGES = ["vi"];
+    const ALLOWED_PRIORITIES = ["low", "medium", "high", "critical"];
+    const ALLOWED_THEMES = ["light", "dark"];
 
     const DEFAULT_SYSTEM = {
         companyName: "TPCOMS IT Support",
@@ -26,10 +30,74 @@
         return USER_PREFIX + String(email || "").trim().toLowerCase();
     }
 
+    function normalizeSystemSettings(settings) {
+        const source = settings && typeof settings === "object" ? settings : {};
+        const companyName = String(source.companyName || DEFAULT_SYSTEM.companyName).trim();
+        const timezone = ALLOWED_TIMEZONES.includes(source.timezone) ? source.timezone : DEFAULT_SYSTEM.timezone;
+        const language = ALLOWED_LANGUAGES.includes(source.language) ? source.language : DEFAULT_SYSTEM.language;
+        const defaultPriority = ALLOWED_PRIORITIES.includes(source.defaultPriority) ? source.defaultPriority : DEFAULT_SYSTEM.defaultPriority;
+        const numericSla = Number(source.slaHours);
+        const slaHours = Number.isInteger(numericSla) && numericSla >= 1 && numericSla <= 168
+            ? numericSla
+            : DEFAULT_SYSTEM.slaHours;
+
+        return {
+            companyName: companyName || DEFAULT_SYSTEM.companyName,
+            timezone,
+            language,
+            defaultPriority,
+            slaHours
+        };
+    }
+
+    function normalizeUserSettings(settings) {
+        const source = settings && typeof settings === "object" ? settings : {};
+        return {
+            theme: ALLOWED_THEMES.includes(source.theme) ? source.theme : DEFAULT_USER.theme,
+            notifyNewTicket: typeof source.notifyNewTicket === "boolean" ? source.notifyNewTicket : DEFAULT_USER.notifyNewTicket,
+            notifyAssigned: typeof source.notifyAssigned === "boolean" ? source.notifyAssigned : DEFAULT_USER.notifyAssigned,
+            notifyUpdated: typeof source.notifyUpdated === "boolean" ? source.notifyUpdated : DEFAULT_USER.notifyUpdated,
+            notifyEmail: typeof source.notifyEmail === "boolean" ? source.notifyEmail : DEFAULT_USER.notifyEmail
+        };
+    }
+
     function getSystemSettings() {
-        if (!window.AppStorage) return { ...DEFAULT_SYSTEM };
-        const stored = window.AppStorage.get(SYSTEM_KEY, null);
-        return { ...DEFAULT_SYSTEM, ...(stored && typeof stored === "object" ? stored : {}) };
+        if (!window.AppStorage || typeof window.AppStorage.get !== "function") {
+            return { ...DEFAULT_SYSTEM };
+        }
+        return normalizeSystemSettings(window.AppStorage.get(SYSTEM_KEY, null));
+    }
+
+    function validateSystemSettings(settings) {
+        const companyName = String(settings && settings.companyName || "").trim();
+        const slaHours = Number(settings && settings.slaHours);
+
+        if (!companyName) {
+            return { ok: false, message: "Tên công ty không được để trống." };
+        }
+        if (!ALLOWED_TIMEZONES.includes(settings.timezone)) {
+            return { ok: false, message: "Múi giờ không hợp lệ." };
+        }
+        if (!ALLOWED_LANGUAGES.includes(settings.language)) {
+            return { ok: false, message: "Ngôn ngữ không hợp lệ." };
+        }
+        if (!ALLOWED_PRIORITIES.includes(settings.defaultPriority)) {
+            return { ok: false, message: "Mức ưu tiên mặc định không hợp lệ." };
+        }
+        if (!Number.isInteger(slaHours) || slaHours < 1 || slaHours > 168) {
+            return { ok: false, message: "SLA mặc định phải là số nguyên từ 1 đến 168 giờ." };
+        }
+
+        return {
+            ok: true,
+            data: {
+                companyName,
+                timezone: settings.timezone,
+                language: settings.language,
+                defaultPriority: settings.defaultPriority,
+                slaHours
+            }
+        };
     }
 
     function saveSystemSettings(settings) {
@@ -37,39 +105,53 @@
         if (!actor || actor.role !== "technical_lead") {
             return { ok: false, message: "Chỉ Trưởng nhóm kỹ thuật được thay đổi thiết lập hệ thống." };
         }
-        const normalized = {
-            companyName: String(settings.companyName || "").trim(),
-            timezone: settings.timezone || "Asia/Ho_Chi_Minh",
-            language: settings.language || "vi",
-            defaultPriority: settings.defaultPriority || "medium",
-            slaHours: Number(settings.slaHours)
-        };
-        if (!normalized.companyName) return { ok: false, message: "Tên công ty không được để trống." };
-        if (!Number.isFinite(normalized.slaHours) || normalized.slaHours < 1 || normalized.slaHours > 168) {
-            return { ok: false, message: "SLA mặc định phải từ 1 đến 168 giờ." };
+        if (!window.AppStorage || typeof window.AppStorage.set !== "function") {
+            return { ok: false, message: "Bộ lưu trữ thiết lập chưa sẵn sàng." };
         }
-        window.AppStorage.set(SYSTEM_KEY, normalized);
-        return { ok: true, message: "Đã lưu thiết lập hệ thống.", data: normalized };
+
+        const validation = validateSystemSettings(settings || {});
+        if (!validation.ok) {
+            return validation;
+        }
+
+        if (!window.AppStorage.set(SYSTEM_KEY, validation.data)) {
+            return { ok: false, message: "Không thể lưu thiết lập hệ thống." };
+        }
+
+        return { ok: true, message: "Đã lưu thiết lập hệ thống.", data: validation.data };
     }
 
     function getUserSettings() {
         const actor = getActor();
-        if (!actor || !window.AppStorage) return { ...DEFAULT_USER };
-        const stored = window.AppStorage.get(getUserKey(actor.email), null);
-        return { ...DEFAULT_USER, ...(stored && typeof stored === "object" ? stored : {}) };
+        if (!actor || !window.AppStorage || typeof window.AppStorage.get !== "function") {
+            return { ...DEFAULT_USER };
+        }
+        return normalizeUserSettings(window.AppStorage.get(getUserKey(actor.email), null));
     }
 
     function saveUserSettings(settings) {
         const actor = getActor();
-        if (!actor || !window.AppStorage) return { ok: false, message: "Không xác định được tài khoản hiện tại." };
+        if (!actor || !window.AppStorage || typeof window.AppStorage.set !== "function") {
+            return { ok: false, message: "Không xác định được tài khoản hiện tại." };
+        }
+
+        const source = settings && typeof settings === "object" ? settings : {};
+        if (!ALLOWED_THEMES.includes(source.theme)) {
+            return { ok: false, message: "Tùy chọn giao diện không hợp lệ." };
+        }
+
         const normalized = {
-            theme: settings.theme === "dark" ? "dark" : "light",
-            notifyNewTicket: Boolean(settings.notifyNewTicket),
-            notifyAssigned: Boolean(settings.notifyAssigned),
-            notifyUpdated: Boolean(settings.notifyUpdated),
-            notifyEmail: Boolean(settings.notifyEmail)
+            theme: source.theme,
+            notifyNewTicket: Boolean(source.notifyNewTicket),
+            notifyAssigned: Boolean(source.notifyAssigned),
+            notifyUpdated: Boolean(source.notifyUpdated),
+            notifyEmail: Boolean(source.notifyEmail)
         };
-        window.AppStorage.set(getUserKey(actor.email), normalized);
+
+        if (!window.AppStorage.set(getUserKey(actor.email), normalized)) {
+            return { ok: false, message: "Không thể lưu tùy chọn cá nhân." };
+        }
+
         return { ok: true, message: "Đã lưu tùy chọn cá nhân.", data: normalized };
     }
 
@@ -78,21 +160,48 @@
         const normalized = String(name || "").trim();
         if (!actor) return { ok: false, message: "Không xác định được tài khoản hiện tại." };
         if (normalized.length < 2) return { ok: false, message: "Tên hiển thị phải có ít nhất 2 ký tự." };
+        if (normalized.length > 100) return { ok: false, message: "Tên hiển thị không được vượt quá 100 ký tự." };
 
-        const next = { ...actor, name: normalized };
-        localStorage.setItem("currentUser", JSON.stringify(next));
+        if (
+            !window.UserStorage ||
+            typeof window.UserStorage.getUserByEmail !== "function" ||
+            typeof window.UserStorage.getUsers !== "function" ||
+            typeof window.UserStorage.saveUsers !== "function"
+        ) {
+            return { ok: false, message: "Danh sách người dùng chưa sẵn sàng." };
+        }
 
-        if (window.UserStorage && typeof window.UserStorage.getUserByEmail === "function" && typeof window.UserStorage.saveUsers === "function") {
-            const user = window.UserStorage.getUserByEmail(actor.email);
-            if (user) {
-                const users = window.UserStorage.getUsers();
-                const index = users.findIndex(function (item) { return item && item.id === user.id; });
-                if (index >= 0) {
-                    const copy = users.slice();
-                    copy[index] = { ...copy[index], name: normalized, updatedAt: new Date().toISOString() };
-                    window.UserStorage.saveUsers(copy);
+        const user = window.UserStorage.getUserByEmail(actor.email);
+        if (!user) {
+            return { ok: false, message: "Không tìm thấy tài khoản hiện tại trong danh sách người dùng." };
+        }
+
+        const users = window.UserStorage.getUsers();
+        const index = users.findIndex(function (item) { return item && item.id === user.id; });
+        if (index < 0) {
+            return { ok: false, message: "Không tìm thấy dữ liệu tài khoản cần cập nhật." };
+        }
+
+        const copy = users.slice();
+        copy[index] = { ...copy[index], name: normalized, updatedAt: new Date().toISOString() };
+        if (!window.UserStorage.saveUsers(copy)) {
+            return { ok: false, message: "Không thể lưu tên hiển thị vào danh sách người dùng." };
+        }
+
+        const next = { email: actor.email, name: normalized, role: actor.role };
+        const sessionSaved = window.AppAuth && typeof window.AppAuth.saveCurrentUser === "function"
+            ? window.AppAuth.saveCurrentUser(next)
+            : (function () {
+                try {
+                    localStorage.setItem("currentUser", JSON.stringify(next));
+                    return true;
+                } catch (error) {
+                    return false;
                 }
-            }
+            })();
+
+        if (!sessionSaved) {
+            return { ok: false, message: "Tên đã lưu vào hồ sơ nhưng không thể cập nhật phiên hiện tại." };
         }
 
         document.querySelectorAll("[data-user-name]").forEach(function (el) { el.textContent = normalized; });
@@ -176,13 +285,19 @@
                 notifyUpdated: document.getElementById("notify-updated")?.checked,
                 notifyEmail: document.getElementById("notify-email")?.checked
             });
-            window.alert(result.message + " Giao diện sáng/tối sẽ được áp dụng ở P19 UI Polish.");
+            window.alert(result.ok
+                ? result.message + " Giao diện sáng/tối sẽ được áp dụng ở P19 UI Polish."
+                : result.message);
         });
 
         document.getElementById("reset-user-settings")?.addEventListener("click", function () {
             const actor = getActor();
-            if (!actor || !window.AppStorage) return;
-            window.AppStorage.remove(getUserKey(actor.email));
+            if (!actor || !window.AppStorage || typeof window.AppStorage.remove !== "function") return;
+            const removed = window.AppStorage.remove(getUserKey(actor.email));
+            if (!removed) {
+                window.alert("Không thể đặt lại tùy chọn cá nhân.");
+                return;
+            }
             render();
             window.alert("Đã đặt lại tùy chọn cá nhân về mặc định.");
         });
@@ -190,6 +305,7 @@
 
     window.SettingsModule = {
         getSystemSettings,
+        validateSystemSettings,
         saveSystemSettings,
         getUserSettings,
         saveUserSettings,
