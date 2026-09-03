@@ -3,7 +3,7 @@
   --ui-warning: #b45309;
   --ui-danger: #b91c1c;
   --ui-info: #1d4ed8;
-  --ui-overlay: rgba(15, 23, 42, 0.5);
+  --ui-overlay: rgba(2, 6, 23, 0.68);
 }
 
 html { scroll-behavior: smooth; }
@@ -29,15 +29,14 @@ textarea:focus-visible {
 }
 
 .button,.metric-card,.device-card,.dashboard__panel,.content__panel,.topbar__profile,.report-category-item,.settings-card {
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition: box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .metric-card:hover,.device-card:hover,.dashboard__panel:hover,.content__panel:hover,.report-category-item:hover,.settings-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 42px rgba(31, 45, 61, 0.09);
+  box-shadow: 0 18px 38px rgba(31, 45, 61, 0.08);
 }
 
-.button:active { transform: translateY(0) scale(.985); }
+.button:active { transform: scale(.985); }
 
 .dashboard-table tbody tr,.tickets-table tbody tr,.users-table tbody tr,.devices-table tbody tr,.network-table tbody tr { transition: background 140ms ease; }
 .table-wrap { border-radius: 16px; scrollbar-width: thin; }
@@ -71,25 +70,43 @@ input:disabled,select:disabled,textarea:disabled,button:disabled { cursor: not-a
 @keyframes ui-toast-in{from{opacity:0;transform:translateY(-8px) translateX(8px)}to{opacity:1;transform:none}}
 
 .ui-modal-backdrop {
-  position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: 1rem; background: var(--ui-overlay); backdrop-filter: blur(4px);
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: var(--ui-overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 .ui-modal {
-  width:min(680px,100%); max-height:calc(100vh - 2rem); display:grid; grid-template-rows:auto minmax(0,1fr); overflow:hidden; border-radius:22px; background:#fff; color:#1f2937; border:1px solid rgba(100,116,139,.16); box-shadow:0 30px 80px rgba(15,23,42,.28); animation:ui-modal-in 160ms ease both;
+  width:min(680px,100%);
+  max-height:calc(100vh - 2.5rem);
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+  overflow:hidden;
+  border-radius:22px;
+  background:#fff;
+  color:#1f2937;
+  border:1px solid rgba(100,116,139,.16);
+  box-shadow:0 34px 100px rgba(0,0,0,.4);
+  animation:ui-modal-in 160ms ease both;
 }
 .ui-modal--sm{width:min(460px,100%)}
 .ui-modal--md{width:min(680px,100%)}
 .ui-modal--lg{width:min(900px,100%)}
 .ui-modal--xl{width:min(1120px,100%)}
-.ui-modal__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border)}
+.ui-modal__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);background:var(--surface)}
 .ui-modal__header h2{margin:0;font-size:1.15rem}
 .ui-modal__close{flex:0 0 auto;width:38px;height:38px;border-radius:12px;cursor:pointer;color:inherit;font-size:1.5rem;line-height:1}
 .ui-modal__close:hover{background:rgba(100,116,139,.1)}
-.ui-modal__body{overflow:auto;padding:1.3rem}
+.ui-modal__body{overflow:auto;padding:1.3rem;background:var(--surface)}
 .ui-modal__body>p,.ui-confirm>p{margin:0;color:#64748b;line-height:1.65}
 .ui-modal__actions{display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)}
 .ui-button--danger{background:var(--ui-danger);color:#fff}
 .ui-button--danger:hover{filter:brightness(.94)}
-@keyframes ui-modal-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes ui-modal-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
 
 .ui-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
 .ui-field{display:grid;gap:.42rem;min-width:0}
@@ -128,7 +145,7 @@ html[data-theme="dark"]{
 html[data-theme="dark"] body{background:linear-gradient(180deg,#0b1220 0%,#101827 100%)}
 html[data-theme="dark"] .sidebar,html[data-theme="dark"] .content__panel,html[data-theme="dark"] .dashboard__panel,html[data-theme="dark"] .metric-card,html[data-theme="dark"] .device-card,html[data-theme="dark"] .tickets__hero,html[data-theme="dark"] .detail__header,html[data-theme="dark"] .report-chart,html[data-theme="dark"] .report-category-item,html[data-theme="dark"] .topbar__profile,html[data-theme="dark"] .timeline__item,html[data-theme="dark"] .comment-item,html[data-theme="dark"] .settings-card{background:var(--surface)}
 html[data-theme="dark"] input,html[data-theme="dark"] select,html[data-theme="dark"] textarea,html[data-theme="dark"] .empty-state,html[data-theme="dark"] .report-chart__body{background:var(--surface-strong);color:var(--text)}
-html[data-theme="dark"] .ui-toast,html[data-theme="dark"] .ui-modal{background:#172238;color:#e5edf8;border-color:rgba(148,163,184,.18)}
+html[data-theme="dark"] .ui-toast,html[data-theme="dark"] .ui-modal,html[data-theme="dark"] .ui-modal__header,html[data-theme="dark"] .ui-modal__body{background:#172238;color:#e5edf8;border-color:rgba(148,163,184,.18)}
 html[data-theme="dark"] .ui-modal__body>p,html[data-theme="dark"] .ui-confirm>p{color:#9aabc2}
 html[data-theme="dark"] .dashboard-table tbody tr:hover,html[data-theme="dark"] .tickets-table tbody tr:hover,html[data-theme="dark"] .users-table tbody tr:hover,html[data-theme="dark"] .devices-table tbody tr:hover,html[data-theme="dark"] .network-table tbody tr:hover{background:rgba(59,130,246,.08)}
 
