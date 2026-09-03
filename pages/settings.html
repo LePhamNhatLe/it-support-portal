@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cài đặt | Cổng IT Support</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
   <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng">
 
   <div class="layout">
-
-    <!-- Sidebar -->
     <aside class="sidebar" aria-label="Điều hướng chính">
-
       <div class="sidebar__brand">
         <div class="sidebar__logo">IT</div>
-
         <div>
           <p class="sidebar__product">IT Support</p>
           <span class="sidebar__subtitle">Portal</span>
@@ -27,362 +21,164 @@
 
       <nav class="sidebar__nav" aria-label="Menu bên">
         <ul>
-          <li>
-            <a href="dashboard.html" data-permission="dashboard">
-              Bảng điều khiển
-            </a>
-          </li>
-
-          <li>
-            <a href="tickets.html" data-permission="tickets">
-              Phiếu hỗ trợ
-            </a>
-          </li>
-
-          <li>
-            <a href="devices.html" data-permission="devices">
-              Thiết bị
-            </a>
-          </li>
-
-          <li>
-            <a href="users.html" data-permission="users">
-              Người dùng
-            </a>
-          </li>
-
-          <li>
-            <a href="network.html" data-permission="network">
-              Mạng
-            </a>
-          </li>
-
-          <li>
-            <a href="reports.html" data-permission="reports">
-              Báo cáo
-            </a>
-          </li>
-
-          <li>
-            <a href="settings.html" data-permission="settings" class="active" aria-current="page">
-              Cài đặt
-            </a>
-          </li>
+          <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+          <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+          <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+          <li><a href="users.html" data-permission="users">Người dùng</a></li>
+          <li><a href="network.html" data-permission="network">Mạng</a></li>
+          <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+          <li><a href="settings.html" data-permission="settings" class="active" aria-current="page">Cài đặt</a></li>
         </ul>
       </nav>
 
       <div class="sidebar__footer">
-        <button class="sidebar__logout" type="button">
-          Đăng xuất
-        </button>
+        <button class="sidebar__logout" type="button">Đăng xuất</button>
       </div>
-
     </aside>
 
-    <!-- Workspace -->
     <div class="workspace">
-
-      <!-- Topbar -->
       <header class="topbar">
-
-        <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-
+        <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
         <div class="topbar__heading">
-          <p class="topbar__eyebrow">
-            Cài đặt hệ thống và thông tin tài khoản
-          </p>
-
+          <p class="topbar__eyebrow">Cài đặt hệ thống và thông tin tài khoản</p>
           <h1>Cài đặt</h1>
         </div>
-
         <div class="topbar__profile">
           <div class="profile__avatar" data-user-avatar></div>
-
           <div class="profile__info">
             <span class="profile__name" data-user-name></span>
-
             <span class="profile__role" data-user-role></span>
           </div>
         </div>
-
       </header>
 
-      <!-- Main content -->
       <main class="content" id="main-content">
-
         <section class="page-header tickets__hero">
           <div>
-            <p class="topbar__eyebrow">
-              Cài đặt hệ thống và thông tin tài khoản
-            </p>
-
+            <p class="topbar__eyebrow">Thiết lập tài khoản, hệ thống và thông báo</p>
             <h2>Thiết lập</h2>
           </div>
         </section>
 
-        <!-- Account + System settings -->
         <section class="settings-grid">
-
           <article class="settings-panel">
-
             <h3>Tài khoản</h3>
-
-            <div class="settings-row">
-              <label for="account-name">
-                Tên tài khoản
-              </label>
-
-              <input id="account-name" type="text" value="">
-            </div>
-
-            <div class="settings-row">
-              <label for="account-email">
-                Email
-              </label>
-
-              <input id="account-email" type="email" value="lead@example.local">
-            </div>
-
-            <div class="settings-row">
-              <label for="account-password">
-                Đổi mật khẩu
-              </label>
-
-              <input id="account-password" type="password">
-            </div>
-
-            <div class="settings-actions">
-              <button class="button button--ghost" type="button">
-                Hủy
-              </button>
-
-              <button class="button button--primary" type="button">
-                Lưu
-              </button>
-            </div>
-
+            <form id="account-form">
+              <div class="settings-row">
+                <label for="account-name">Tên hiển thị</label>
+                <input id="account-name" type="text" maxlength="120" required>
+              </div>
+              <div class="settings-row">
+                <label for="account-email">Email</label>
+                <input id="account-email" type="email" readonly>
+              </div>
+              <p>Email và vai trò được giữ cố định trong bản demo để không làm hỏng liên kết ticket/device.</p>
+              <div class="settings-actions">
+                <button class="button button--primary" type="submit">Lưu tài khoản</button>
+              </div>
+            </form>
           </article>
 
           <article class="settings-panel">
-
             <h3>Thiết lập hệ thống</h3>
-
-            <div class="settings-row">
-              <label for="company-name">
-                Tên công ty
-              </label>
-
-              <input id="company-name" type="text" value="Công ty Ví dụ">
-            </div>
-
-            <div class="settings-row">
-              <label for="timezone">
-                Múi giờ
-              </label>
-
-              <select id="timezone">
-                <option>UTC+7 (Hà Nội)</option>
-                <option>UTC+0</option>
-                <option>UTC+1</option>
-              </select>
-            </div>
-
-            <div class="settings-row">
-              <label for="language">
-                Ngôn ngữ
-              </label>
-
-              <select id="language">
-                <option>Tiếng Việt</option>
-                <option>English</option>
-              </select>
-            </div>
-
-            <div class="settings-actions">
-              <button class="button button--ghost" type="button">
-                Hủy
-              </button>
-
-              <button class="button button--primary" type="button">
-                Lưu thay đổi
-              </button>
-            </div>
-
+            <p id="system-settings-note"></p>
+            <form id="system-settings-form">
+              <div class="settings-row">
+                <label for="company-name">Tên công ty</label>
+                <input id="company-name" type="text" required>
+              </div>
+              <div class="settings-row">
+                <label for="timezone">Múi giờ</label>
+                <select id="timezone">
+                  <option value="Asia/Ho_Chi_Minh">UTC+7 - Việt Nam</option>
+                  <option value="UTC">UTC+0</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label for="language">Ngôn ngữ</label>
+                <select id="language">
+                  <option value="vi">Tiếng Việt</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label for="default-priority">Ưu tiên mặc định</label>
+                <select id="default-priority">
+                  <option value="low">Thấp</option>
+                  <option value="medium">Trung bình</option>
+                  <option value="high">Cao</option>
+                  <option value="critical">Khẩn cấp</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label for="sla-hours">SLA mặc định (giờ)</label>
+                <input id="sla-hours" type="number" min="1" max="168" required>
+              </div>
+              <div class="settings-actions">
+                <button class="button button--primary" type="submit">Lưu thiết lập hệ thống</button>
+              </div>
+            </form>
           </article>
-
         </section>
 
-        <!-- Interface + Notifications -->
         <section class="dashboard__grid settings__grid">
-
-          <article class="content__panel">
-
+          <article class="content__panel dashboard__panel--wide">
             <div class="panel__header">
-              <h2>Tùy chọn giao diện</h2>
-
-              <p>
-                Chọn giao diện phù hợp với thói quen làm việc.
-              </p>
+              <h2>Tùy chọn cá nhân</h2>
+              <p>Lưu riêng theo tài khoản hiện tại bằng LocalStorage.</p>
             </div>
 
-            <div class="toggle-group">
+            <form id="preference-form">
+              <div class="toggle-group">
+                <label class="toggle-card">
+                  <input type="radio" name="theme" value="light">
+                  <div><strong>Chế độ sáng</strong><p>Ưu tiên giao diện sáng.</p></div>
+                </label>
+                <label class="toggle-card">
+                  <input type="radio" name="theme" value="dark">
+                  <div><strong>Chế độ tối</strong><p>Lưu lựa chọn để áp dụng khi hoàn thiện UI ở P19.</p></div>
+                </label>
+              </div>
 
-              <label class="toggle-card">
-                <input type="radio" name="theme" checked>
+              <div class="settings-checkboxes">
+                <label><input id="notify-new-ticket" type="checkbox"> Nhận thông báo khi có phiếu mới</label>
+                <label><input id="notify-assigned" type="checkbox"> Nhận thông báo khi được phân công</label>
+                <label><input id="notify-updated" type="checkbox"> Nhận thông báo khi phiếu được cập nhật</label>
+                <label><input id="notify-email" type="checkbox"> Ưu tiên nhận thông báo qua email</label>
+              </div>
 
-                <div>
-                  <strong>Chế độ sáng</strong>
-
-                  <p>
-                    Giao diện sáng phù hợp môi trường văn phòng.
-                  </p>
-                </div>
-              </label>
-
-              <label class="toggle-card">
-                <input type="radio" name="theme">
-
-                <div>
-                  <strong>Chế độ tối</strong>
-
-                  <p>
-                    Giao diện tối giảm chói mắt khi làm việc ban đêm.
-                  </p>
-                </div>
-              </label>
-
-            </div>
-
+              <div class="settings-actions">
+                <button class="button button--ghost" id="reset-user-settings" type="button">Đặt lại mặc định</button>
+                <button class="button button--primary" type="submit">Lưu tùy chọn</button>
+              </div>
+            </form>
           </article>
-
-          <article class="content__panel">
-
-            <div class="panel__header">
-              <h2>Thông báo</h2>
-
-              <p>
-                Quản lý nhận thông báo từ hệ thống.
-              </p>
-            </div>
-
-            <div class="settings-checkboxes">
-
-              <label>
-                <input type="checkbox" checked>
-                Nhận thông báo khi có yêu cầu mới
-              </label>
-
-              <label>
-                <input type="checkbox" checked>
-                Nhận thông báo khi được phân công yêu cầu
-              </label>
-
-              <label>
-                <input type="checkbox" checked>
-                Nhận thông báo khi yêu cầu được cập nhật
-              </label>
-
-              <label>
-                <input type="checkbox">
-                Nhận thông báo qua email
-              </label>
-
-            </div>
-
-          </article>
-
         </section>
 
-        <!-- Session + Danger zone -->
         <section class="dashboard__grid settings__grid">
-
           <article class="content__panel">
-
             <div class="panel__header">
               <h2>Phiên đăng nhập</h2>
-
-              <p>
-                Theo dõi phiên truy cập hiện tại và đăng xuất
-                từ các thiết bị khác.
-              </p>
+              <p>Bản frontend hiện chỉ quản lý một phiên LocalStorage trên trình duyệt hiện tại.</p>
             </div>
-
             <div class="session-card">
-
-              <div>
-                <p class="session-label">
-                  Thiết bị hiện tại
-                </p>
-
-                <strong>
-                  Laptop Windows
-                </strong>
-              </div>
-
-              <div>
-                <p class="session-label">
-                  Trình duyệt
-                </p>
-
-                <strong>
-                  Chrome
-                </strong>
-              </div>
-
-              <div>
-                <p class="session-label">
-                  Thời gian đăng nhập gần nhất
-                </p>
-
-                <strong>
-                  5 phút trước
-                </strong>
-              </div>
-
+              <div><p class="session-label">Lưu trữ phiên</p><strong>LocalStorage</strong></div>
+              <div><p class="session-label">Xác thực</p><strong>Demo account</strong></div>
+              <div><p class="session-label">Backend session</p><strong>Chưa triển khai</strong></div>
             </div>
-
-            <button class="button button--ghost" type="button">
-              Đăng xuất khỏi tất cả thiết bị
-            </button>
-
           </article>
 
           <article class="content__panel settings-danger">
-
             <div class="panel__header">
-
-              <h2>Vùng nguy hiểm</h2>
-
-              <p>
-                Hành động bên dưới có thể ảnh hưởng đến
-                quyền truy cập tài khoản.
-              </p>
-
+              <h2>Giới hạn bản frontend</h2>
+              <p>Đổi mật khẩu, xóa tài khoản và đăng xuất nhiều thiết bị cần backend để thực hiện đúng.</p>
             </div>
-
-            <p class="danger-text">
-              Thao tác này không thể hoàn tác.
-            </p>
-
-            <button class="button button--ghost button--danger" type="button">
-              Xóa tài khoản
-            </button>
-
+            <p class="danger-text">Các chức năng này sẽ được triển khai ở giai đoạn backend/database thay vì giả lập bằng nút bấm không có tác dụng.</p>
           </article>
-
         </section>
-
       </main>
-
     </div>
-
   </div>
 
-  <!-- JavaScript -->
   <script src="../data/seed-data.js"></script>
   <script src="../js/storage.js"></script>
   <script src="../js/auth.js"></script>
@@ -390,5 +186,7 @@
   <script src="../js/guard.js"></script>
   <script src="../js/profile.js"></script>
   <script src="../js/menu.js"></script>
+  <script src="../js/users.js"></script>
+  <script src="../js/settings.js"></script>
 </body>
 </html>
