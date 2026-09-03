@@ -1,8 +1,6 @@
 (function () {
   function loadPolishStyles() {
-    if (document.querySelector('link[data-ui-polish="true"]')) {
-      return;
-    }
+    if (document.querySelector('link[data-ui-polish="true"]')) return;
 
     const currentScript = document.currentScript;
     const href = currentScript && currentScript.src
@@ -21,9 +19,7 @@
 
   function getThemeStorageKey() {
     const user = getCurrentUser();
-    if (!user || typeof user.email !== "string" || !user.email.trim()) {
-      return null;
-    }
+    if (!user || typeof user.email !== "string" || !user.email.trim()) return null;
     return "userSettings:" + user.email.trim().toLowerCase();
   }
 
@@ -56,9 +52,7 @@
 
   function notify(message, type, duration) {
     const text = typeof message === "string" ? message.trim() : "";
-    if (!text) {
-      return null;
-    }
+    if (!text) return null;
 
     const toast = document.createElement("div");
     toast.className = "ui-toast";
@@ -76,9 +70,7 @@
     closeButton.textContent = "×";
 
     const remove = function () {
-      if (toast.isConnected) {
-        toast.remove();
-      }
+      if (toast.isConnected) toast.remove();
     };
 
     closeButton.addEventListener("click", remove);
@@ -88,81 +80,123 @@
     return toast;
   }
 
+  function openModal(options) {
+    const settings = options && typeof options === "object" ? options : {};
+    const size = ["sm", "md", "lg", "xl"].includes(settings.size) ? settings.size : "md";
+    const backdrop = document.createElement("div");
+    backdrop.className = "ui-modal-backdrop";
+
+    const modal = document.createElement("section");
+    modal.className = "ui-modal ui-modal--" + size;
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+
+    const header = document.createElement("header");
+    header.className = "ui-modal__header";
+    const heading = document.createElement("h2");
+    heading.textContent = String(settings.title || "Thông tin");
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "ui-modal__close";
+    closeButton.setAttribute("aria-label", "Đóng popup");
+    closeButton.textContent = "×";
+    header.append(heading, closeButton);
+
+    const body = document.createElement("div");
+    body.className = "ui-modal__body";
+    if (settings.content instanceof Node) {
+      body.appendChild(settings.content);
+    } else if (typeof settings.content === "string") {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = settings.content;
+      body.appendChild(paragraph);
+    }
+
+    modal.append(header, body);
+    backdrop.appendChild(modal);
+    document.body.appendChild(backdrop);
+    document.body.classList.add("ui-modal-open");
+
+    const previousFocus = document.activeElement;
+    let closed = false;
+
+    function close() {
+      if (closed) return;
+      closed = true;
+      document.removeEventListener("keydown", onKeydown);
+      backdrop.remove();
+      if (!document.querySelector(".ui-modal-backdrop")) {
+        document.body.classList.remove("ui-modal-open");
+      }
+      if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+      if (typeof settings.onClose === "function") settings.onClose();
+    }
+
+    function onKeydown(event) {
+      if (event.key === "Escape" && settings.closeOnEscape !== false) close();
+    }
+
+    closeButton.addEventListener("click", close);
+    backdrop.addEventListener("click", function (event) {
+      if (event.target === backdrop && settings.closeOnBackdrop !== false) close();
+    });
+    document.addEventListener("keydown", onKeydown);
+    closeButton.focus();
+
+    return { backdrop, modal, body, close };
+  }
+
   function confirmAction(options) {
     const settings = typeof options === "string" ? { message: options } : (options || {});
-    const message = String(settings.message || "Bạn có chắc muốn tiếp tục?");
-    const title = String(settings.title || "Xác nhận thao tác");
-    const confirmText = String(settings.confirmText || "Xác nhận");
-    const cancelText = String(settings.cancelText || "Hủy");
-
     return new Promise(function (resolve) {
-      const backdrop = document.createElement("div");
-      backdrop.className = "ui-modal-backdrop";
-
-      const modal = document.createElement("section");
-      modal.className = "ui-modal";
-      modal.setAttribute("role", "dialog");
-      modal.setAttribute("aria-modal", "true");
-
-      const heading = document.createElement("h2");
-      heading.textContent = title;
-      const body = document.createElement("p");
-      body.textContent = message;
+      const content = document.createElement("div");
+      content.className = "ui-confirm";
+      const message = document.createElement("p");
+      message.textContent = String(settings.message || "Bạn có chắc muốn tiếp tục?");
       const actions = document.createElement("div");
       actions.className = "ui-modal__actions";
 
       const cancelButton = document.createElement("button");
       cancelButton.type = "button";
       cancelButton.className = "button button--ghost";
-      cancelButton.textContent = cancelText;
+      cancelButton.textContent = String(settings.cancelText || "Hủy");
 
       const confirmButton = document.createElement("button");
       confirmButton.type = "button";
-      confirmButton.className = "button button--primary";
-      confirmButton.textContent = confirmText;
+      confirmButton.className = settings.danger ? "button ui-button--danger" : "button button--primary";
+      confirmButton.textContent = String(settings.confirmText || "Xác nhận");
 
+      actions.append(cancelButton, confirmButton);
+      content.append(message, actions);
+
+      let controller = null;
       function finish(value) {
-        document.removeEventListener("keydown", onKeydown);
-        backdrop.remove();
+        if (controller) controller.close();
         resolve(value);
-      }
-
-      function onKeydown(event) {
-        if (event.key === "Escape") {
-          finish(false);
-        }
       }
 
       cancelButton.addEventListener("click", function () { finish(false); });
       confirmButton.addEventListener("click", function () { finish(true); });
-      backdrop.addEventListener("click", function (event) {
-        if (event.target === backdrop) {
-          finish(false);
-        }
-      });
-      document.addEventListener("keydown", onKeydown);
 
-      actions.append(cancelButton, confirmButton);
-      modal.append(heading, body, actions);
-      backdrop.appendChild(modal);
-      document.body.appendChild(backdrop);
+      controller = openModal({
+        title: String(settings.title || "Xác nhận thao tác"),
+        content,
+        size: "sm",
+        onClose: function () { resolve(false); }
+      });
       confirmButton.focus();
     });
   }
 
   function closeSidebar() {
     const toggle = document.getElementById("sidebar-toggle");
-    if (toggle) {
-      toggle.checked = false;
-    }
+    if (toggle) toggle.checked = false;
     document.body.dataset.sidebarOpen = "false";
   }
 
   function initSidebarBackdrop() {
     const toggle = document.getElementById("sidebar-toggle");
-    if (!toggle || document.querySelector(".ui-sidebar-backdrop")) {
-      return;
-    }
+    if (!toggle || document.querySelector(".ui-sidebar-backdrop")) return;
 
     const backdrop = document.createElement("div");
     backdrop.className = "ui-sidebar-backdrop";
@@ -173,15 +207,11 @@
       document.body.dataset.sidebarOpen = toggle.checked ? "true" : "false";
     });
     backdrop.addEventListener("click", closeSidebar);
-
     document.querySelectorAll(".sidebar__nav a").forEach(function (link) {
       link.addEventListener("click", closeSidebar);
     });
-
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && toggle.checked) {
-        closeSidebar();
-      }
+      if (event.key === "Escape" && toggle.checked) closeSidebar();
     });
   }
 
@@ -189,6 +219,7 @@
 
   window.AppUI = {
     notify,
+    openModal,
     confirm: confirmAction,
     applyTheme,
     closeSidebar
@@ -198,22 +229,14 @@
     applyTheme();
     initSidebarBackdrop();
 
-    if (
-      !window.AppPermissions ||
-      typeof window.AppPermissions.hasPermission !== "function"
-    ) {
+    if (!window.AppPermissions || typeof window.AppPermissions.hasPermission !== "function") {
       console.error("AppPermissions chưa được load.");
       return;
     }
 
-    const menuItems = document.querySelectorAll("[data-permission]");
-
-    menuItems.forEach(function (item) {
+    document.querySelectorAll("[data-permission]").forEach(function (item) {
       const permission = item.dataset.permission;
-
-      if (!permission || !window.AppPermissions.hasPermission(permission)) {
-        item.style.display = "none";
-      }
+      if (!permission || !window.AppPermissions.hasPermission(permission)) item.style.display = "none";
     });
   });
 })();
