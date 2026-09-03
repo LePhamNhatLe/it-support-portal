@@ -16,6 +16,19 @@
         return typeof value === "string" ? value.trim().toLowerCase() : "";
     }
 
+    function getCurrentUser() {
+        return typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
+    }
+
+    function isCurrentUser(user) {
+        const currentUser = getCurrentUser();
+        return Boolean(
+            currentUser &&
+            user &&
+            normalizeEmail(currentUser.email) === normalizeEmail(user.email)
+        );
+    }
+
     function getLinkCounts(user) {
         const email = normalizeEmail(user && user.email);
         const tickets = window.TicketStorage && typeof window.TicketStorage.getTickets === "function"
@@ -32,6 +45,100 @@
             })
             : [];
         return { tickets: tickets.length, devices: devices.length };
+    }
+
+    function getSelfUpdateError(user, changes) {
+        if (!isCurrentUser(user) || !changes || typeof changes !== "object") {
+            return null;
+        }
+
+        if (
+            Object.prototype.hasOwnProperty.call(changes, "role") &&
+            changes.role !== user.role
+        ) {
+            return "Không thể tự thay đổi vai trò của tài khoản đang đăng nhập.";
+        }
+
+        if (
+            Object.prototype.hasOwnProperty.call(changes, "status") &&
+            changes.status !== "active"
+        ) {
+            return "Không thể tự khóa hoặc vô hiệu tài khoản đang đăng nhập.";
+        }
+
+        return null;
+    }
+
+    function patchUserStorage() {
+        if (
+            !window.UserStorage ||
+            typeof window.UserStorage.updateUser !== "function" ||
+            window.UserStorage.__selfProtectionPatched
+        ) {
+            return;
+        }
+
+        const originalUpdateUser = window.UserStorage.updateUser;
+
+        window.UserStorage.updateUser = function (id, changes) {
+            const user = window.UserStorage.getUserById(id);
+            const message = getSelfUpdateError(user, changes);
+            if (message) {
+                return {
+                    ok: false,
+                    reason: "self_protection",
+                    message,
+                    data: null
+                };
+            }
+            return originalUpdateUser(id, changes);
+        };
+
+        window.UserStorage.__selfProtectionPatched = true;
+    }
+
+    function handleEditSubmit(event) {
+        const form = event.target.closest("#user-form");
+        if (!form || form.dataset.mode !== "edit" || !window.UserStorage) {
+            return;
+        }
+
+        const user = window.UserStorage.getUserById(form.dataset.userId);
+        if (!user || !isCurrentUser(user)) {
+            return;
+        }
+
+        const message = getSelfUpdateError(user, {
+            role: form.elements.role ? form.elements.role.value : user.role,
+            status: form.elements.status ? form.elements.status.value : user.status
+        });
+
+        if (!message) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        setFeedback(message, true);
+        window.alert(message);
+    }
+
+    function handleSelfLockAction(event) {
+        const button = event.target.closest('button[data-action="lock-user"][data-user-id]');
+        if (!button || !window.UserStorage) {
+            return;
+        }
+
+        const user = window.UserStorage.getUserById(button.dataset.userId);
+        if (!user || !isCurrentUser(user)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const message = "Không thể tự khóa tài khoản đang đăng nhập.";
+        setFeedback(message, true);
+        window.alert(message);
     }
 
     function handleDeleteAction(event) {
@@ -55,8 +162,7 @@
             return;
         }
 
-        const currentUser = typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
-        if (currentUser && normalizeEmail(currentUser.email) === normalizeEmail(user.email)) {
+        if (isCurrentUser(user)) {
             const message = "Không thể xóa " + user.id + " vì đây là tài khoản đang đăng nhập.";
             setFeedback(message, true);
             window.alert(message);
@@ -85,5 +191,8 @@
         }
     }
 
+    patchUserStorage();
+    document.addEventListener("submit", handleEditSubmit, true);
+    document.addEventListener("click", handleSelfLockAction, true);
     document.addEventListener("click", handleDeleteAction, true);
 })();
