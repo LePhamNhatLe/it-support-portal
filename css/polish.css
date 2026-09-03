@@ -134,7 +134,70 @@ input:disabled,select:disabled,textarea:disabled,button:disabled { cursor: not-a
   font: inherit;
 }
 .ui-promoted-panel .tickets__filter textarea { min-height: 120px; resize: vertical; }
-.ui-promoted-panel .detail__fields { gap: 1rem 1.25rem; }
+
+.ui-promoted-panel .detail__fields {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.85rem;
+}
+.ui-promoted-panel .detail__fields > * {
+  min-width:0;
+  padding:1rem 1.05rem;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--surface-strong);
+}
+.ui-promoted-panel .detail__label {
+  display:block;
+  margin:0 0 .35rem;
+  color:var(--muted);
+  font-size:.8rem;
+  font-weight:600;
+  letter-spacing:.01em;
+}
+.ui-promoted-panel .detail__value {
+  display:block;
+  margin:0;
+  color:var(--text);
+  font-size:.98rem;
+  font-weight:750;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.ui-promoted-panel .detail__description {
+  grid-column:1/-1;
+  padding:1rem 1.05rem;
+  margin:0;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--surface-strong);
+  line-height:1.65;
+}
+
+/* Compact network overview: desktop 4 columns, tablet 2, mobile 1. */
+.device-overview {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.9rem;
+}
+.device-overview .device-card {
+  min-height:112px;
+  padding:1rem 1.05rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border-radius:16px;
+}
+.device-overview .device-card h3 {
+  margin:0;
+  font-size:.88rem;
+  color:var(--muted);
+}
+.device-overview .device-card__value {
+  margin:.45rem 0 0;
+  font-size:1.75rem;
+  line-height:1;
+}
 
 .ui-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
 .ui-field{display:grid;gap:.42rem;min-width:0}
@@ -177,6 +240,10 @@ html[data-theme="dark"] .ui-toast,html[data-theme="dark"] .ui-modal,html[data-th
 html[data-theme="dark"] .ui-modal__body>p,html[data-theme="dark"] .ui-confirm>p{color:#9aabc2}
 html[data-theme="dark"] .dashboard-table tbody tr:hover,html[data-theme="dark"] .tickets-table tbody tr:hover,html[data-theme="dark"] .users-table tbody tr:hover,html[data-theme="dark"] .devices-table tbody tr:hover,html[data-theme="dark"] .network-table tbody tr:hover{background:rgba(59,130,246,.08)}
 
+@media(max-width:980px){
+  .device-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 @media(max-width:840px){
   .ui-sidebar-backdrop{position:fixed;inset:0;z-index:9;background:rgba(15,23,42,.42);backdrop-filter:blur(2px)}
   .layout__toggle:checked~.ui-sidebar-backdrop,body[data-sidebar-open="true"] .ui-sidebar-backdrop{display:block}
@@ -202,6 +269,7 @@ html[data-theme="dark"] .dashboard-table tbody tr:hover,html[data-theme="dark"] 
   .settings-card__header{flex-direction:column}
   .settings-card__header .button{width:100%}
   .ui-promoted-panel .detail__fields { grid-template-columns: 1fr; }
+  .device-overview{grid-template-columns:1fr}
 }
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
