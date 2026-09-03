@@ -17,6 +17,15 @@
         }
     }
 
+    function showDeleteError(message) {
+        setFeedback(message, true);
+        const feedback = document.getElementById("device-feedback");
+        if (feedback) {
+            feedback.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        window.alert(message);
+    }
+
     function handleDeviceAction(event) {
         const button = event.target.closest("button[data-action][data-device-id]");
         if (!button) {
@@ -53,7 +62,19 @@
         if (action === "delete-device") {
             const device = window.DeviceStorage.getDeviceById(deviceId);
             if (!device) {
-                setFeedback("Không tìm thấy thiết bị.", true);
+                showDeleteError("Không tìm thấy thiết bị.");
+                return;
+            }
+
+            const linkedTicketCount = typeof window.DeviceStorage.getLinkedTicketCount === "function"
+                ? window.DeviceStorage.getLinkedTicketCount(deviceId)
+                : 0;
+
+            if (linkedTicketCount > 0) {
+                showDeleteError(
+                    "Không thể xóa " + deviceId + " vì thiết bị đang được liên kết với " +
+                    linkedTicketCount + " phiếu hỗ trợ."
+                );
                 return;
             }
 
@@ -66,10 +87,15 @@
             }
 
             const result = window.DeviceStorage.deleteDevice(deviceId);
+            if (!result.ok) {
+                showDeleteError(result.message);
+                return;
+            }
+
             if (window.DevicesPage && typeof window.DevicesPage.renderAll === "function") {
                 window.DevicesPage.renderAll();
             }
-            setFeedback(result.message, !result.ok);
+            setFeedback(result.message, false);
         }
     }
 
