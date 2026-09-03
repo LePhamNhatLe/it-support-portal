@@ -22,17 +22,8 @@
         return Number.isNaN(date.getTime()) ? null : date;
     }
 
-    function startOfDay(date) {
-        const copy = new Date(date);
-        copy.setHours(0, 0, 0, 0);
-        return copy;
-    }
-
-    function endOfDay(date) {
-        const copy = new Date(date);
-        copy.setHours(23, 59, 59, 999);
-        return copy;
-    }
+    function startOfDay(date) { const copy = new Date(date); copy.setHours(0, 0, 0, 0); return copy; }
+    function endOfDay(date) { const copy = new Date(date); copy.setHours(23, 59, 59, 999); return copy; }
 
     function resolveRange() {
         const select = document.getElementById("report-range");
@@ -50,17 +41,10 @@
         else if (value === "custom") {
             from = fromInput && fromInput.value ? startOfDay(new Date(fromInput.value + "T00:00:00")) : null;
             to = toInput && toInput.value ? endOfDay(new Date(toInput.value + "T00:00:00")) : null;
-        } else {
-            to = null;
-        }
+        } else to = null;
 
         const valid = !(from && to && from > to);
-        return {
-            from,
-            to,
-            valid,
-            message: valid ? "" : "Từ ngày không được lớn hơn Đến ngày."
-        };
+        return { from, to, valid, message: valid ? "" : "Từ ngày không được lớn hơn Đến ngày." };
     }
 
     function filterTicketsByRange(tickets, range) {
@@ -82,9 +66,7 @@
         }, {});
     }
 
-    function percent(part, total) {
-        return total ? Math.round((part / total) * 100) + "%" : "0%";
-    }
+    function percent(part, total) { return total ? Math.round((part / total) * 100) + "%" : "0%"; }
 
     function averageResolutionHours(tickets) {
         const values = tickets.map(function (ticket) {
@@ -108,13 +90,35 @@
         container.replaceChildren();
         const entries = Object.entries(counts).sort(function (a, b) { return b[1] - a[1]; });
         if (!entries.length) {
-            const p = document.createElement("p"); p.textContent = "Không có dữ liệu."; container.appendChild(p); return;
+            const p = document.createElement("p");
+            p.className = "ui-form-note";
+            p.textContent = "Không có dữ liệu trong khoảng thời gian này.";
+            container.appendChild(p);
+            return;
         }
+
+        const total = entries.reduce(function (sum, entry) { return sum + entry[1]; }, 0) || 1;
         entries.forEach(function (entry) {
-            const row = document.createElement("div"); row.className = "report-category-item";
-            const label = document.createElement("span"); label.textContent = labels[entry[0]] || entry[0];
-            const value = document.createElement("strong"); value.textContent = String(entry[1]);
-            row.append(label, value); container.appendChild(row);
+            const row = document.createElement("div");
+            row.className = "report-bar-item";
+
+            const top = document.createElement("div");
+            top.className = "report-bar-item__top";
+            const label = document.createElement("span");
+            label.textContent = labels[entry[0]] || entry[0];
+            const value = document.createElement("strong");
+            value.textContent = entry[1] + " · " + Math.round((entry[1] / total) * 100) + "%";
+            top.append(label, value);
+
+            const track = document.createElement("div");
+            track.className = "report-bar-item__track";
+            const fill = document.createElement("span");
+            fill.className = "report-bar-item__fill";
+            fill.style.width = Math.max(4, Math.round((entry[1] / total) * 100)) + "%";
+            track.appendChild(fill);
+
+            row.append(top, track);
+            container.appendChild(row);
         });
     }
 
@@ -172,19 +176,13 @@
         renderDistribution("report-category-list", countBy(tickets, "category"), CATEGORY_LABELS);
         renderDeviceReport(devices, network);
         renderPerformance(tickets, users);
-
         return { tickets, devices, network, users, range };
     }
 
     function applyFilters() {
         const range = resolveRange();
-        if (!range.valid) {
-            notify(range.message, "error");
-            return false;
-        }
-        render();
-        notify("Đã áp dụng bộ lọc báo cáo.", "success");
-        return true;
+        if (!range.valid) { notify(range.message, "error"); return false; }
+        render(); notify("Đã áp dụng bộ lọc báo cáo.", "success"); return true;
     }
 
     function resetFilters() {
@@ -194,8 +192,7 @@
         if (range) range.value = "all";
         if (from) from.value = "";
         if (to) to.value = "";
-        render();
-        notify("Đã đặt lại bộ lọc báo cáo.", "info");
+        render(); notify("Đã đặt lại bộ lọc báo cáo.", "info");
     }
 
     function protectSpreadsheetFormula(value) {
@@ -203,18 +200,11 @@
         return /^[\t\r ]*[=+\-@]/.test(text) ? "'" + text : text;
     }
 
-    function escapeCsv(value) {
-        const text = protectSpreadsheetFormula(value);
-        return '"' + text.replace(/"/g, '""') + '"';
-    }
+    function escapeCsv(value) { const text = protectSpreadsheetFormula(value); return '"' + text.replace(/"/g, '""') + '"'; }
 
     function exportCsv() {
         const range = resolveRange();
-        if (!range.valid) {
-            notify(range.message, "error");
-            return false;
-        }
-
+        if (!range.valid) { notify(range.message, "error"); return false; }
         const data = render();
         const rows = [["Mã phiếu", "Tiêu đề", "Danh mục", "Ưu tiên", "Trạng thái", "Người yêu cầu", "Người phụ trách", "Ngày tạo", "Ngày giải quyết"]];
         data.tickets.forEach(function (ticket) {
@@ -239,19 +229,16 @@
         document.getElementById("report-reset")?.addEventListener("click", resetFilters);
         document.getElementById("report-export")?.addEventListener("click", exportCsv);
         document.getElementById("report-print")?.addEventListener("click", function () { window.print(); });
+        document.getElementById("report-range")?.addEventListener("change", function () {
+            const custom = this.value === "custom";
+            document.getElementById("report-from").disabled = !custom;
+            document.getElementById("report-to").disabled = !custom;
+        });
+        const range = document.getElementById("report-range");
+        if (range) range.dispatchEvent(new Event("change"));
         render();
     }
 
-    window.ReportsModule = {
-        render,
-        applyFilters,
-        exportCsv,
-        resetFilters,
-        resolveRange,
-        filterTicketsByRange,
-        averageResolutionHours,
-        protectSpreadsheetFormula,
-        escapeCsv
-    };
+    window.ReportsModule = { render, applyFilters, exportCsv, resetFilters, resolveRange, filterTicketsByRange, averageResolutionHours, protectSpreadsheetFormula, escapeCsv };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
