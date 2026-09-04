@@ -1,4 +1,4 @@
-﻿const PERMISSIONS = {
+const PERMISSIONS = {
     DASHBOARD: "dashboard",
     TICKETS: "tickets",
     TICKET_DETAIL: "ticket_detail",
@@ -91,6 +91,7 @@ function getAllowedPermissions() {
 
     return [...ROLES[role].permissions];
 }
+
 window.AppPermissions = {
     PERMISSIONS,
     ROLES,
