@@ -6,164 +6,34 @@
   <title>Cài đặt | Cổng IT Support</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true">
+  <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true">
 </head>
 <body>
   <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng">
-
   <div class="layout">
     <aside class="sidebar" aria-label="Điều hướng chính">
-      <div class="sidebar__brand">
-        <div class="sidebar__logo">IT</div>
-        <div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div>
-      </div>
-
-      <nav class="sidebar__nav" aria-label="Menu bên">
-        <ul>
-          <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
-          <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
-          <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
-          <li><a href="users.html" data-permission="users">Người dùng</a></li>
-          <li><a href="network.html" data-permission="network">Mạng</a></li>
-          <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
-          <li><a href="settings.html" data-permission="settings" class="active" aria-current="page">Cài đặt</a></li>
-        </ul>
-      </nav>
-
+      <div class="sidebar__brand"><div class="sidebar__logo">IT</div><div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div></div>
+      <nav class="sidebar__nav" aria-label="Menu bên"><ul>
+        <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li><li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li><li><a href="devices.html" data-permission="devices">Thiết bị</a></li><li><a href="users.html" data-permission="users">Người dùng</a></li><li><a href="network.html" data-permission="network">Mạng</a></li><li><a href="reports.html" data-permission="reports">Báo cáo</a></li><li><a href="settings.html" data-permission="settings" class="active" aria-current="page">Cài đặt</a></li>
+      </ul></nav>
       <div class="sidebar__footer"><button class="sidebar__logout" type="button">Đăng xuất</button></div>
     </aside>
-
     <div class="workspace">
-      <header class="topbar">
-        <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
-        <div class="topbar__heading">
-          <p class="topbar__eyebrow">Tài khoản, hệ thống và tùy chọn cá nhân</p>
-          <h1>Cài đặt</h1>
-        </div>
-        <div class="topbar__profile">
-          <div class="profile__avatar" data-user-avatar></div>
-          <div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div>
-        </div>
-      </header>
-
+      <header class="topbar"><label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label><div class="topbar__heading"><p class="topbar__eyebrow">Tài khoản, hệ thống và tùy chọn cá nhân</p><h1>Cài đặt</h1></div><div class="topbar__profile"><div class="profile__avatar" data-user-avatar></div><div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div></div></header>
       <main class="content" id="main-content">
-        <section class="page-header tickets__hero">
-          <div>
-            <p class="topbar__eyebrow">Xem nhanh thông tin hiện tại, chỉ mở popup khi cần chỉnh sửa.</p>
-            <h2>Thiết lập hệ thống</h2>
-          </div>
-        </section>
-
+        <section class="page-header tickets__hero"><div><p class="topbar__eyebrow">Xem nhanh thông tin hiện tại, chỉ mở cửa sổ chỉnh sửa khi cần.</p><h2>Thiết lập hệ thống</h2></div></section>
         <section class="settings-overview" aria-label="Tổng quan cài đặt">
-          <article class="settings-card">
-            <div class="settings-card__header">
-              <div>
-                <h3>Tài khoản</h3>
-                <p>Thông tin tài khoản đang đăng nhập.</p>
-              </div>
-              <button class="button button--ghost" type="button" data-settings-action="edit-account">Chỉnh sửa</button>
-            </div>
-            <div class="settings-kv">
-              <div class="settings-kv__item"><span class="settings-kv__label">Tên hiển thị</span><strong class="settings-kv__value" data-settings="account-name">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">Email</span><strong class="settings-kv__value" data-settings="account-email">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">Vai trò</span><strong class="settings-kv__value" data-settings="account-role">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">Trạng thái</span><strong class="settings-kv__value">Đang hoạt động</strong></div>
-            </div>
-          </article>
-
-          <article class="settings-card">
-            <div class="settings-card__header">
-              <div>
-                <h3>Thiết lập hệ thống</h3>
-                <p id="system-settings-note">Thông số mặc định cho cổng IT Support.</p>
-              </div>
-              <button class="button button--ghost" id="edit-system-settings" type="button" data-settings-action="edit-system">Chỉnh sửa</button>
-            </div>
-            <div class="settings-kv">
-              <div class="settings-kv__item"><span class="settings-kv__label">Tên công ty</span><strong class="settings-kv__value" data-settings="company-name">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">Múi giờ</span><strong class="settings-kv__value" data-settings="timezone">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">Ưu tiên mặc định</span><strong class="settings-kv__value" data-settings="default-priority">-</strong></div>
-              <div class="settings-kv__item"><span class="settings-kv__label">SLA mặc định</span><strong class="settings-kv__value" data-settings="sla-hours">-</strong></div>
-            </div>
-          </article>
-
-          <article class="settings-card settings-card--wide">
-            <div class="settings-card__header">
-              <div>
-                <h3>Tùy chọn cá nhân</h3>
-                <p>Giao diện và thông báo được lưu riêng theo tài khoản.</p>
-              </div>
-              <button class="button button--ghost" type="button" data-settings-action="edit-preferences">Chỉnh sửa</button>
-            </div>
-            <div class="settings-preference-list">
-              <div class="settings-preference-chip"><span>Giao diện</span><strong data-settings="theme">-</strong></div>
-              <div class="settings-preference-chip"><span>Phiếu mới</span><strong data-settings="notify-new">-</strong></div>
-              <div class="settings-preference-chip"><span>Được phân công</span><strong data-settings="notify-assigned">-</strong></div>
-              <div class="settings-preference-chip"><span>Email</span><strong data-settings="notify-email">-</strong></div>
-            </div>
-          </article>
-
-          <article class="settings-card settings-card--wide">
-            <div class="settings-card__header">
-              <div>
-                <h3>Phiên đăng nhập và giới hạn frontend</h3>
-                <p>Thông tin kỹ thuật của bản demo hiện tại.</p>
-              </div>
-            </div>
-            <div class="settings-session-grid">
-              <div><span class="settings-kv__label">Lưu trữ phiên</span><strong>LocalStorage</strong></div>
-              <div><span class="settings-kv__label">Xác thực</span><strong>Demo account</strong></div>
-              <div><span class="settings-kv__label">Backend session</span><strong>Chưa triển khai</strong></div>
-            </div>
-            <p class="ui-form-note">Đổi mật khẩu, xóa tài khoản và đăng xuất nhiều thiết bị sẽ được triển khai ở giai đoạn backend/database thay vì giả lập bằng nút không có tác dụng.</p>
-          </article>
+          <article class="settings-card"><div class="settings-card__header"><div><h3>Tài khoản</h3><p>Thông tin tài khoản đang đăng nhập.</p></div><button class="button button--ghost" type="button" data-settings-action="edit-account">Chỉnh sửa</button></div><div class="settings-kv"><div class="settings-kv__item"><span class="settings-kv__label">Tên hiển thị</span><strong class="settings-kv__value" data-settings="account-name">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">Email</span><strong class="settings-kv__value" data-settings="account-email">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">Vai trò</span><strong class="settings-kv__value" data-settings="account-role">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">Trạng thái</span><strong class="settings-kv__value">Đang hoạt động</strong></div></div></article>
+          <article class="settings-card"><div class="settings-card__header"><div><h3>Thiết lập hệ thống</h3><p id="system-settings-note">Thông số mặc định cho cổng IT Support.</p></div><button class="button button--ghost" id="edit-system-settings" type="button" data-settings-action="edit-system">Chỉnh sửa</button></div><div class="settings-kv"><div class="settings-kv__item"><span class="settings-kv__label">Tên công ty</span><strong class="settings-kv__value" data-settings="company-name">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">Múi giờ</span><strong class="settings-kv__value" data-settings="timezone">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">Ưu tiên mặc định</span><strong class="settings-kv__value" data-settings="default-priority">-</strong></div><div class="settings-kv__item"><span class="settings-kv__label">SLA mặc định</span><strong class="settings-kv__value" data-settings="sla-hours">-</strong></div></div></article>
+          <article class="settings-card settings-card--wide"><div class="settings-card__header"><div><h3>Tùy chọn cá nhân</h3><p>Giao diện và thông báo được lưu riêng theo tài khoản.</p></div><button class="button button--ghost" type="button" data-settings-action="edit-preferences">Chỉnh sửa</button></div><div class="settings-preference-list"><div class="settings-preference-chip"><span>Giao diện</span><strong data-settings="theme">-</strong></div><div class="settings-preference-chip"><span>Phiếu mới</span><strong data-settings="notify-new">-</strong></div><div class="settings-preference-chip"><span>Được phân công</span><strong data-settings="notify-assigned">-</strong></div><div class="settings-preference-chip"><span>Email</span><strong data-settings="notify-email">-</strong></div></div></article>
+          <article class="settings-card settings-card--wide"><div class="settings-card__header"><div><h3>Phiên đăng nhập và giới hạn frontend</h3><p>Thông tin kỹ thuật của bản demo hiện tại.</p></div></div><div class="settings-session-grid"><div><span class="settings-kv__label">Lưu trữ phiên</span><strong>LocalStorage</strong></div><div><span class="settings-kv__label">Xác thực</span><strong>Tài khoản demo</strong></div><div><span class="settings-kv__label">Phiên backend</span><strong>Chưa triển khai</strong></div></div><p class="ui-form-note">Đổi mật khẩu, xóa tài khoản và đăng xuất nhiều thiết bị sẽ được triển khai ở giai đoạn backend và cơ sở dữ liệu, thay vì giả lập bằng nút không có tác dụng.</p></article>
         </section>
       </main>
     </div>
   </div>
-
-  <template id="account-settings-template">
-    <form id="account-form" class="ui-form-grid">
-      <div class="ui-field"><label for="account-name">Tên hiển thị</label><input id="account-name" type="text" maxlength="100" required></div>
-      <div class="ui-field"><label for="account-email">Email</label><input id="account-email" type="email" readonly></div>
-      <div class="ui-field ui-field--full"><p class="ui-form-note">Email và vai trò được giữ cố định trong bản frontend để bảo toàn liên kết ticket/device.</p></div>
-      <p class="ui-form-error ui-field--full" id="account-form-error" hidden></p>
-      <div class="ui-modal__actions ui-field--full"><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu tài khoản</button></div>
-    </form>
-  </template>
-
-  <template id="system-settings-template">
-    <form id="system-settings-form" class="ui-form-grid">
-      <div class="ui-field ui-field--full"><label for="company-name">Tên công ty</label><input id="company-name" type="text" maxlength="120" required></div>
-      <div class="ui-field"><label for="timezone">Múi giờ</label><select id="timezone"><option value="Asia/Ho_Chi_Minh">UTC+7 - Việt Nam</option><option value="UTC">UTC+0</option></select></div>
-      <div class="ui-field"><label for="language">Ngôn ngữ</label><select id="language"><option value="vi">Tiếng Việt</option></select></div>
-      <div class="ui-field"><label for="default-priority">Ưu tiên mặc định</label><select id="default-priority"><option value="low">Thấp</option><option value="medium">Trung bình</option><option value="high">Cao</option><option value="critical">Khẩn cấp</option></select></div>
-      <div class="ui-field"><label for="sla-hours">SLA mặc định (giờ)</label><input id="sla-hours" type="number" min="1" max="168" step="1" required></div>
-      <p class="ui-form-error ui-field--full" id="system-form-error" hidden></p>
-      <div class="ui-modal__actions ui-field--full"><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu thiết lập</button></div>
-    </form>
-  </template>
-
-  <template id="preference-settings-template">
-    <form id="preference-form" class="ui-form-grid">
-      <div class="ui-field"><label for="theme">Giao diện</label><select id="theme" name="theme"><option value="light">Chế độ sáng</option><option value="dark">Chế độ tối</option></select></div>
-      <div class="ui-field"><label>Tùy chọn thông báo</label><p class="ui-form-note">Chọn các loại sự kiện cần theo dõi.</p></div>
-      <label class="settings-preference-chip"><input id="notify-new-ticket" type="checkbox"> Nhận thông báo khi có phiếu mới</label>
-      <label class="settings-preference-chip"><input id="notify-assigned" type="checkbox"> Nhận thông báo khi được phân công</label>
-      <label class="settings-preference-chip"><input id="notify-updated" type="checkbox"> Nhận thông báo khi phiếu được cập nhật</label>
-      <label class="settings-preference-chip"><input id="notify-email" type="checkbox"> Ưu tiên nhận thông báo qua email</label>
-      <p class="ui-form-error ui-field--full" id="preference-form-error" hidden></p>
-      <div class="ui-modal__actions ui-field--full"><button class="button button--ghost" id="reset-user-settings" type="button">Đặt lại mặc định</button><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu tùy chọn</button></div>
-    </form>
-  </template>
-
-  <script src="../data/seed-data.js"></script>
-  <script src="../js/storage.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/permissions.js"></script>
-  <script src="../js/guard.js"></script>
-  <script src="../js/profile.js"></script>
-  <script src="../js/menu.js"></script>
-  <script src="../js/users.js"></script>
-  <script src="../js/settings.js"></script>
+  <template id="account-settings-template"><form id="account-form" class="ui-form-grid"><div class="ui-field"><label for="account-name">Tên hiển thị</label><input id="account-name" type="text" maxlength="100" required></div><div class="ui-field"><label for="account-email">Email</label><input id="account-email" type="email" readonly></div><div class="ui-field ui-field--full"><p class="ui-form-note">Email và vai trò được giữ cố định trong bản frontend để bảo toàn liên kết phiếu hỗ trợ và thiết bị.</p></div><p class="ui-form-error ui-field--full" id="account-form-error" hidden></p><div class="ui-modal__actions ui-field--full"><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu tài khoản</button></div></form></template>
+  <template id="system-settings-template"><form id="system-settings-form" class="ui-form-grid"><div class="ui-field ui-field--full"><label for="company-name">Tên công ty</label><input id="company-name" type="text" maxlength="120" required></div><div class="ui-field"><label for="timezone">Múi giờ</label><select id="timezone"><option value="Asia/Ho_Chi_Minh">UTC+7 - Việt Nam</option><option value="UTC">UTC+0</option></select></div><div class="ui-field"><label for="language">Ngôn ngữ</label><select id="language"><option value="vi">Tiếng Việt</option></select></div><div class="ui-field"><label for="default-priority">Ưu tiên mặc định</label><select id="default-priority"><option value="low">Thấp</option><option value="medium">Trung bình</option><option value="high">Cao</option><option value="critical">Khẩn cấp</option></select></div><div class="ui-field"><label for="sla-hours">SLA mặc định (giờ)</label><input id="sla-hours" type="number" min="1" max="168" step="1" required></div><p class="ui-form-error ui-field--full" id="system-form-error" hidden></p><div class="ui-modal__actions ui-field--full"><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu thiết lập</button></div></form></template>
+  <template id="preference-settings-template"><form id="preference-form" class="ui-form-grid"><div class="ui-field"><label for="theme">Giao diện</label><select id="theme" name="theme"><option value="light">Chế độ sáng</option><option value="dark">Chế độ tối</option></select></div><div class="ui-field"><label>Tùy chọn thông báo</label><p class="ui-form-note">Chọn các loại sự kiện cần theo dõi.</p></div><label class="settings-preference-chip"><input id="notify-new-ticket" type="checkbox"> Nhận thông báo khi có phiếu mới</label><label class="settings-preference-chip"><input id="notify-assigned" type="checkbox"> Nhận thông báo khi được phân công</label><label class="settings-preference-chip"><input id="notify-updated" type="checkbox"> Nhận thông báo khi phiếu được cập nhật</label><label class="settings-preference-chip"><input id="notify-email" type="checkbox"> Ưu tiên nhận thông báo qua email</label><p class="ui-form-error ui-field--full" id="preference-form-error" hidden></p><div class="ui-modal__actions ui-field--full"><button class="button button--ghost" id="reset-user-settings" type="button">Đặt lại mặc định</button><button class="button button--ghost" type="button" data-modal-cancel>Hủy</button><button class="button button--primary" type="submit">Lưu tùy chọn</button></div></form></template>
+  <script src="../data/seed-data.js"></script><script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/permissions.js"></script><script src="../js/guard.js"></script><script src="../js/profile.js"></script><script src="../js/menu.js"></script><script src="../js/users.js"></script><script src="../js/settings.js"></script>
 </body>
 </html>
