@@ -404,9 +404,9 @@
         return summary;
     }
 
-    function createActionButton(label, action, id) {
+    function createActionButton(label, action, id, modifier) {
         const button = document.createElement("button");
-        button.className = "button button--ghost";
+        button.className = "action-btn action-btn--" + modifier;
         button.type = "button";
         button.textContent = label;
         button.dataset.action = action;
@@ -463,13 +463,16 @@
             row.appendChild(purchaseCell);
 
             const actionCell = document.createElement("td");
-            actionCell.appendChild(createActionButton("Xem", "view-device", device.id));
+            const actionGroup = document.createElement("div");
+            actionGroup.className = "table-actions";
+            actionGroup.appendChild(createActionButton("Xem", "view-device", device.id, "view"));
             if (canManageDevices()) {
-                actionCell.appendChild(createActionButton("Chỉnh sửa", "edit-device", device.id));
+                actionGroup.appendChild(createActionButton("Chỉnh sửa", "edit-device", device.id, "edit"));
             }
             if (canDeleteDevices()) {
-                actionCell.appendChild(createActionButton("Xóa", "delete-device", device.id));
+                actionGroup.appendChild(createActionButton("Xóa", "delete-device", device.id, "delete"));
             }
+            actionCell.appendChild(actionGroup);
             row.appendChild(actionCell);
 
             fragment.appendChild(row);

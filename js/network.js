@@ -265,9 +265,9 @@
         return summary;
     }
 
-    function createActionButton(label, action, id) {
+    function createActionButton(label, action, id, modifier) {
         const button = document.createElement("button");
-        button.className = "button button--ghost";
+        button.className = "action-btn action-btn--" + modifier;
         button.type = "button";
         button.textContent = label;
         button.dataset.action = action;
@@ -297,9 +297,12 @@
             statusCell.appendChild(badge); row.appendChild(statusCell);
             const uptimeCell = document.createElement("td"); uptimeCell.textContent = formatUptime(device.uptimeHours); row.appendChild(uptimeCell);
             const actionCell = document.createElement("td");
-            actionCell.appendChild(createActionButton("Xem", "view-network", device.id));
-            if (canManageNetwork()) actionCell.appendChild(createActionButton("Chỉnh sửa", "edit-network", device.id));
-            if (canDeleteNetwork()) actionCell.appendChild(createActionButton("Xóa", "delete-network", device.id));
+            const actionGroup = document.createElement("div");
+            actionGroup.className = "table-actions";
+            actionGroup.appendChild(createActionButton("Xem", "view-network", device.id, "view"));
+            if (canManageNetwork()) actionGroup.appendChild(createActionButton("Chỉnh sửa", "edit-network", device.id, "edit"));
+            if (canDeleteNetwork()) actionGroup.appendChild(createActionButton("Xóa", "delete-network", device.id, "delete"));
+            actionCell.appendChild(actionGroup);
             row.appendChild(actionCell); fragment.appendChild(row);
         });
         tbody.appendChild(fragment);

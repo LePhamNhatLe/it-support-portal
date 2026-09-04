@@ -45,7 +45,7 @@
 
     const CATEGORY_LABELS = {
         hardware: "Phần cứng",
-        software: "Phần mềm",
+        software: "Phần mềm & Ứng dụng",
         network: "Mạng",
         account: "Tài khoản",
         printer: "Máy in",
@@ -301,11 +301,14 @@
 
     function createActionCell(ticketId) {
         const cell = document.createElement("td");
+        const actionGroup = document.createElement("div");
+        actionGroup.className = "table-actions";
         const link = document.createElement("a");
-        link.className = "button button--ghost";
+        link.className = "action-btn action-btn--view";
         link.href = "ticket-detail.html?id=" + encodeURIComponent(ticketId);
         link.textContent = "Xem";
-        cell.appendChild(link);
+        actionGroup.appendChild(link);
+        cell.appendChild(actionGroup);
         return cell;
     }
 

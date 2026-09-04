@@ -314,9 +314,9 @@
         };
     }
 
-    function createActionButton(label, action, id) {
+    function createActionButton(label, action, id, modifier) {
         const button = document.createElement("button");
-        button.className = "button button--ghost";
+        button.className = "action-btn action-btn--" + modifier;
         button.type = "button";
         button.textContent = label;
         button.dataset.action = action;
@@ -352,12 +352,15 @@
             createdCell.textContent = formatDate(user.createdAt);
             row.appendChild(createdCell);
             const actionCell = document.createElement("td");
-            actionCell.appendChild(createActionButton("Xem", "view-user", user.id));
+            const actionGroup = document.createElement("div");
+            actionGroup.className = "table-actions";
+            actionGroup.appendChild(createActionButton("Xem", "view-user", user.id, "view"));
             if (canManageUsers()) {
-                actionCell.appendChild(createActionButton("Chỉnh sửa", "edit-user", user.id));
-                actionCell.appendChild(createActionButton(user.status === "locked" ? "Mở khóa" : "Khóa", user.status === "locked" ? "unlock-user" : "lock-user", user.id));
-                actionCell.appendChild(createActionButton("Xóa", "delete-user", user.id));
+                actionGroup.appendChild(createActionButton("Chỉnh sửa", "edit-user", user.id, "edit"));
+                actionGroup.appendChild(createActionButton(user.status === "locked" ? "Mở khóa" : "Khóa", user.status === "locked" ? "unlock-user" : "lock-user", user.id, "edit"));
+                actionGroup.appendChild(createActionButton("Xóa", "delete-user", user.id, "delete"));
             }
+            actionCell.appendChild(actionGroup);
             row.appendChild(actionCell);
             fragment.appendChild(row);
         });
