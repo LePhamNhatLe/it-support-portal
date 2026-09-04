@@ -7,20 +7,6 @@
     return ".." + path;
   }
 
-  function loadStyleOnce(href, dataAttribute) {
-    if (document.querySelector('link[' + dataAttribute + '="true"]')) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    link.setAttribute(dataAttribute, "true");
-    document.head.appendChild(link);
-  }
-
-  function loadPolishStyles() {
-    loadStyleOnce(resolveAsset("/css/polish.css"), "data-ui-polish");
-    loadStyleOnce(resolveAsset("/css/global-surface.css"), "data-global-surface");
-  }
-
   function loadPanelModalAdapter() {
     if (document.querySelector('script[data-panel-modal-adapter="true"]')) return;
     const script = document.createElement("script");
@@ -115,7 +101,7 @@
     const closeButton = document.createElement("button");
     closeButton.type = "button";
     closeButton.className = "ui-modal__close";
-    closeButton.setAttribute("aria-label", "Đóng popup");
+    closeButton.setAttribute("aria-label", "Đóng cửa sổ");
     closeButton.textContent = "×";
     header.append(heading, closeButton);
 
@@ -187,7 +173,10 @@
       content.append(message, actions);
 
       let controller = null;
+      let settled = false;
       function finish(value) {
+        if (settled) return;
+        settled = true;
         if (controller) controller.close();
         resolve(value);
       }
@@ -199,7 +188,12 @@
         title: String(settings.title || "Xác nhận thao tác"),
         content,
         size: "sm",
-        onClose: function () { resolve(false); }
+        onClose: function () {
+          if (!settled) {
+            settled = true;
+            resolve(false);
+          }
+        }
       });
       confirmButton.focus();
     });
@@ -231,8 +225,6 @@
       if (event.key === "Escape" && toggle.checked) closeSidebar();
     });
   }
-
-  loadPolishStyles();
 
   window.AppUI = {
     notify,
