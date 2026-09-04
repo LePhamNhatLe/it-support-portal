@@ -3,276 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chi tiết yêu cầu | Cổng IT Support</title>
+    <title>Chi tiết phiếu hỗ trợ | Cổng IT Support</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
-
     <div class="layout">
       <aside class="sidebar" aria-label="Điều hướng chính">
-        <div class="sidebar__brand">
-          <div class="sidebar__logo">IT</div>
-          <div>
-            <p class="sidebar__product">IT Support</p>
-            <span class="sidebar__subtitle">Portal</span>
-          </div>
-        </div>
-
-        <nav class="sidebar__nav" aria-label="Menu bên">
-          <ul>
-            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
-            <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
-            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
-            <li><a href="users.html" data-permission="users">Người dùng</a></li>
-            <li><a href="network.html" data-permission="network">Mạng</a></li>
-            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
-            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
-          </ul>
-        </nav>
-
-        <div class="sidebar__footer">
-          <button class="sidebar__logout" type="button">Đăng xuất</button>
-        </div>
+        <div class="sidebar__brand"><div class="sidebar__logo">IT</div><div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div></div>
+        <nav class="sidebar__nav" aria-label="Menu bên"><ul><li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li><li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li><li><a href="devices.html" data-permission="devices">Thiết bị</a></li><li><a href="users.html" data-permission="users">Người dùng</a></li><li><a href="network.html" data-permission="network">Mạng</a></li><li><a href="reports.html" data-permission="reports">Báo cáo</a></li><li><a href="settings.html" data-permission="settings">Cài đặt</a></li></ul></nav>
+        <div class="sidebar__footer"><button class="sidebar__logout" type="button">Đăng xuất</button></div>
       </aside>
-
       <div class="workspace">
-        <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-
-          <div class="topbar__heading">
-            <p class="topbar__eyebrow">Chi tiết yêu cầu</p>
-            <h1>Yêu cầu hỗ trợ</h1>
-          </div>
-
-          <div class="topbar__profile">
-            <div class="profile__avatar" data-user-avatar></div>
-            <div class="profile__info">
-              <span class="profile__name" data-user-name></span>
-              <span class="profile__role" data-user-role></span>
-            </div>
-          </div>
-        </header>
-
+        <header class="topbar"><label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label><div class="topbar__heading"><p class="topbar__eyebrow">Chi tiết phiếu</p><h1>Phiếu hỗ trợ</h1></div><div class="topbar__profile"><div class="profile__avatar" data-user-avatar></div><div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div></div></header>
         <main class="content" id="main-content">
-          <p id="ticket-detail-state" role="alert" hidden></p>
-          <p id="ticket-action-feedback" role="status" hidden></p>
-
-          <section class="detail__header" data-ticket-content>
-            <div class="detail__header-left">
-              <a href="tickets.html" class="button button--ghost">Quay lại danh sách</a>
-              <div class="detail__meta">
-                <p class="detail__code">Mã yêu cầu: <strong data-ticket-id></strong></p>
-                <h2 data-ticket-title></h2>
-                <div class="detail__labels">
-                  <span class="status-badge" data-ticket-status></span>
-                  <span class="badge" data-ticket-priority></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="detail__actions">
-              <button class="button button--ghost" type="button" data-action="edit-ticket">Chỉnh sửa</button>
-              <button class="button button--ghost" type="button" data-action="assign-ticket">Phân công</button>
-              <button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button>
-            </div>
-          </section>
-
-          <section class="content__panel" id="edit-ticket-panel" hidden>
-            <div class="panel__header">
-              <h2>Chỉnh sửa phiếu</h2>
-              <p>Chỉ các trường nghiệp vụ được phép mới có thể thay đổi.</p>
-            </div>
-            <form id="edit-ticket-form">
-              <div class="tickets__filters">
-                <div class="tickets__filter">
-                  <label for="edit-ticket-title">Tiêu đề</label>
-                  <input id="edit-ticket-title" name="title" type="text" maxlength="120" required />
-                </div>
-                <div class="tickets__filter">
-                  <label for="edit-ticket-category">Danh mục</label>
-                  <select id="edit-ticket-category" name="category" required>
-                    <option value="hardware">Phần cứng</option>
-                    <option value="software">Phần mềm</option>
-                    <option value="network">Mạng</option>
-                    <option value="account">Tài khoản</option>
-                    <option value="printer">Máy in</option>
-                    <option value="other">Khác</option>
-                  </select>
-                </div>
-                <div class="tickets__filter">
-                  <label for="edit-ticket-priority">Ưu tiên</label>
-                  <select id="edit-ticket-priority" name="priority" required>
-                    <option value="low">Thấp</option>
-                    <option value="medium">Trung bình</option>
-                    <option value="high">Cao</option>
-                    <option value="critical">Khẩn cấp</option>
-                  </select>
-                </div>
-                <div class="tickets__filter">
-                  <label for="edit-ticket-device">Mã thiết bị</label>
-                  <input id="edit-ticket-device" name="deviceId" type="text" placeholder="Không bắt buộc" />
-                </div>
-              </div>
-              <div class="tickets__filter">
-                <label for="edit-ticket-description">Mô tả</label>
-                <textarea id="edit-ticket-description" name="description" rows="5" maxlength="1000" required></textarea>
-              </div>
-              <div class="detail__actions-row">
-                <button class="button button--primary" type="submit">Lưu thay đổi</button>
-                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
-              </div>
-            </form>
-          </section>
-
-          <section class="content__panel" id="assign-ticket-panel" hidden>
-            <div class="panel__header">
-              <h2>Phân công kỹ thuật viên</h2>
-              <p>Nhập email của tài khoản kỹ thuật đang hoạt động.</p>
-            </div>
-            <form id="assign-ticket-form">
-              <div class="tickets__filter">
-                <label for="assign-ticket-email">Email người phụ trách</label>
-                <input id="assign-ticket-email" name="assigneeEmail" type="email" placeholder="technician@itsupport.local" required />
-              </div>
-              <div class="detail__actions-row">
-                <button class="button button--primary" type="submit">Lưu phân công</button>
-                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
-              </div>
-            </form>
-          </section>
-
-          <section class="content__panel" id="status-ticket-panel" hidden>
-            <div class="panel__header">
-              <h2>Thay đổi trạng thái</h2>
-              <p>Chỉ hiển thị các trạng thái tiếp theo hợp lệ với tài khoản hiện tại.</p>
-            </div>
-            <form id="status-ticket-form">
-              <div class="tickets__filter">
-                <label for="status-ticket-value">Trạng thái tiếp theo</label>
-                <select id="status-ticket-value" name="status" required></select>
-              </div>
-              <div class="detail__actions-row">
-                <button class="button button--primary" type="submit">Cập nhật trạng thái</button>
-                <button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button>
-              </div>
-            </form>
-          </section>
-
-          <section class="detail__info-grid" data-ticket-content>
-            <article class="dashboard__panel detail__section">
-              <div class="panel__header">
-                <h2>Thông tin yêu cầu</h2>
-              </div>
-              <div class="detail__fields">
-                <div>
-                  <p class="detail__label">Người yêu cầu</p>
-                  <p class="detail__value" data-ticket-requester-name></p>
-                </div>
-                <div>
-                  <p class="detail__label">Email</p>
-                  <p class="detail__value" data-ticket-requester-email></p>
-                </div>
-                <div>
-                  <p class="detail__label">Phòng ban</p>
-                  <p class="detail__value" data-ticket-department></p>
-                </div>
-                <div>
-                  <p class="detail__label">Danh mục</p>
-                  <p class="detail__value" data-ticket-category></p>
-                </div>
-                <div>
-                  <p class="detail__label">Thiết bị liên quan</p>
-                  <p class="detail__value" data-ticket-device></p>
-                </div>
-                <div>
-                  <p class="detail__label">Nhân viên xử lý</p>
-                  <p class="detail__value" data-ticket-assignee></p>
-                </div>
-                <div>
-                  <p class="detail__label">Ngày tạo</p>
-                  <p class="detail__value" data-ticket-created-at></p>
-                </div>
-                <div>
-                  <p class="detail__label">Cập nhật lần cuối</p>
-                  <p class="detail__value" data-ticket-updated-at></p>
-                </div>
-              </div>
-            </article>
-
-            <article class="dashboard__panel detail__section">
-              <div class="panel__header">
-                <h2>Mô tả vấn đề</h2>
-              </div>
-              <p class="detail__description" data-ticket-description></p>
-            </article>
-          </section>
-
-          <section class="detail__workflow detail__section" data-ticket-content>
-            <article class="dashboard__panel">
-              <div class="panel__header">
-                <h2>Khu vực xử lý</h2>
-              </div>
-
-              <div class="detail__workflow-grid">
-                <div>
-                  <p class="detail__label">Trạng thái xử lý</p>
-                  <p class="detail__value" data-ticket-workflow-status></p>
-                </div>
-                <div>
-                  <p class="detail__label">Nhân viên phụ trách</p>
-                  <p class="detail__value" data-ticket-workflow-assignee></p>
-                </div>
-                <div class="detail__note" data-work-note-control>
-                  <p class="detail__label">Ghi chú xử lý</p>
-                  <textarea id="ticket-work-note" placeholder="Nhập ghi chú xử lý..."></textarea>
-                </div>
-              </div>
-
-              <div class="detail__actions-row">
-                <button class="button button--ghost" type="button" data-action="add-work-note">Thêm ghi chú</button>
-                <button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button>
-              </div>
-            </article>
-          </section>
-
-          <section class="dashboard__panel detail__section" data-ticket-content>
-            <div class="panel__header">
-              <h2>Lịch sử xử lý</h2>
-            </div>
-            <div class="timeline" data-ticket-history></div>
-          </section>
-
-          <section class="dashboard__panel detail__section" data-ticket-content>
-            <div class="panel__header">
-              <h2>Bình luận</h2>
-            </div>
-            <div class="comments">
-              <div class="comments__input">
-                <textarea id="ticket-comment" placeholder="Nhập bình luận..."></textarea>
-                <button class="button button--primary" type="button" data-action="add-comment">Gửi bình luận</button>
-              </div>
-              <div data-ticket-comments-list></div>
-            </div>
-          </section>
+          <p id="ticket-detail-state" role="alert" hidden></p><p id="ticket-action-feedback" role="status" hidden></p>
+          <section class="detail__header" data-ticket-content><div class="detail__header-left"><a href="tickets.html" class="button button--ghost">Quay lại danh sách</a><div class="detail__meta"><p class="detail__code">Mã phiếu: <strong data-ticket-id></strong></p><h2 data-ticket-title></h2><div class="detail__labels"><span class="status-badge" data-ticket-status></span><span class="badge" data-ticket-priority></span></div></div></div><div class="detail__actions"><button class="button button--ghost" type="button" data-action="edit-ticket">Chỉnh sửa</button><button class="button button--ghost" type="button" data-action="assign-ticket">Phân công</button><button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button></div></section>
+          <section class="content__panel" id="edit-ticket-panel" hidden><div class="panel__header"><h2>Chỉnh sửa phiếu</h2><p>Chỉ các trường nghiệp vụ được phép mới có thể thay đổi.</p></div><form id="edit-ticket-form"><div class="tickets__filters"><div class="tickets__filter"><label for="edit-ticket-title">Tiêu đề</label><input id="edit-ticket-title" name="title" type="text" maxlength="120" required /></div><div class="tickets__filter"><label for="edit-ticket-category">Danh mục</label><select id="edit-ticket-category" name="category" required><option value="hardware">Phần cứng</option><option value="software">Phần mềm</option><option value="network">Mạng</option><option value="account">Tài khoản</option><option value="printer">Máy in</option><option value="other">Khác</option></select></div><div class="tickets__filter"><label for="edit-ticket-priority">Ưu tiên</label><select id="edit-ticket-priority" name="priority" required><option value="low">Thấp</option><option value="medium">Trung bình</option><option value="high">Cao</option><option value="critical">Khẩn cấp</option></select></div><div class="tickets__filter"><label for="edit-ticket-device">Mã thiết bị</label><input id="edit-ticket-device" name="deviceId" type="text" placeholder="Không bắt buộc" /></div></div><div class="tickets__filter"><label for="edit-ticket-description">Mô tả</label><textarea id="edit-ticket-description" name="description" rows="5" maxlength="1000" required></textarea></div><div class="detail__actions-row"><button class="button button--primary" type="submit">Lưu thay đổi</button><button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button></div></form></section>
+          <section class="content__panel" id="assign-ticket-panel" hidden><div class="panel__header"><h2>Phân công kỹ thuật viên</h2><p>Nhập email của tài khoản kỹ thuật đang hoạt động.</p></div><form id="assign-ticket-form"><div class="tickets__filter"><label for="assign-ticket-email">Email người phụ trách</label><input id="assign-ticket-email" name="assigneeEmail" type="email" placeholder="technician@itsupport.local" required /></div><div class="detail__actions-row"><button class="button button--primary" type="submit">Lưu phân công</button><button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button></div></form></section>
+          <section class="content__panel" id="status-ticket-panel" hidden><div class="panel__header"><h2>Thay đổi trạng thái</h2><p>Chỉ hiển thị các trạng thái tiếp theo hợp lệ với tài khoản hiện tại.</p></div><form id="status-ticket-form"><div class="tickets__filter"><label for="status-ticket-value">Trạng thái tiếp theo</label><select id="status-ticket-value" name="status" required></select></div><div class="detail__actions-row"><button class="button button--primary" type="submit">Cập nhật trạng thái</button><button class="button button--ghost" type="button" data-action="cancel-ticket-action">Hủy</button></div></form></section>
+          <section class="detail__info-grid" data-ticket-content><article class="dashboard__panel detail__section"><div class="panel__header"><h2>Thông tin phiếu</h2></div><div class="detail__fields"><div><p class="detail__label">Người yêu cầu</p><p class="detail__value" data-ticket-requester-name></p></div><div><p class="detail__label">Email</p><p class="detail__value" data-ticket-requester-email></p></div><div><p class="detail__label">Phòng ban</p><p class="detail__value" data-ticket-department></p></div><div><p class="detail__label">Danh mục</p><p class="detail__value" data-ticket-category></p></div><div><p class="detail__label">Thiết bị liên quan</p><p class="detail__value" data-ticket-device></p></div><div><p class="detail__label">Nhân viên xử lý</p><p class="detail__value" data-ticket-assignee></p></div><div><p class="detail__label">Ngày tạo</p><p class="detail__value" data-ticket-created-at></p></div><div><p class="detail__label">Cập nhật lần cuối</p><p class="detail__value" data-ticket-updated-at></p></div></div></article><article class="dashboard__panel detail__section"><div class="panel__header"><h2>Mô tả vấn đề</h2></div><p class="detail__description" data-ticket-description></p></article></section>
+          <section class="detail__workflow detail__section" data-ticket-content><article class="dashboard__panel"><div class="panel__header"><h2>Khu vực xử lý</h2></div><div class="detail__workflow-grid"><div><p class="detail__label">Trạng thái xử lý</p><p class="detail__value" data-ticket-workflow-status></p></div><div><p class="detail__label">Nhân viên phụ trách</p><p class="detail__value" data-ticket-workflow-assignee></p></div><div class="detail__note" data-work-note-control><p class="detail__label">Ghi chú xử lý</p><textarea id="ticket-work-note" placeholder="Nhập ghi chú xử lý..."></textarea></div></div><div class="detail__actions-row"><button class="button button--ghost" type="button" data-action="add-work-note">Thêm ghi chú</button><button class="button button--primary" type="button" data-action="change-ticket-status">Thay đổi trạng thái</button></div></article></section>
+          <section class="dashboard__panel detail__section" data-ticket-content><div class="panel__header"><h2>Lịch sử xử lý</h2></div><div class="timeline" data-ticket-history></div></section>
+          <section class="dashboard__panel detail__section" data-ticket-content><div class="panel__header"><h2>Bình luận</h2></div><div class="comments"><div class="comments__input"><textarea id="ticket-comment" placeholder="Nhập bình luận..."></textarea><button class="button button--primary" type="button" data-action="add-comment">Gửi bình luận</button></div><div data-ticket-comments-list></div></div></section>
         </main>
       </div>
     </div>
-    <script src="../data/seed-data.js"></script>
-    <script src="../js/storage.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/permissions.js"></script>
-    <script src="../js/ticket-action-permissions.js"></script>
-    <script src="../js/ticket-operations.js"></script>
-    <script src="../js/guard.js"></script>
-    <script src="../js/profile.js"></script>
-    <script src="../js/menu.js"></script>
-    <script src="../js/ticket-activity.js"></script>
-    <script src="../js/ticket-detail.js"></script>
-    <script src="../js/ticket-detail-context.js"></script>
+    <script src="../data/seed-data.js"></script><script src="../js/storage.js"></script><script src="../js/auth.js"></script><script src="../js/permissions.js"></script><script src="../js/ticket-action-permissions.js"></script><script src="../js/ticket-operations.js"></script><script src="../js/guard.js"></script><script src="../js/profile.js"></script><script src="../js/menu.js"></script><script src="../js/ticket-activity.js"></script><script src="../js/ticket-detail.js"></script><script src="../js/ticket-detail-context.js"></script>
   </body>
 </html>
