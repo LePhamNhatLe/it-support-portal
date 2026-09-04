@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mạng | Cổng IT Support</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
@@ -31,7 +33,7 @@
         </header>
 
         <main class="content" id="main-content">
-          <section class="page-header tickets__hero"><div><p class="topbar__eyebrow">Theo dõi IP, MAC, VLAN, subnet, gateway và trạng thái thiết bị mạng.</p><h2>Network Inventory</h2></div></section>
+          <section class="page-header tickets__hero"><div><p class="topbar__eyebrow">Theo dõi IP, MAC, VLAN, subnet, gateway và trạng thái thiết bị mạng.</p><h2>Danh mục thiết bị mạng</h2></div></section>
 
           <section class="tickets__toolbar">
             <label class="tickets__search" for="search-network-device"><span class="visually-hidden">Tìm kiếm thiết bị mạng</span><input id="search-network-device" type="search" placeholder="Tìm mã, tên, IP, MAC, VLAN..." /></label>
@@ -59,24 +61,21 @@
                 <div class="tickets__filter"><label for="network-vlan">VLAN</label><input id="network-vlan" name="vlan" type="number" min="1" max="4094" required /></div>
                 <div class="tickets__filter"><label for="network-subnet">Subnet/CIDR</label><input id="network-subnet" name="subnet" type="text" placeholder="10.0.0.0/24" required /></div>
                 <div class="tickets__filter"><label for="network-gateway">Gateway</label><input id="network-gateway" name="gateway" type="text" placeholder="10.0.0.1" required /></div>
-                <div class="tickets__filter"><label for="network-management-url">Management URL</label><input id="network-management-url" name="managementUrl" type="text" placeholder="https://10.0.0.2" /></div>
-                <div class="tickets__filter"><label for="network-uptime">Uptime (giờ)</label><input id="network-uptime" name="uptimeHours" type="number" min="0" required /></div>
+                <div class="tickets__filter"><label for="network-management-url">URL quản trị</label><input id="network-management-url" name="managementUrl" type="text" placeholder="https://10.0.0.2" /></div>
+                <div class="tickets__filter"><label for="network-uptime">Thời gian hoạt động (giờ)</label><input id="network-uptime" name="uptimeHours" type="number" min="0" required /></div>
               </div>
               <div class="tickets__filter"><label for="network-notes">Ghi chú</label><textarea id="network-notes" name="notes" rows="4" maxlength="1000"></textarea></div>
               <div class="tickets__filters"><button class="button button--primary" type="submit">Lưu thiết bị</button><button class="button button--ghost" id="cancel-network-form" type="button">Hủy</button></div>
             </form>
           </section>
 
-          <section class="content__panel" id="network-detail-panel" hidden>
-            <div class="panel__header"><h2>Chi tiết thiết bị mạng</h2><button class="button button--ghost" id="close-network-detail" type="button">Đóng</button></div>
-            <div class="detail__fields" id="network-detail-content"></div>
-          </section>
+          <section class="content__panel" id="network-detail-panel" hidden><div class="panel__header"><h2>Chi tiết thiết bị mạng</h2><button class="button button--ghost" id="close-network-detail" type="button">Đóng</button></div><div class="detail__fields" id="network-detail-content"></div></section>
 
           <section class="dashboard__summary tickets__summary">
             <article class="metric-card"><div><p class="metric-card__label">Tổng thiết bị mạng</p><p class="metric-card__value" data-network-summary="total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Đang hoạt động</p><p class="metric-card__value" data-network-summary="online">0</p></div><span class="metric-card__delta metric-card__delta--success">Online</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Đang bảo trì</p><p class="metric-card__value" data-network-summary="maintenance">0</p></div><span class="metric-card__delta metric-card__delta--warning">Maintenance</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Ngoài tuyến</p><p class="metric-card__value" data-network-summary="offline">0</p></div><span class="metric-card__delta metric-card__delta--danger">Offline</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang hoạt động</p><p class="metric-card__value" data-network-summary="online">0</p></div><span class="metric-card__delta metric-card__delta--success">Trực tuyến</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang bảo trì</p><p class="metric-card__value" data-network-summary="maintenance">0</p></div><span class="metric-card__delta metric-card__delta--warning">Đang bảo trì</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Ngoài tuyến</p><p class="metric-card__value" data-network-summary="offline">0</p></div><span class="metric-card__delta metric-card__delta--danger">Mất kết nối</span></article>
           </section>
 
           <section class="dashboard__grid">
@@ -86,14 +85,14 @@
                 <article class="device-card device-card--active"><h3>Router</h3><p class="device-card__value" data-network-summary="router">0</p></article>
                 <article class="device-card device-card--repair"><h3>Switch</h3><p class="device-card__value" data-network-summary="switch">0</p></article>
                 <article class="device-card device-card--retired"><h3>Access Point</h3><p class="device-card__value" data-network-summary="access_point">0</p></article>
-                <article class="device-card device-card--active"><h3>Online</h3><p class="device-card__value" data-network-summary="online">0</p></article>
+                <article class="device-card device-card--active"><h3>Trực tuyến</h3><p class="device-card__value" data-network-summary="online">0</p></article>
               </div>
             </article>
 
             <article class="dashboard__panel dashboard__panel--wide">
-              <div class="panel__header"><h2>Bảng thiết bị mạng</h2><p>Dữ liệu quản lý bằng LocalStorage, phục vụ mô phỏng inventory và xử lý sự cố mạng.</p></div>
-              <div class="table-wrap"><table class="dashboard-table network-table"><thead><tr><th scope="col">Mã thiết bị</th><th scope="col">Tên thiết bị</th><th scope="col">Loại</th><th scope="col">IPv4</th><th scope="col">MAC</th><th scope="col">Khu vực</th><th scope="col">Trạng thái</th><th scope="col">Uptime</th><th scope="col">Thao tác</th></tr></thead><tbody></tbody></table></div>
-              <div class="tickets__empty network__empty" hidden><div class="empty-state"><h3>Không có thiết bị mạng</h3><p>Không có thiết bị phù hợp với tìm kiếm hoặc bộ lọc.</p><button class="button button--primary" type="button" data-action="open-create-network">Thêm thiết bị mạng</button></div></div>
+              <div class="panel__header"><h2>Bảng thiết bị mạng</h2><p>Dữ liệu được quản lý bằng LocalStorage để mô phỏng kiểm kê và xử lý sự cố mạng.</p></div>
+              <div class="table-wrap"><table class="dashboard-table network-table"><thead><tr><th scope="col">Mã thiết bị</th><th scope="col">Tên thiết bị</th><th scope="col">Loại</th><th scope="col">IPv4</th><th scope="col">MAC</th><th scope="col">Khu vực</th><th scope="col">Trạng thái</th><th scope="col">Thời gian hoạt động</th><th scope="col">Thao tác</th></tr></thead><tbody></tbody></table></div>
+              <div class="tickets__empty network__empty" hidden><div class="empty-state"><h3>Không có thiết bị mạng</h3><p>Không có thiết bị phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p><button class="button button--primary" type="button" data-action="open-create-network">Thêm thiết bị mạng</button></div></div>
             </article>
           </section>
         </main>
@@ -108,6 +107,5 @@
     <script src="../js/profile.js"></script>
     <script src="../js/menu.js"></script>
     <script src="../js/network.js"></script>
-    <script src="../js/network-regression.js"></script>
   </body>
 </html>
