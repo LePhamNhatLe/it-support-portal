@@ -39,6 +39,66 @@ html:not([data-theme="dark"]) .sidebar__nav a.active {
   box-shadow: 0 10px 24px rgba(37,99,235,.18);
 }
 
+/* Ticket detail top area: keep information and actions visually balanced. */
+.detail__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.detail__header-left {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.detail__meta {
+  min-width: 0;
+}
+
+.detail__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: .8rem;
+  align-self: start;
+}
+
+.detail__actions .button {
+  min-width: 0;
+  width: 100%;
+}
+
+.detail__actions .button--primary {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+  .detail__header {
+    grid-template-columns: 1fr;
+  }
+
+  .detail__actions {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .detail__actions .button--primary {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .detail__header-left {
+    grid-template-columns: 1fr;
+  }
+
+  .detail__actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Technology-inspired dark mode, closer to the login screen than the old blue-gray wash. */
 html[data-theme="dark"] {
   --bg: #07111f;
