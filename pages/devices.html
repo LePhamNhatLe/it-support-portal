@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thiết bị | Cổng IT Support</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
@@ -38,209 +40,69 @@
 
       <div class="workspace">
         <header class="topbar">
-          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
-            <span></span><span></span><span></span>
-          </label>
-
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
           <div class="topbar__heading">
             <p class="topbar__eyebrow">Quản lý tài sản và thiết bị công nghệ thông tin</p>
             <h1>Thiết bị</h1>
           </div>
-
           <div class="topbar__profile">
             <div class="profile__avatar" data-user-avatar></div>
-            <div class="profile__info">
-              <span class="profile__name" data-user-name></span>
-              <span class="profile__role" data-user-role></span>
-            </div>
+            <div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div>
           </div>
         </header>
 
         <main class="content" id="main-content">
           <section class="page-header tickets__hero">
-            <div>
-              <p class="topbar__eyebrow">Theo dõi tài sản, người sử dụng, IP và trạng thái thiết bị.</p>
-              <h2>Danh sách thiết bị</h2>
-            </div>
+            <div><p class="topbar__eyebrow">Theo dõi tài sản, người sử dụng, IP và trạng thái thiết bị.</p><h2>Danh sách thiết bị</h2></div>
           </section>
 
           <section class="tickets__toolbar">
-            <label class="tickets__search" for="search-device">
-              <span class="visually-hidden">Tìm kiếm thiết bị</span>
-              <input id="search-device" type="search" placeholder="Tìm mã, tên, IP, serial, người dùng..." />
-            </label>
-
+            <label class="tickets__search" for="search-device"><span class="visually-hidden">Tìm kiếm thiết bị</span><input id="search-device" type="search" placeholder="Tìm mã, tên, IP, số serial, người dùng..." /></label>
             <div class="tickets__filters">
-              <div class="tickets__filter">
-                <label for="device-type-filter">Loại thiết bị</label>
-                <select id="device-type-filter"></select>
-              </div>
-              <div class="tickets__filter">
-                <label for="device-status-filter">Trạng thái</label>
-                <select id="device-status-filter"></select>
-              </div>
-              <div class="tickets__filter">
-                <label for="device-department-filter">Phòng ban</label>
-                <select id="device-department-filter"></select>
-              </div>
+              <div class="tickets__filter"><label for="device-type-filter">Loại thiết bị</label><select id="device-type-filter"></select></div>
+              <div class="tickets__filter"><label for="device-status-filter">Trạng thái</label><select id="device-status-filter"></select></div>
+              <div class="tickets__filter"><label for="device-department-filter">Phòng ban</label><select id="device-department-filter"></select></div>
             </div>
-
             <button class="button button--primary" type="button" data-action="open-create-device">+ Thêm thiết bị</button>
           </section>
 
           <p id="device-feedback" role="status" hidden></p>
 
           <section class="content__panel" id="device-editor-panel" hidden>
-            <div class="panel__header">
-              <h2>Thông tin thiết bị</h2>
-              <p>Thêm hoặc cập nhật thông tin tài sản IT.</p>
-            </div>
-
+            <div class="panel__header"><h2>Thông tin thiết bị</h2><p>Thêm hoặc cập nhật thông tin tài sản IT.</p></div>
             <form id="device-form" data-mode="create">
               <div class="tickets__filters">
-                <div class="tickets__filter">
-                  <label for="device-id">Mã thiết bị</label>
-                  <input id="device-id" name="id" type="text" required />
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-name">Tên thiết bị</label>
-                  <input id="device-name" name="name" type="text" required maxlength="120" />
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-type">Loại thiết bị</label>
-                  <select id="device-type" name="type" required>
-                    <option value="desktop">Máy tính để bàn</option>
-                    <option value="laptop">Laptop</option>
-                    <option value="printer">Máy in</option>
-                    <option value="router">Router</option>
-                    <option value="switch">Switch</option>
-                    <option value="access_point">Access Point</option>
-                    <option value="server">Máy chủ</option>
-                    <option value="other">Thiết bị khác</option>
-                  </select>
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-status">Trạng thái</label>
-                  <select id="device-status" name="status" required>
-                    <option value="in_use">Đang sử dụng</option>
-                    <option value="maintenance">Đang bảo trì</option>
-                    <option value="storage">Trong kho</option>
-                    <option value="broken">Hỏng</option>
-                    <option value="retired">Ngưng sử dụng</option>
-                  </select>
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-user-email">Người sử dụng</label>
-                  <input id="device-user-email" name="userEmail" type="email" placeholder="user@itsupport.local" />
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-department">Phòng ban</label>
-                  <select id="device-department" name="department" required>
-                    <option>Hành chính</option>
-                    <option>Kinh doanh</option>
-                    <option>Kỹ thuật</option>
-                    <option>Kế toán</option>
-                    <option>Nhân sự</option>
-                    <option selected>Khác</option>
-                  </select>
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-ip-address">Địa chỉ IPv4</label>
-                  <input id="device-ip-address" name="ipAddress" type="text" placeholder="192.168.1.10" />
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-serial-number">Serial Number</label>
-                  <input id="device-serial-number" name="serialNumber" type="text" />
-                </div>
-                <div class="tickets__filter">
-                  <label for="device-purchase-date">Ngày mua</label>
-                  <input id="device-purchase-date" name="purchaseDate" type="date" />
-                </div>
+                <div class="tickets__filter"><label for="device-id">Mã thiết bị</label><input id="device-id" name="id" type="text" required /></div>
+                <div class="tickets__filter"><label for="device-name">Tên thiết bị</label><input id="device-name" name="name" type="text" required maxlength="120" /></div>
+                <div class="tickets__filter"><label for="device-type">Loại thiết bị</label><select id="device-type" name="type" required><option value="desktop">Máy tính để bàn</option><option value="laptop">Laptop</option><option value="printer">Máy in</option><option value="router">Router</option><option value="switch">Switch</option><option value="access_point">Access Point</option><option value="server">Máy chủ</option><option value="other">Thiết bị khác</option></select></div>
+                <div class="tickets__filter"><label for="device-status">Trạng thái</label><select id="device-status" name="status" required><option value="in_use">Đang sử dụng</option><option value="maintenance">Đang bảo trì</option><option value="storage">Trong kho</option><option value="broken">Hỏng</option><option value="retired">Ngưng sử dụng</option></select></div>
+                <div class="tickets__filter"><label for="device-user-email">Người sử dụng</label><input id="device-user-email" name="userEmail" type="email" placeholder="user@itsupport.local" /></div>
+                <div class="tickets__filter"><label for="device-department">Phòng ban</label><select id="device-department" name="department" required><option>Hành chính</option><option>Kinh doanh</option><option>Kỹ thuật</option><option>Kế toán</option><option>Nhân sự</option><option selected>Khác</option></select></div>
+                <div class="tickets__filter"><label for="device-ip-address">Địa chỉ IPv4</label><input id="device-ip-address" name="ipAddress" type="text" placeholder="192.168.1.10" /></div>
+                <div class="tickets__filter"><label for="device-serial-number">Số serial</label><input id="device-serial-number" name="serialNumber" type="text" /></div>
+                <div class="tickets__filter"><label for="device-purchase-date">Ngày mua</label><input id="device-purchase-date" name="purchaseDate" type="date" /></div>
               </div>
-
-              <div class="tickets__filter">
-                <label for="device-notes">Ghi chú</label>
-                <textarea id="device-notes" name="notes" rows="4" maxlength="1000"></textarea>
-              </div>
-
-              <div class="tickets__filters">
-                <button class="button button--primary" type="submit">Lưu thiết bị</button>
-                <button class="button button--ghost" id="cancel-device-form" type="button">Hủy</button>
-              </div>
+              <div class="tickets__filter"><label for="device-notes">Ghi chú</label><textarea id="device-notes" name="notes" rows="4" maxlength="1000"></textarea></div>
+              <div class="tickets__filters"><button class="button button--primary" type="submit">Lưu thiết bị</button><button class="button button--ghost" id="cancel-device-form" type="button">Hủy</button></div>
             </form>
           </section>
 
           <section class="content__panel" id="device-detail-panel" hidden>
-            <div class="panel__header">
-              <h2>Chi tiết thiết bị</h2>
-              <button class="button button--ghost" id="close-device-detail" type="button">Đóng</button>
-            </div>
+            <div class="panel__header"><h2>Chi tiết thiết bị</h2><button class="button button--ghost" id="close-device-detail" type="button">Đóng</button></div>
             <div class="detail__fields" id="device-detail-content"></div>
           </section>
 
           <section class="dashboard__summary tickets__summary">
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Tổng thiết bị</p>
-                <p class="metric-card__value" data-device-summary="total">0</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đang sử dụng</p>
-                <p class="metric-card__value" data-device-summary="in_use">0</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--success">Đang hoạt động</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đang bảo trì</p>
-                <p class="metric-card__value" data-device-summary="maintenance">0</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--warning">Cần theo dõi</span>
-            </article>
-            <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Ngưng sử dụng</p>
-                <p class="metric-card__value" data-device-summary="retired">0</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--danger">Đã nghỉ hưu</span>
-            </article>
+            <article class="metric-card"><div><p class="metric-card__label">Tổng thiết bị</p><p class="metric-card__value" data-device-summary="total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang sử dụng</p><p class="metric-card__value" data-device-summary="in_use">0</p></div><span class="metric-card__delta metric-card__delta--success">Đang hoạt động</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang bảo trì</p><p class="metric-card__value" data-device-summary="maintenance">0</p></div><span class="metric-card__delta metric-card__delta--warning">Cần theo dõi</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Ngưng sử dụng</p><p class="metric-card__value" data-device-summary="retired">0</p></div><span class="metric-card__delta metric-card__delta--danger">Không còn khai thác</span></article>
           </section>
 
           <section class="dashboard__panel">
-            <div class="panel__header">
-              <h2>Bảng thiết bị</h2>
-              <p>Dữ liệu được lưu bằng LocalStorage và liên kết với phiếu hỗ trợ qua mã DEV.</p>
-            </div>
-
-            <div class="table-wrap">
-              <table class="dashboard-table devices-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Mã thiết bị</th>
-                    <th scope="col">Tên thiết bị</th>
-                    <th scope="col">Loại</th>
-                    <th scope="col">Người sử dụng</th>
-                    <th scope="col">Phòng ban</th>
-                    <th scope="col">Địa chỉ IP</th>
-                    <th scope="col">Trạng thái</th>
-                    <th scope="col">Ngày mua</th>
-                    <th scope="col">Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-
-            <div class="tickets__empty devices__empty" hidden>
-              <div class="empty-state">
-                <h3>Không có thiết bị nào</h3>
-                <p>Không có thiết bị phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p>
-                <button class="button button--primary" type="button" data-action="open-create-device">Thêm thiết bị</button>
-              </div>
-            </div>
+            <div class="panel__header"><h2>Bảng thiết bị</h2><p>Dữ liệu được lưu bằng LocalStorage và liên kết với phiếu hỗ trợ qua mã DEV.</p></div>
+            <div class="table-wrap"><table class="dashboard-table devices-table"><thead><tr><th scope="col">Mã thiết bị</th><th scope="col">Tên thiết bị</th><th scope="col">Loại</th><th scope="col">Người sử dụng</th><th scope="col">Phòng ban</th><th scope="col">Địa chỉ IP</th><th scope="col">Trạng thái</th><th scope="col">Ngày mua</th><th scope="col">Thao tác</th></tr></thead><tbody></tbody></table></div>
+            <div class="tickets__empty devices__empty" hidden><div class="empty-state"><h3>Không có thiết bị nào</h3><p>Không có thiết bị phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p><button class="button button--primary" type="button" data-action="open-create-device">Thêm thiết bị</button></div></div>
           </section>
         </main>
       </div>
@@ -255,6 +117,5 @@
     <script src="../js/menu.js"></script>
     <script src="../js/devices.js"></script>
     <script src="../js/devices-actions.js"></script>
-    <script src="../js/device-regression.js"></script>
   </body>
 </html>
