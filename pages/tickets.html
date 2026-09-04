@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Phiếu hỗ trợ | Cổng IT Support</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
@@ -75,34 +77,15 @@
             <div class="tickets__filters">
               <div class="tickets__filter">
                 <label for="status-filter">Trạng thái</label>
-                <select id="status-filter">
-                  <option>Tất cả trạng thái</option>
-                  <option>Mở</option>
-                  <option>Đang xử lý</option>
-                  <option>Chờ</option>
-                  <option>Đã giải quyết</option>
-                  <option>Đã đóng</option>
-                </select>
+                <select id="status-filter"><option>Tất cả trạng thái</option></select>
               </div>
               <div class="tickets__filter">
                 <label for="priority-filter">Ưu tiên</label>
-                <select id="priority-filter">
-                  <option>Tất cả mức ưu tiên</option>
-                  <option>Thấp</option>
-                  <option>Trung bình</option>
-                  <option>Cao</option>
-                  <option>Khẩn cấp</option>
-                </select>
+                <select id="priority-filter"><option>Tất cả mức ưu tiên</option></select>
               </div>
               <div class="tickets__filter">
                 <label for="category-filter">Danh mục</label>
-                <select id="category-filter">
-                  <option>Tất cả danh mục</option>
-                  <option>Phần cứng</option>
-                  <option>Phần mềm</option>
-                  <option>Mạng</option>
-                  <option>Bảo mật</option>
-                </select>
+                <select id="category-filter"><option>Tất cả danh mục</option></select>
               </div>
             </div>
 
@@ -170,39 +153,27 @@
 
           <section class="dashboard__summary tickets__summary">
             <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Phiếu mở</p>
-                <p class="metric-card__value">34</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--danger">+12%</span>
+              <div><p class="metric-card__label">Phiếu mở</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
             </article>
             <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đang xử lý</p>
-                <p class="metric-card__value">18</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--warning">+5%</span>
+              <div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
             </article>
             <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đang chờ</p>
-                <p class="metric-card__value">13</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--neutral">Ổn định</span>
+              <div><p class="metric-card__label">Đang chờ</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
             </article>
             <article class="metric-card">
-              <div>
-                <p class="metric-card__label">Đã giải quyết</p>
-                <p class="metric-card__value">282</p>
-              </div>
-              <span class="metric-card__delta metric-card__delta--success">+18%</span>
+              <div><p class="metric-card__label">Đã giải quyết</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
             </article>
           </section>
 
           <section class="dashboard__panel">
             <div class="panel__header">
               <h2>Hàng đợi phiếu</h2>
-              <p>Duyệt, sắp xếp và xử lý các yêu cầu phiếu gửi qua cổng hỗ trợ IT.</p>
+              <p>Duyệt, sắp xếp và xử lý các yêu cầu được gửi qua cổng hỗ trợ IT.</p>
             </div>
 
             <div class="table-wrap">
@@ -217,7 +188,7 @@
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Người phụ trách</th>
                     <th scope="col">Ngày tạo</th>
-                    <th scope="col">Hành động</th>
+                    <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -247,6 +218,5 @@
     <script src="../js/ticket-activity.js"></script>
     <script src="../js/tickets-integration.js"></script>
     <script src="../js/tickets.js"></script>
-    <script src="../js/ticket-regression.js"></script>
   </body>
 </html>
