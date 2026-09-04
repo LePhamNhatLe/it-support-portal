@@ -3,7 +3,7 @@
         open: "Mở",
         assigned: "Đã phân công",
         in_progress: "Đang xử lý",
-        pending: "Chờ",
+        pending: "Đang chờ",
         resolved: "Đã giải quyết",
         closed: "Đã đóng",
         reopened: "Mở lại"
@@ -31,13 +31,16 @@
     }
 
     function getVisibleTickets() {
-        if (window.TicketAccess && typeof window.TicketAccess.getVisibleTickets === "function") {
-            return window.TicketAccess.getVisibleTickets();
+        if (
+            !window.TicketAccess ||
+            typeof window.TicketAccess.getVisibleTickets !== "function"
+        ) {
+            console.error("dashboard.js: TicketAccess chưa sẵn sàng.");
+            return [];
         }
-        if (window.TicketStorage && typeof window.TicketStorage.getTickets === "function") {
-            return window.TicketStorage.getTickets();
-        }
-        return read("tickets");
+
+        const tickets = window.TicketAccess.getVisibleTickets();
+        return Array.isArray(tickets) ? tickets : [];
     }
 
     function countBy(items, key, value) {
@@ -52,9 +55,7 @@
     function setMetricCardVisibility(metricKey, visible) {
         const metric = document.querySelector('[data-dashboard="' + metricKey + '"]');
         const card = metric ? metric.closest(".device-card") : null;
-        if (card) {
-            card.hidden = !visible;
-        }
+        if (card) card.hidden = !visible;
     }
 
     function applyMetricPermissions() {
@@ -64,9 +65,7 @@
 
         const deviceMetric = document.querySelector('[data-dashboard="devices-total"]');
         const devicePanel = deviceMetric ? deviceMetric.closest(".dashboard__panel") : null;
-        if (devicePanel) {
-            devicePanel.hidden = !canViewDevices;
-        }
+        if (devicePanel) devicePanel.hidden = !canViewDevices;
 
         setMetricCardVisibility("users-active", canViewUsers);
         setMetricCardVisibility("network-online", canViewNetwork);
@@ -74,9 +73,7 @@
 
         const systemMetric = document.querySelector('[data-dashboard="users-active"]');
         const systemPanel = systemMetric ? systemMetric.closest(".dashboard__panel") : null;
-        if (systemPanel) {
-            systemPanel.hidden = !canViewUsers && !canViewNetwork;
-        }
+        if (systemPanel) systemPanel.hidden = !canViewUsers && !canViewNetwork;
 
         return { canViewDevices, canViewUsers, canViewNetwork };
     }
@@ -105,7 +102,9 @@
     function renderRecentTickets(tickets) {
         const tbody = document.getElementById("dashboard-recent-tickets");
         if (!tbody) return;
-        const latest = tickets.slice().sort(function (a, b) {
+
+        const source = Array.isArray(tickets) ? tickets : [];
+        const latest = source.slice().sort(function (a, b) {
             return new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0);
         }).slice(0, 5);
         tbody.replaceChildren();
@@ -144,5 +143,9 @@
         applyMetricPermissions
     };
 
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render); else render();
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", render);
+    } else {
+        render();
+    }
 })();
