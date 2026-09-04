@@ -1,0 +1,176 @@
+/* P19 semantic action colors: visually separate view/edit/delete and apply/reset actions. */
+
+/* Shared table/action buttons */
+button[data-action],
+.button[data-action],
+button[data-settings-action],
+.button[data-settings-action],
+#report-apply,
+#report-reset,
+#reset-user-settings {
+  font-weight: 700;
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* View / inspect actions: cyan-blue */
+html:not([data-theme="dark"]) button[data-action^="view-"],
+html:not([data-theme="dark"]) .button[data-action^="view-"] {
+  color: #075985;
+  background: linear-gradient(180deg, #ecfeff, #cffafe);
+  border-color: rgba(8,145,178,.30);
+  box-shadow: 0 6px 14px rgba(8,145,178,.10);
+}
+
+html:not([data-theme="dark"]) button[data-action^="view-"]:hover,
+html:not([data-theme="dark"]) .button[data-action^="view-"]:hover {
+  background: linear-gradient(180deg, #cffafe, #a5f3fc);
+  border-color: rgba(8,145,178,.48);
+  box-shadow: 0 9px 18px rgba(8,145,178,.16);
+}
+
+/* Edit actions: indigo */
+html:not([data-theme="dark"]) button[data-action^="edit-"],
+html:not([data-theme="dark"]) .button[data-action^="edit-"],
+html:not([data-theme="dark"]) button[data-settings-action] {
+  color: #4338ca;
+  background: linear-gradient(180deg, #eef2ff, #e0e7ff);
+  border-color: rgba(79,70,229,.30);
+  box-shadow: 0 6px 14px rgba(79,70,229,.10);
+}
+
+html:not([data-theme="dark"]) button[data-action^="edit-"]:hover,
+html:not([data-theme="dark"]) .button[data-action^="edit-"]:hover,
+html:not([data-theme="dark"]) button[data-settings-action]:hover {
+  background: linear-gradient(180deg, #e0e7ff, #c7d2fe);
+  border-color: rgba(79,70,229,.48);
+  box-shadow: 0 9px 18px rgba(79,70,229,.16);
+}
+
+/* Delete / destructive actions: red */
+html:not([data-theme="dark"]) button[data-action^="delete-"],
+html:not([data-theme="dark"]) .button[data-action^="delete-"] {
+  color: #b91c1c;
+  background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+  border-color: rgba(220,38,38,.28);
+  box-shadow: 0 6px 14px rgba(220,38,38,.08);
+}
+
+html:not([data-theme="dark"]) button[data-action^="delete-"]:hover,
+html:not([data-theme="dark"]) .button[data-action^="delete-"]:hover {
+  color: #991b1b;
+  background: linear-gradient(180deg, #ffe4e6, #fecdd3);
+  border-color: rgba(220,38,38,.48);
+  box-shadow: 0 9px 18px rgba(220,38,38,.15);
+}
+
+/* Lock / warning state: amber */
+html:not([data-theme="dark"]) button[data-action^="lock-"],
+html:not([data-theme="dark"]) .button[data-action^="lock-"] {
+  color: #a16207;
+  background: linear-gradient(180deg, #fffbeb, #fef3c7);
+  border-color: rgba(217,119,6,.30);
+}
+
+/* Unlock / restore: green */
+html:not([data-theme="dark"]) button[data-action^="unlock-"],
+html:not([data-theme="dark"]) .button[data-action^="unlock-"] {
+  color: #047857;
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
+  border-color: rgba(5,150,105,.30);
+}
+
+/* Report actions: apply is positive, reset is secondary */
+html:not([data-theme="dark"]) #report-apply {
+  color: #ffffff;
+  background: linear-gradient(100deg, #059669, #0d9488);
+  border-color: rgba(5,150,105,.34);
+  box-shadow: 0 9px 20px rgba(5,150,105,.18);
+}
+
+html:not([data-theme="dark"]) #report-apply:hover {
+  background: linear-gradient(100deg, #047857, #0f766e);
+  box-shadow: 0 12px 24px rgba(5,150,105,.24);
+}
+
+html:not([data-theme="dark"]) #report-reset,
+html:not([data-theme="dark"]) #reset-user-settings {
+  color: #475569;
+  background: linear-gradient(180deg, #f8fafc, #e2e8f0);
+  border-color: rgba(100,116,139,.28);
+  box-shadow: 0 5px 12px rgba(100,116,139,.08);
+}
+
+/* Ticket-detail semantic actions */
+html:not([data-theme="dark"]) button[data-action="assign-ticket"] {
+  color: #6d28d9;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe);
+  border-color: rgba(124,58,237,.28);
+}
+
+html:not([data-theme="dark"]) button[data-action="change-ticket-status"] {
+  color: #ffffff;
+  background: linear-gradient(100deg, #2563eb, #0ea5e9);
+  border-color: rgba(14,165,233,.30);
+  box-shadow: 0 9px 20px rgba(37,99,235,.18);
+}
+
+/* Dark mode semantic versions */
+html[data-theme="dark"] button[data-action^="view-"],
+html[data-theme="dark"] .button[data-action^="view-"] {
+  color: #67e8f9;
+  background: rgba(8,145,178,.14);
+  border-color: rgba(34,211,238,.28);
+}
+
+html[data-theme="dark"] button[data-action^="edit-"],
+html[data-theme="dark"] .button[data-action^="edit-"],
+html[data-theme="dark"] button[data-settings-action] {
+  color: #c4b5fd;
+  background: rgba(99,102,241,.14);
+  border-color: rgba(129,140,248,.28);
+}
+
+html[data-theme="dark"] button[data-action^="delete-"],
+html[data-theme="dark"] .button[data-action^="delete-"] {
+  color: #fda4af;
+  background: rgba(190,24,93,.13);
+  border-color: rgba(251,113,133,.28);
+}
+
+html[data-theme="dark"] button[data-action^="lock-"] {
+  color: #fcd34d;
+  background: rgba(180,83,9,.15);
+  border-color: rgba(245,158,11,.28);
+}
+
+html[data-theme="dark"] button[data-action^="unlock-"] {
+  color: #6ee7b7;
+  background: rgba(5,150,105,.14);
+  border-color: rgba(52,211,153,.28);
+}
+
+html[data-theme="dark"] #report-apply {
+  color: #ecfdf5;
+  background: linear-gradient(100deg, #059669, #0d9488);
+  border-color: rgba(52,211,153,.30);
+}
+
+html[data-theme="dark"] #report-reset,
+html[data-theme="dark"] #reset-user-settings {
+  color: #cbd5e1;
+  background: rgba(71,85,105,.20);
+  border-color: rgba(148,163,184,.22);
+}
+
+html[data-theme="dark"] button[data-action="assign-ticket"] {
+  color: #ddd6fe;
+  background: rgba(124,58,237,.15);
+  border-color: rgba(167,139,250,.28);
+}
+
+html[data-theme="dark"] button[data-action="change-ticket-status"] {
+  color: #ffffff;
+  background: linear-gradient(100deg, #2563eb, #0ea5e9);
+  border-color: rgba(56,189,248,.30);
+}

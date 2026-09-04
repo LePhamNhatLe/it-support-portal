@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Người dùng | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand"><div class="sidebar__logo">IT</div><div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div></div>
+        <nav class="sidebar__nav" aria-label="Menu bên"><ul>
+          <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+          <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+          <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+          <li><a href="users.html" data-permission="users" class="active" aria-current="page">Người dùng</a></li>
+          <li><a href="network.html" data-permission="network">Mạng</a></li>
+          <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+          <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
+        </ul></nav>
+        <div class="sidebar__footer"><button class="sidebar__logout" type="button">Đăng xuất</button></div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
+          <div class="topbar__heading"><p class="topbar__eyebrow">Quản lý người dùng và quyền truy cập</p><h1>Người dùng</h1></div>
+          <div class="topbar__profile"><div class="profile__avatar" data-user-avatar></div><div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div></div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="page-header tickets__hero"><div><p class="topbar__eyebrow">Quản lý tài khoản nội bộ, vai trò, trạng thái và liên kết tài sản.</p><h2>Danh sách người dùng</h2></div></section>
+
+          <section class="tickets__toolbar">
+            <label class="tickets__search" for="user-search"><span class="visually-hidden">Tìm kiếm người dùng</span><input id="user-search" type="search" placeholder="Tìm mã, tên, email, phòng ban..." /></label>
+            <div class="tickets__filters"><div class="tickets__filter"><label for="role-filter">Vai trò</label><select id="role-filter"></select></div><div class="tickets__filter"><label for="status-filter">Trạng thái</label><select id="status-filter"></select></div></div>
+            <button class="button button--primary" type="button" data-action="open-create-user">+ Thêm người dùng</button>
+          </section>
+
+          <p id="user-feedback" role="status" hidden></p>
+
+          <section class="content__panel" id="user-editor-panel" hidden>
+            <div class="panel__header"><h2>Thông tin người dùng</h2><p>Tạo hoặc cập nhật tài khoản người dùng nội bộ.</p></div>
+            <form id="user-form" data-mode="create">
+              <div class="tickets__filters">
+                <div class="tickets__filter"><label for="user-id">Mã người dùng</label><input id="user-id" name="id" type="text" required /></div>
+                <div class="tickets__filter"><label for="user-name">Họ tên</label><input id="user-name" name="name" type="text" maxlength="120" required /></div>
+                <div class="tickets__filter"><label for="user-email">Email</label><input id="user-email" name="email" type="email" required /></div>
+                <div class="tickets__filter"><label for="user-department">Phòng ban</label><select id="user-department" name="department" required><option>IT</option><option>Kỹ thuật</option><option>Kinh doanh</option><option>Hành chính</option><option>Kế toán</option><option>Nhân sự</option><option>Marketing</option><option>Vận hành</option><option selected>Khác</option></select></div>
+                <div class="tickets__filter"><label for="user-role">Vai trò</label><select id="user-role" name="role" required><option value="technical_lead">Trưởng nhóm kỹ thuật</option><option value="technician">Nhân viên kỹ thuật</option><option value="user" selected>Người dùng</option></select></div>
+                <div class="tickets__filter"><label for="user-phone">Số điện thoại</label><input id="user-phone" name="phone" type="text" /></div>
+                <div class="tickets__filter"><label for="user-status">Trạng thái</label><select id="user-status" name="status" required><option value="active">Hoạt động</option><option value="disabled">Vô hiệu hóa</option><option value="locked">Đã khóa</option></select></div>
+              </div>
+              <div class="tickets__filters"><button class="button button--primary" type="submit">Lưu người dùng</button><button class="button button--ghost" id="cancel-user-form" type="button">Hủy</button></div>
+            </form>
+          </section>
+
+          <section class="content__panel" id="user-detail-panel" hidden><div class="panel__header"><h2>Chi tiết người dùng</h2><button class="button button--ghost" id="close-user-detail" type="button">Đóng</button></div><div class="detail__fields" id="user-detail-content"></div></section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card"><div><p class="metric-card__label">Tổng người dùng</p><p class="metric-card__value" data-user-summary="total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Dữ liệu hiện tại</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Hoạt động</p><p class="metric-card__value" data-user-summary="active">0</p></div><span class="metric-card__delta metric-card__delta--success">Có thể truy cập</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Kỹ thuật viên</p><p class="metric-card__value" data-user-summary="technician">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Nhân sự kỹ thuật</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đã khóa</p><p class="metric-card__value" data-user-summary="locked">0</p></div><span class="metric-card__delta metric-card__delta--danger">Không thể truy cập</span></article>
+          </section>
+
+          <section class="dashboard__grid"><article class="dashboard__panel dashboard__panel--wide"><div class="panel__header"><h2>Danh sách người dùng</h2><p>Dữ liệu được lưu bằng LocalStorage và liên kết với phiếu hỗ trợ, thiết bị qua email.</p></div><div class="table-wrap"><table class="dashboard-table users-table"><thead><tr><th scope="col">Mã</th><th scope="col">Tên</th><th scope="col">Email</th><th scope="col">Phòng ban</th><th scope="col">Vai trò</th><th scope="col">SĐT</th><th scope="col">Trạng thái</th><th scope="col">Ngày tạo</th><th scope="col">Thao tác</th></tr></thead><tbody></tbody></table></div><div class="tickets__empty users__empty" hidden><div class="empty-state"><h3>Không có người dùng nào</h3><p>Không có người dùng phù hợp với tìm kiếm hoặc bộ lọc hiện tại.</p><button class="button button--primary" type="button" data-action="open-create-user">Thêm người dùng</button></div></div></article></section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../data/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/profile.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/devices.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="../js/users-actions.js"></script>
+  </body>
+</html>

@@ -1,0 +1,328 @@
+/* P19 visual theme refinement: stronger controls in light mode and a darker technology-inspired palette. */
+
+:root {
+  --tech-cyan: #0ea5e9;
+  --tech-sky: #38bdf8;
+  --tech-blue: #2563eb;
+}
+
+/* Light mode controls should look intentional, not disabled or washed out. */
+html:not([data-theme="dark"]) .button--ghost {
+  color: #1d4ed8;
+  background: linear-gradient(180deg, rgba(239,246,255,.98), rgba(219,234,254,.9));
+  border-color: rgba(37,99,235,.24);
+  box-shadow: 0 6px 16px rgba(37,99,235,.08);
+}
+
+html:not([data-theme="dark"]) .button--ghost:hover,
+html:not([data-theme="dark"]) .button--ghost:focus-visible {
+  color: #1e40af;
+  background: linear-gradient(180deg, #eff6ff, #dbeafe);
+  border-color: rgba(37,99,235,.42);
+  box-shadow: 0 10px 24px rgba(37,99,235,.14);
+}
+
+html:not([data-theme="dark"]) .button--primary {
+  background: linear-gradient(100deg, #2563eb, #0ea5e9);
+  border-color: rgba(14,165,233,.28);
+  box-shadow: 0 10px 24px rgba(37,99,235,.2);
+}
+
+html:not([data-theme="dark"]) .button--primary:hover,
+html:not([data-theme="dark"]) .button--primary:focus-visible {
+  background: linear-gradient(100deg, #1d4ed8, #0284c7);
+  box-shadow: 0 14px 30px rgba(14,165,233,.25);
+}
+
+html:not([data-theme="dark"]) .sidebar__nav a.active {
+  background: linear-gradient(100deg, #2563eb, #3b82f6);
+  box-shadow: 0 10px 24px rgba(37,99,235,.18);
+}
+
+/* Action hierarchy: actions should be recognizable before the user reads every label. */
+.dashboard-table td:last-child,
+.tickets-table td:last-child,
+.users-table td:last-child,
+.devices-table td:last-child,
+.network-table td:last-child {
+  white-space: nowrap;
+}
+
+.dashboard-table td:last-child .button,
+.tickets-table td:last-child .button,
+.users-table td:last-child .button,
+.devices-table td:last-child .button,
+.network-table td:last-child .button {
+  margin: .18rem .32rem .18rem 0;
+  min-height: 38px;
+  padding-inline: .9rem;
+  border-radius: 11px;
+  font-weight: 650;
+}
+
+/* View/detail actions: cyan, informative and low-risk. */
+html:not([data-theme="dark"]) button[data-action*="view"],
+html:not([data-theme="dark"]) button[data-action*="detail"],
+html:not([data-theme="dark"]) a[data-action*="view"],
+html:not([data-theme="dark"]) a[data-action*="detail"] {
+  color: #0369a1 !important;
+  background: linear-gradient(180deg, #ecfeff, #cffafe) !important;
+  border-color: rgba(8,145,178,.30) !important;
+  box-shadow: 0 6px 14px rgba(8,145,178,.10);
+}
+
+/* Edit/update/assign actions: indigo-purple, visually distinct from view. */
+html:not([data-theme="dark"]) button[data-action*="edit"],
+html:not([data-theme="dark"]) button[data-action*="update"],
+html:not([data-theme="dark"]) button[data-action*="assign"] {
+  color: #5b21b6 !important;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe) !important;
+  border-color: rgba(109,40,217,.28) !important;
+  box-shadow: 0 6px 14px rgba(109,40,217,.10);
+}
+
+/* Destructive actions must look destructive, instead of politely impersonating a normal button. */
+html:not([data-theme="dark"]) button[data-action*="delete"],
+html:not([data-theme="dark"]) .ui-button--danger {
+  color: #b91c1c !important;
+  background: linear-gradient(180deg, #fff1f2, #ffe4e6) !important;
+  border-color: rgba(220,38,38,.30) !important;
+  box-shadow: 0 6px 14px rgba(220,38,38,.10);
+}
+
+html:not([data-theme="dark"]) button[data-action*="lock"]:not([data-action*="unlock"]) {
+  color: #a16207 !important;
+  background: linear-gradient(180deg, #fffbeb, #fef3c7) !important;
+  border-color: rgba(217,119,6,.30) !important;
+}
+
+html:not([data-theme="dark"]) button[data-action*="unlock"],
+html:not([data-theme="dark"]) button[data-action*="restore"] {
+  color: #047857 !important;
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5) !important;
+  border-color: rgba(5,150,105,.30) !important;
+}
+
+/* Filter/form action pairs: Apply is positive, Reset is intentionally neutral. */
+html:not([data-theme="dark"]) button[id*="apply"],
+html:not([data-theme="dark"]) button[data-action*="apply"] {
+  color: #ffffff !important;
+  background: linear-gradient(100deg, #059669, #0d9488) !important;
+  border-color: rgba(5,150,105,.35) !important;
+  box-shadow: 0 9px 20px rgba(5,150,105,.18);
+}
+
+html:not([data-theme="dark"]) button[id*="reset"],
+html:not([data-theme="dark"]) button[data-action*="reset"] {
+  color: #475569 !important;
+  background: linear-gradient(180deg, #f8fafc, #e2e8f0) !important;
+  border-color: rgba(100,116,139,.25) !important;
+  box-shadow: none;
+}
+
+/* Ticket detail top area: keep information and actions visually balanced. */
+.detail__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.detail__header-left {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.detail__meta {
+  min-width: 0;
+}
+
+.detail__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: .8rem;
+  align-self: start;
+}
+
+.detail__actions .button {
+  min-width: 0;
+  width: 100%;
+}
+
+.detail__actions .button--primary {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+  .detail__header {
+    grid-template-columns: 1fr;
+  }
+
+  .detail__actions {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .detail__actions .button--primary {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .detail__header-left {
+    grid-template-columns: 1fr;
+  }
+
+  .detail__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-table td:last-child .button,
+  .tickets-table td:last-child .button,
+  .users-table td:last-child .button,
+  .devices-table td:last-child .button,
+  .network-table td:last-child .button {
+    margin-right: .22rem;
+    min-height: 36px;
+    padding-inline: .78rem;
+  }
+}
+
+/* Technology-inspired dark mode, closer to the login screen than the old blue-gray wash. */
+html[data-theme="dark"] {
+  --bg: #07111f;
+  --surface: rgba(8, 22, 42, .92);
+  --surface-strong: rgba(12, 31, 55, .96);
+  --border: rgba(56, 189, 248, .16);
+  --text: #e6f2ff;
+  --muted: #91a9c3;
+  --brand: #38bdf8;
+  --brand-dark: #0ea5e9;
+  --shadow: 0 22px 58px rgba(0,0,0,.28);
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 14% 10%, rgba(37,99,235,.16), transparent 27%),
+    radial-gradient(circle at 86% 14%, rgba(14,165,233,.1), transparent 24%),
+    linear-gradient(145deg, #06101d 0%, #081627 48%, #07111f 100%);
+}
+
+html[data-theme="dark"] body::before {
+  background:
+    linear-gradient(rgba(56,189,248,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.035) 1px, transparent 1px),
+    radial-gradient(circle at 12% 8%, rgba(59,130,246,.12), transparent 28%),
+    radial-gradient(circle at 88% 18%, rgba(14,165,233,.09), transparent 24%);
+  background-size: 38px 38px, 38px 38px, auto, auto;
+}
+
+html[data-theme="dark"] .sidebar {
+  background: rgba(6, 18, 34, .97) !important;
+  border-right-color: rgba(56,189,248,.14);
+  box-shadow: inset -1px 0 0 rgba(56,189,248,.05);
+}
+
+html[data-theme="dark"] .sidebar__logo,
+html[data-theme="dark"] .profile__avatar {
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  box-shadow: 0 0 24px rgba(56,189,248,.22);
+}
+
+html[data-theme="dark"] .sidebar__nav a.active {
+  background: linear-gradient(100deg, #2563eb, #0ea5e9);
+  color: #fff;
+  box-shadow: 0 10px 26px rgba(14,165,233,.18);
+}
+
+html[data-theme="dark"] .button--primary {
+  background: linear-gradient(100deg, #2563eb, #0ea5e9);
+  color: #fff;
+  border-color: rgba(56,189,248,.2);
+  box-shadow: 0 10px 24px rgba(14,165,233,.14);
+}
+
+html[data-theme="dark"] .button--ghost {
+  color: #7dd3fc;
+  background: rgba(14,165,233,.08);
+  border-color: rgba(56,189,248,.18);
+}
+
+html[data-theme="dark"] .button--ghost:hover,
+html[data-theme="dark"] .button--ghost:focus-visible {
+  background: rgba(14,165,233,.14);
+  border-color: rgba(56,189,248,.34);
+  box-shadow: 0 8px 22px rgba(14,165,233,.1);
+}
+
+html[data-theme="dark"] button[data-action*="view"],
+html[data-theme="dark"] button[data-action*="detail"] {
+  color: #67e8f9 !important;
+  background: rgba(6,182,212,.10) !important;
+  border-color: rgba(34,211,238,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="edit"],
+html[data-theme="dark"] button[data-action*="update"],
+html[data-theme="dark"] button[data-action*="assign"] {
+  color: #c4b5fd !important;
+  background: rgba(124,58,237,.13) !important;
+  border-color: rgba(167,139,250,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="delete"],
+html[data-theme="dark"] .ui-button--danger {
+  color: #fda4af !important;
+  background: rgba(225,29,72,.13) !important;
+  border-color: rgba(251,113,133,.30) !important;
+}
+
+html[data-theme="dark"] button[data-action*="lock"]:not([data-action*="unlock"]) {
+  color: #fcd34d !important;
+  background: rgba(217,119,6,.12) !important;
+  border-color: rgba(245,158,11,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="unlock"],
+html[data-theme="dark"] button[data-action*="restore"],
+html[data-theme="dark"] button[id*="apply"],
+html[data-theme="dark"] button[data-action*="apply"] {
+  color: #6ee7b7 !important;
+  background: rgba(5,150,105,.13) !important;
+  border-color: rgba(52,211,153,.28) !important;
+}
+
+html[data-theme="dark"] button[id*="reset"],
+html[data-theme="dark"] button[data-action*="reset"] {
+  color: #cbd5e1 !important;
+  background: rgba(100,116,139,.13) !important;
+  border-color: rgba(148,163,184,.20) !important;
+}
+
+html[data-theme="dark"] .dashboard__panel,
+html[data-theme="dark"] .content__panel,
+html[data-theme="dark"] .metric-card,
+html[data-theme="dark"] .device-card,
+html[data-theme="dark"] .tickets__hero,
+html[data-theme="dark"] .tickets__toolbar,
+html[data-theme="dark"] .detail__header,
+html[data-theme="dark"] .topbar__profile,
+html[data-theme="dark"] .settings-card,
+html[data-theme="dark"] .report-filter-bar {
+  border-color: rgba(56,189,248,.14);
+  box-shadow: 0 16px 38px rgba(0,0,0,.16), inset 0 1px 0 rgba(125,211,252,.025);
+}
+
+html[data-theme="dark"] .table-wrap {
+  border-color: rgba(56,189,248,.12) !important;
+}
+
+html[data-theme="dark"] .dashboard-table tbody tr:hover,
+html[data-theme="dark"] .tickets-table tbody tr:hover,
+html[data-theme="dark"] .users-table tbody tr:hover,
+html[data-theme="dark"] .devices-table tbody tr:hover,
+html[data-theme="dark"] .network-table tbody tr:hover {
+  background: rgba(14,165,233,.065);
+}

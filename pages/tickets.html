@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phiếu hỗ trợ | Cổng IT Support</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
+  </head>
+  <body>
+    <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Điều hướng chính">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">IT</div>
+          <div>
+            <p class="sidebar__product">IT Support</p>
+            <span class="sidebar__subtitle">Portal</span>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav" aria-label="Menu bên">
+          <ul>
+            <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+            <li><a href="tickets.html" data-permission="tickets" class="active" aria-current="page">Phiếu hỗ trợ</a></li>
+            <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+            <li><a href="users.html" data-permission="users">Người dùng</a></li>
+            <li><a href="network.html" data-permission="network">Mạng</a></li>
+            <li><a href="reports.html" data-permission="reports">Báo cáo</a></li>
+            <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
+          </ul>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="sidebar__logout" type="button">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div class="topbar__heading">
+            <p class="topbar__eyebrow">Chào mừng trở lại</p>
+            <h1>Phiếu hỗ trợ</h1>
+          </div>
+
+          <div class="topbar__profile">
+            <div class="profile__avatar" data-user-avatar></div>
+            <div class="profile__info">
+              <span class="profile__name" data-user-name></span>
+              <span class="profile__role" data-user-role></span>
+            </div>
+          </div>
+        </header>
+
+        <main class="content" id="main-content">
+          <section class="page-header tickets__hero">
+            <div>
+              <p class="topbar__eyebrow">Quản lý và theo dõi yêu cầu hỗ trợ IT.</p>
+              <h2>Phiếu hỗ trợ</h2>
+            </div>
+          </section>
+
+          <section class="tickets__toolbar">
+            <label class="tickets__search" for="search-ticket">
+              <span class="visually-hidden">Tìm kiếm phiếu</span>
+              <input id="search-ticket" type="search" placeholder="Tìm kiếm phiếu" />
+            </label>
+
+            <div class="tickets__filters">
+              <div class="tickets__filter">
+                <label for="status-filter">Trạng thái</label>
+                <select id="status-filter"><option>Tất cả trạng thái</option></select>
+              </div>
+              <div class="tickets__filter">
+                <label for="priority-filter">Ưu tiên</label>
+                <select id="priority-filter"><option>Tất cả mức ưu tiên</option></select>
+              </div>
+              <div class="tickets__filter">
+                <label for="category-filter">Danh mục</label>
+                <select id="category-filter"><option>Tất cả danh mục</option></select>
+              </div>
+            </div>
+
+            <button class="button button--primary" type="button" data-action="open-create-ticket">Tạo phiếu</button>
+          </section>
+
+          <p id="ticket-feedback" role="status" hidden></p>
+
+          <section class="content__panel" id="create-ticket-panel" hidden>
+            <div class="panel__header">
+              <h2>Tạo phiếu hỗ trợ</h2>
+              <p>Nhập thông tin sự cố hoặc yêu cầu cần bộ phận IT hỗ trợ.</p>
+            </div>
+
+            <form id="create-ticket-form">
+              <div class="tickets__filters">
+                <div class="tickets__filter">
+                  <label for="ticket-title">Tiêu đề</label>
+                  <input id="ticket-title" name="title" type="text" maxlength="120" required />
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-category">Danh mục</label>
+                  <select id="ticket-category" name="category" required>
+                    <option value="">Chọn danh mục</option>
+                    <option value="hardware">Phần cứng</option>
+                    <option value="software">Phần mềm</option>
+                    <option value="network">Mạng</option>
+                    <option value="account">Tài khoản</option>
+                    <option value="printer">Máy in</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-priority">Mức ưu tiên</label>
+                  <select id="ticket-priority" name="priority" required>
+                    <option value="">Chọn mức ưu tiên</option>
+                    <option value="low">Thấp</option>
+                    <option value="medium">Trung bình</option>
+                    <option value="high">Cao</option>
+                    <option value="critical">Khẩn cấp</option>
+                  </select>
+                </div>
+
+                <div class="tickets__filter">
+                  <label for="ticket-device-id">Mã thiết bị (không bắt buộc)</label>
+                  <input id="ticket-device-id" name="deviceId" type="text" placeholder="Ví dụ: DEV-001" />
+                </div>
+              </div>
+
+              <div class="tickets__filter">
+                <label for="ticket-description">Mô tả</label>
+                <textarea id="ticket-description" name="description" rows="5" maxlength="1000" required></textarea>
+              </div>
+
+              <p id="create-ticket-error" role="alert" hidden></p>
+
+              <div class="tickets__filters">
+                <button class="button button--primary" type="submit">Lưu phiếu</button>
+                <button class="button button--ghost" id="cancel-create-ticket" type="button">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="dashboard__summary tickets__summary">
+            <article class="metric-card">
+              <div><p class="metric-card__label">Phiếu mở</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
+            </article>
+            <article class="metric-card">
+              <div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
+            </article>
+            <article class="metric-card">
+              <div><p class="metric-card__label">Đang chờ</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
+            </article>
+            <article class="metric-card">
+              <div><p class="metric-card__label">Đã giải quyết</p><p class="metric-card__value">0</p></div>
+              <span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span>
+            </article>
+          </section>
+
+          <section class="dashboard__panel">
+            <div class="panel__header">
+              <h2>Hàng đợi phiếu</h2>
+              <p>Duyệt, sắp xếp và xử lý các yêu cầu được gửi qua cổng hỗ trợ IT.</p>
+            </div>
+
+            <div class="table-wrap">
+              <table class="dashboard-table tickets-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Mã phiếu</th>
+                    <th scope="col">Tiêu đề</th>
+                    <th scope="col">Người yêu cầu</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Ưu tiên</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Người phụ trách</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="tickets__empty" hidden>
+              <div class="empty-state">
+                <h3>Không có phiếu nào</h3>
+                <p>Chưa có phiếu hỗ trợ.</p>
+                <button class="button button--primary" type="button" data-action="open-create-ticket">Tạo phiếu đầu tiên</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script src="../data/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ticket-action-permissions.js"></script>
+    <script src="../js/ticket-operations.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/profile.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/ticket-activity.js"></script>
+    <script src="../js/tickets-integration.js"></script>
+    <script src="../js/tickets.js"></script>
+  </body>
+</html>
