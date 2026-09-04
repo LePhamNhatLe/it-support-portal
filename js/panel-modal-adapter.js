@@ -1,6 +1,9 @@
 (function () {
   const CONFIG = {
     "create-ticket-panel": { size: "lg", title: "Tạo phiếu hỗ trợ" },
+    "edit-ticket-panel": { size: "lg", title: "Chỉnh sửa phiếu" },
+    "assign-ticket-panel": { size: "md", title: "Phân công kỹ thuật viên" },
+    "status-ticket-panel": { size: "md", title: "Thay đổi trạng thái" },
     "device-editor-panel": { size: "xl", title: "Thông tin thiết bị" },
     "device-detail-panel": { size: "lg", title: "Chi tiết thiết bị" },
     "user-editor-panel": { size: "xl", title: "Thông tin người dùng" },
