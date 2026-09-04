@@ -6,6 +6,7 @@
   <title>Báo cáo | Cổng IT Support</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true">
+  <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true">
   <link rel="stylesheet" href="../css/reports-polish.css">
 </head>
 <body>
@@ -43,15 +44,15 @@
         </section>
 
         <section class="dashboard__summary tickets__summary report-summary">
-          <article class="metric-card"><div><p class="metric-card__label">Tổng yêu cầu</p><p class="metric-card__value" data-report="tickets-total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Theo bộ lọc</span></article>
+          <article class="metric-card"><div><p class="metric-card__label">Tổng phiếu</p><p class="metric-card__value" data-report="tickets-total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Theo bộ lọc</span></article>
           <article class="metric-card"><div><p class="metric-card__label">Đã giải quyết</p><p class="metric-card__value" data-report="tickets-resolved">0</p></div><span class="metric-card__delta metric-card__delta--success" data-report="tickets-resolved-rate">0%</span></article>
           <article class="metric-card"><div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value" data-report="tickets-processing">0</p></div><span class="metric-card__delta metric-card__delta--warning" data-report="tickets-processing-rate">0%</span></article>
-          <article class="metric-card"><div><p class="metric-card__label">TG xử lý TB</p><p class="metric-card__value" data-report="avg-resolution">-</p></div><span class="metric-card__delta metric-card__delta--neutral">Ticket đã xử lý</span></article>
+          <article class="metric-card"><div><p class="metric-card__label">Thời gian xử lý TB</p><p class="metric-card__value" data-report="avg-resolution">-</p></div><span class="metric-card__delta metric-card__delta--neutral">Phiếu đã xử lý</span></article>
         </section>
 
         <section class="report-distribution-grid">
-          <article class="dashboard__panel"><div class="panel__header"><h2>Theo trạng thái</h2><p>Tỷ lệ trạng thái của ticket trong bộ lọc.</p></div><div class="report-bar-list" id="report-status-list"></div></article>
-          <article class="dashboard__panel"><div class="panel__header"><h2>Theo ưu tiên</h2><p>Phân bố mức độ ưu tiên của ticket.</p></div><div class="report-bar-list" id="report-priority-list"></div></article>
+          <article class="dashboard__panel"><div class="panel__header"><h2>Theo trạng thái</h2><p>Tỷ lệ trạng thái của phiếu trong bộ lọc.</p></div><div class="report-bar-list" id="report-status-list"></div></article>
+          <article class="dashboard__panel"><div class="panel__header"><h2>Theo ưu tiên</h2><p>Phân bố mức độ ưu tiên của phiếu.</p></div><div class="report-bar-list" id="report-priority-list"></div></article>
           <article class="dashboard__panel"><div class="panel__header"><h2>Theo danh mục</h2><p>Nhóm sự cố và yêu cầu phổ biến.</p></div><div class="report-bar-list" id="report-category-list"></div></article>
         </section>
 
@@ -62,19 +63,19 @@
             <div class="report-inventory-card"><span>Đang sử dụng</span><strong data-report="devices-in-use">0</strong></div>
             <div class="report-inventory-card"><span>Bảo trì</span><strong data-report="devices-maintenance">0</strong></div>
             <div class="report-inventory-card"><span>Ngưng sử dụng</span><strong data-report="devices-retired">0</strong></div>
-            <div class="report-inventory-card"><span>Tổng Network</span><strong data-report="network-total">0</strong></div>
-            <div class="report-inventory-card"><span>Network Online</span><strong data-report="network-online">0</strong></div>
-            <div class="report-inventory-card"><span>Network có vấn đề</span><strong data-report="network-issues">0</strong></div>
+            <div class="report-inventory-card"><span>Tổng thiết bị mạng</span><strong data-report="network-total">0</strong></div>
+            <div class="report-inventory-card"><span>Mạng trực tuyến</span><strong data-report="network-online">0</strong></div>
+            <div class="report-inventory-card"><span>Mạng có vấn đề</span><strong data-report="network-issues">0</strong></div>
           </div>
         </section>
 
         <section class="dashboard__panel">
-          <div class="panel__header"><h2>Hiệu suất nhân viên kỹ thuật</h2><p>Tính theo ticket được phân công và thời gian xử lý.</p></div>
-          <div class="table-wrap"><table class="dashboard-table performance-table"><thead><tr><th>Nhân viên</th><th>Yêu cầu giao</th><th>Đã giải quyết</th><th>Đang xử lý</th><th>TG xử lý TB</th></tr></thead><tbody id="report-performance-body"></tbody></table></div>
+          <div class="panel__header"><h2>Hiệu suất nhân viên kỹ thuật</h2><p>Tính theo phiếu được phân công và thời gian xử lý.</p></div>
+          <div class="table-wrap"><table class="dashboard-table performance-table"><thead><tr><th>Nhân viên</th><th>Phiếu được giao</th><th>Đã giải quyết</th><th>Đang xử lý</th><th>Thời gian xử lý TB</th></tr></thead><tbody id="report-performance-body"></tbody></table></div>
         </section>
 
         <section class="dashboard__panel report-export-panel">
-          <div class="panel__header"><h2>Xuất báo cáo</h2><p>In trang hoặc xuất ticket theo bộ lọc hiện tại.</p></div>
+          <div class="panel__header"><h2>Xuất báo cáo</h2><p>In trang hoặc xuất danh sách phiếu theo bộ lọc hiện tại.</p></div>
           <div class="report-action-buttons"><button class="button button--ghost" id="report-print" type="button">In báo cáo</button><button class="button button--primary" id="report-export" type="button">Xuất CSV</button></div>
         </section>
       </main>
