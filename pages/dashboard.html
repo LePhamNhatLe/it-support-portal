@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bảng điều khiển | Cổng IT Support</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
+    <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
@@ -41,9 +43,9 @@
         <main class="content" id="main-content">
           <section class="dashboard__summary">
             <article class="metric-card"><div><p class="metric-card__label">Tổng phiếu</p><p class="metric-card__value" data-dashboard="tickets-total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Theo quyền hiện tại</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Phiếu mở</p><p class="metric-card__value" data-dashboard="tickets-open">0</p></div><span class="metric-card__delta metric-card__delta--danger">Open / Reopened</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value" data-dashboard="tickets-processing">0</p></div><span class="metric-card__delta metric-card__delta--warning">Assigned / Pending</span></article>
-            <article class="metric-card"><div><p class="metric-card__label">Đã xử lý</p><p class="metric-card__value" data-dashboard="tickets-resolved">0</p></div><span class="metric-card__delta metric-card__delta--success">Resolved / Closed</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Phiếu mở</p><p class="metric-card__value" data-dashboard="tickets-open">0</p></div><span class="metric-card__delta metric-card__delta--danger">Mở / Mở lại</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value" data-dashboard="tickets-processing">0</p></div><span class="metric-card__delta metric-card__delta--warning">Đã phân công / Đang xử lý / Đang chờ</span></article>
+            <article class="metric-card"><div><p class="metric-card__label">Đã xử lý</p><p class="metric-card__value" data-dashboard="tickets-resolved">0</p></div><span class="metric-card__delta metric-card__delta--success">Đã giải quyết / Đã đóng</span></article>
           </section>
 
           <section class="dashboard__grid">
@@ -71,9 +73,9 @@
             <article class="dashboard__panel dashboard__panel--system">
               <div class="panel__header"><h2>Tổng quan hệ thống</h2><p>Người dùng và hạ tầng mạng đang được quản lý.</p></div>
               <div class="device-overview dashboard__system-overview">
-                <article class="device-card device-card--active"><h3>User hoạt động</h3><p class="device-card__value" data-dashboard="users-active">0</p></article>
-                <article class="device-card device-card--active"><h3>Network online</h3><p class="device-card__value" data-dashboard="network-online">0</p></article>
-                <article class="device-card device-card--repair"><h3>Network cảnh báo/offline</h3><p class="device-card__value" data-dashboard="network-alert">0</p></article>
+                <article class="device-card device-card--active"><h3>Người dùng hoạt động</h3><p class="device-card__value" data-dashboard="users-active">0</p></article>
+                <article class="device-card device-card--active"><h3>Mạng trực tuyến</h3><p class="device-card__value" data-dashboard="network-online">0</p></article>
+                <article class="device-card device-card--repair"><h3>Mạng cảnh báo / ngoài tuyến</h3><p class="device-card__value" data-dashboard="network-alert">0</p></article>
               </div>
             </article>
           </section>
