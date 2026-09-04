@@ -16,6 +16,15 @@
     document.head.appendChild(link);
   }
 
+  function loadActionColors() {
+    if (document.querySelector('link[data-action-colors="true"]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = resolveAsset("/css/action-colors.css");
+    link.dataset.actionColors = "true";
+    document.head.appendChild(link);
+  }
+
   function loadPanelModalAdapter() {
     if (document.querySelector('script[data-panel-modal-adapter="true"]')) return;
     const script = document.createElement("script");
@@ -236,6 +245,7 @@
   }
 
   loadTechTheme();
+  loadActionColors();
 
   window.AppUI = {
     notify,
