@@ -3,6 +3,7 @@
 
 .content {
   gap: 1.35rem;
+  min-width: 0;
 }
 
 /* Every major content block should read as a contained card, not a flat horizontal strip. */
@@ -27,6 +28,7 @@
 .device-card,
 .report-filter-bar,
 .settings-card {
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 20px;
 }
@@ -45,27 +47,44 @@
 }
 
 .panel__header {
+  min-width: 0;
   margin-bottom: 1rem;
 }
 
 .panel__header h2,
 .panel__header h3 {
   margin-top: 0;
+  overflow-wrap: anywhere;
 }
 
 .panel__header p {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 /* Toolbars should also feel contained instead of floating between cards. */
 .tickets__toolbar {
+  min-width: 0;
   padding: 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(31, 45, 61, 0.04);
+}
+
+.tickets__search,
+.tickets__filters,
+.tickets__filter {
+  min-width: 0;
+}
+
+.tickets__search input,
+.tickets__filter input,
+.tickets__filter select,
+.tickets__filter textarea {
+  max-width: 100%;
 }
 
 /* Keep summary cards visually separated from the page background. */
@@ -81,6 +100,12 @@
   box-shadow: 0 10px 24px rgba(31, 45, 61, 0.04);
 }
 
+.metric-card__label,
+.metric-card__delta,
+.device-card h3 {
+  overflow-wrap: anywhere;
+}
+
 .metric-card__value {
   margin-top: .45rem;
 }
@@ -88,6 +113,7 @@
 /* Any dashboard grid becomes a proper card grid with visible breathing room. */
 .dashboard__grid,
 .report-distribution-grid {
+  min-width: 0;
   gap: 1rem;
   align-items: stretch;
 }
@@ -107,9 +133,11 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   width: 100%;
+  min-width: 0;
 }
 
 .dashboard__system-overview .device-card {
+  min-width: 0;
   min-height: 118px;
   padding: 1.05rem 1.15rem;
 }
@@ -122,11 +150,15 @@
 /* Tables sit inside the card instead of visually bleeding into its edges. */
 .dashboard__panel > .table-wrap,
 .content__panel > .table-wrap {
+  min-width: 0;
+  max-width: 100%;
   margin-top: .25rem;
   border: 1px solid var(--border);
   border-radius: 14px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: var(--surface-strong);
+  -webkit-overflow-scrolling: touch;
 }
 
 .dashboard-table,
@@ -143,10 +175,12 @@
 .dashboard__panel--wide .device-overview,
 .device-overview {
   width: 100%;
+  min-width: 0;
 }
 
 .device-overview .device-card {
   width: 100%;
+  min-width: 0;
 }
 
 /* Avoid large empty horizontal bands on content pages. */
@@ -157,16 +191,19 @@
 /* Detail blocks inside modal are clearly separated and fill the available area. */
 .ui-promoted-panel .detail__fields {
   width: 100%;
+  min-width: 0;
   justify-content: space-between;
   gap: 1rem;
 }
 
 .ui-promoted-panel .detail__fields > * {
   width: 100%;
+  min-width: 0;
   min-height: 82px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow-wrap: anywhere;
 }
 
 .ui-promoted-panel .detail__description {
@@ -199,13 +236,7 @@ html[data-theme="dark"] .content__panel > .table-wrap {
   }
 
   .dashboard__system-overview {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .dashboard__system-overview {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -229,5 +260,9 @@ html[data-theme="dark"] .content__panel > .table-wrap {
 
   .metric-card {
     padding: 1rem;
+  }
+
+  .dashboard__system-overview {
+    grid-template-columns: 1fr;
   }
 }
