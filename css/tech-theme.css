@@ -39,6 +39,87 @@ html:not([data-theme="dark"]) .sidebar__nav a.active {
   box-shadow: 0 10px 24px rgba(37,99,235,.18);
 }
 
+/* Action hierarchy: actions should be recognizable before the user reads every label. */
+.dashboard-table td:last-child,
+.tickets-table td:last-child,
+.users-table td:last-child,
+.devices-table td:last-child,
+.network-table td:last-child {
+  white-space: nowrap;
+}
+
+.dashboard-table td:last-child .button,
+.tickets-table td:last-child .button,
+.users-table td:last-child .button,
+.devices-table td:last-child .button,
+.network-table td:last-child .button {
+  margin: .18rem .32rem .18rem 0;
+  min-height: 38px;
+  padding-inline: .9rem;
+  border-radius: 11px;
+  font-weight: 650;
+}
+
+/* View/detail actions: cyan, informative and low-risk. */
+html:not([data-theme="dark"]) button[data-action*="view"],
+html:not([data-theme="dark"]) button[data-action*="detail"],
+html:not([data-theme="dark"]) a[data-action*="view"],
+html:not([data-theme="dark"]) a[data-action*="detail"] {
+  color: #0369a1 !important;
+  background: linear-gradient(180deg, #ecfeff, #cffafe) !important;
+  border-color: rgba(8,145,178,.30) !important;
+  box-shadow: 0 6px 14px rgba(8,145,178,.10);
+}
+
+/* Edit/update/assign actions: indigo-purple, visually distinct from view. */
+html:not([data-theme="dark"]) button[data-action*="edit"],
+html:not([data-theme="dark"]) button[data-action*="update"],
+html:not([data-theme="dark"]) button[data-action*="assign"] {
+  color: #5b21b6 !important;
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe) !important;
+  border-color: rgba(109,40,217,.28) !important;
+  box-shadow: 0 6px 14px rgba(109,40,217,.10);
+}
+
+/* Destructive actions must look destructive, instead of politely impersonating a normal button. */
+html:not([data-theme="dark"]) button[data-action*="delete"],
+html:not([data-theme="dark"]) .ui-button--danger {
+  color: #b91c1c !important;
+  background: linear-gradient(180deg, #fff1f2, #ffe4e6) !important;
+  border-color: rgba(220,38,38,.30) !important;
+  box-shadow: 0 6px 14px rgba(220,38,38,.10);
+}
+
+html:not([data-theme="dark"]) button[data-action*="lock"]:not([data-action*="unlock"]) {
+  color: #a16207 !important;
+  background: linear-gradient(180deg, #fffbeb, #fef3c7) !important;
+  border-color: rgba(217,119,6,.30) !important;
+}
+
+html:not([data-theme="dark"]) button[data-action*="unlock"],
+html:not([data-theme="dark"]) button[data-action*="restore"] {
+  color: #047857 !important;
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5) !important;
+  border-color: rgba(5,150,105,.30) !important;
+}
+
+/* Filter/form action pairs: Apply is positive, Reset is intentionally neutral. */
+html:not([data-theme="dark"]) button[id*="apply"],
+html:not([data-theme="dark"]) button[data-action*="apply"] {
+  color: #ffffff !important;
+  background: linear-gradient(100deg, #059669, #0d9488) !important;
+  border-color: rgba(5,150,105,.35) !important;
+  box-shadow: 0 9px 20px rgba(5,150,105,.18);
+}
+
+html:not([data-theme="dark"]) button[id*="reset"],
+html:not([data-theme="dark"]) button[data-action*="reset"] {
+  color: #475569 !important;
+  background: linear-gradient(180deg, #f8fafc, #e2e8f0) !important;
+  border-color: rgba(100,116,139,.25) !important;
+  box-shadow: none;
+}
+
 /* Ticket detail top area: keep information and actions visually balanced. */
 .detail__header {
   display: grid;
@@ -96,6 +177,16 @@ html:not([data-theme="dark"]) .sidebar__nav a.active {
 
   .detail__actions {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-table td:last-child .button,
+  .tickets-table td:last-child .button,
+  .users-table td:last-child .button,
+  .devices-table td:last-child .button,
+  .network-table td:last-child .button {
+    margin-right: .22rem;
+    min-height: 36px;
+    padding-inline: .78rem;
   }
 }
 
@@ -164,6 +255,50 @@ html[data-theme="dark"] .button--ghost:focus-visible {
   background: rgba(14,165,233,.14);
   border-color: rgba(56,189,248,.34);
   box-shadow: 0 8px 22px rgba(14,165,233,.1);
+}
+
+html[data-theme="dark"] button[data-action*="view"],
+html[data-theme="dark"] button[data-action*="detail"] {
+  color: #67e8f9 !important;
+  background: rgba(6,182,212,.10) !important;
+  border-color: rgba(34,211,238,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="edit"],
+html[data-theme="dark"] button[data-action*="update"],
+html[data-theme="dark"] button[data-action*="assign"] {
+  color: #c4b5fd !important;
+  background: rgba(124,58,237,.13) !important;
+  border-color: rgba(167,139,250,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="delete"],
+html[data-theme="dark"] .ui-button--danger {
+  color: #fda4af !important;
+  background: rgba(225,29,72,.13) !important;
+  border-color: rgba(251,113,133,.30) !important;
+}
+
+html[data-theme="dark"] button[data-action*="lock"]:not([data-action*="unlock"]) {
+  color: #fcd34d !important;
+  background: rgba(217,119,6,.12) !important;
+  border-color: rgba(245,158,11,.28) !important;
+}
+
+html[data-theme="dark"] button[data-action*="unlock"],
+html[data-theme="dark"] button[data-action*="restore"],
+html[data-theme="dark"] button[id*="apply"],
+html[data-theme="dark"] button[data-action*="apply"] {
+  color: #6ee7b7 !important;
+  background: rgba(5,150,105,.13) !important;
+  border-color: rgba(52,211,153,.28) !important;
+}
+
+html[data-theme="dark"] button[id*="reset"],
+html[data-theme="dark"] button[data-action*="reset"] {
+  color: #cbd5e1 !important;
+  background: rgba(100,116,139,.13) !important;
+  border-color: rgba(148,163,184,.20) !important;
 }
 
 html[data-theme="dark"] .dashboard__panel,
