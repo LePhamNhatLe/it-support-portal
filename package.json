@@ -1,0 +1,20 @@
+{
+  "name": "it-support-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IT Support Portal frontend and Node.js/Express backend practice project",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node --watch server/src/server.js",
+    "start": "node server/src/server.js",
+    "check:server": "node --check server/src/server.js && node --check server/src/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0"
+  }
+}
