@@ -276,6 +276,9 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+  window.addEventListener("load", init, { once: true });
+  window.setTimeout(init, 0);
+  window.setTimeout(init, 250);
 
   window.P23ApiSync = { init, patchDevices, patchNetwork, patchTickets, patchSettings, hydrateReports };
 })();
