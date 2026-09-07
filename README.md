@@ -141,24 +141,29 @@ tests/regression.html
 
 The runner covers authentication, session handling, permissions, tickets, ticket privacy, devices, users, network inventory, dashboard data, reports, settings, cross-module references, and the module-level regression suites.
 
-Before a release merge, the regression page should be run manually in a browser and confirmed PASS because this repository currently has no automated GitHub Actions workflow.
+The frontend regression runner has been completed and is kept separate from production pages. A final manual browser smoke test is still recommended before merging because this repository currently has no automated GitHub Actions workflow.
 
 ## UI / UX Status
 
-P19 is currently in progress.
+P19 frontend UI / UX polish is complete at code level.
 
 Completed polish includes:
 
 - Shared rounded content surfaces
 - Modal-based CRUD flows
-- Dark and light themes
+- Technology-oriented light and dark themes
+- Unified blue action-button hierarchy
 - Settings redesign
 - Reports layout polish
 - Login redesign
 - Network overview layout polish
 - Dashboard layout polish
+- Responsive grid hardening for dashboard, device, and system overviews
+- Table overflow containment and long-label wrapping
+- Removal of stale merge-conflict markers and duplicate rendered blocks
+- Production CSS loading cleanup to reduce theme/action-style flashing
 
-Remaining P19 work is primarily responsive cleanup across tablet and mobile breakpoints, long-label wrapping, and horizontal-overflow checks.
+A final manual browser smoke test on desktop, tablet, and mobile is recommended after pulling the latest `develop` branch.
 
 ## Technology
 
@@ -190,8 +195,8 @@ Open `index.html` in a modern browser. A local static server such as VS Code Liv
 - P16 Reports: DONE
 - P17 Settings: DONE
 - P18 Full Frontend Regression: DONE
-- P19 UI / UX Polish: IN PROGRESS
-- P20 README and Frontend Portfolio Release: NEXT
+- P19 UI / UX Polish: DONE
+- P20 README and Frontend Portfolio Release: READY TO MERGE
 - P21 Node.js + Express Backend: PLANNED
 - P22 MySQL: PLANNED
 - P23 Frontend / Backend Integration: PLANNED
