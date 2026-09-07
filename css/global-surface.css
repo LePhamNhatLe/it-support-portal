@@ -6,6 +6,18 @@
   min-width: 0;
 }
 
+.workspace,
+.topbar,
+.topbar__heading,
+.topbar__profile,
+.dashboard__summary,
+.dashboard__grid,
+.device-overview,
+.report-distribution-grid,
+.report-grid {
+  min-width: 0;
+}
+
 /* Every major content block should read as a contained card, not a flat horizontal strip. */
 .content > .dashboard__panel,
 .content > .content__panel,
@@ -123,17 +135,27 @@
   height: 100%;
 }
 
+/* Dashboard and inventory overview cards stay balanced without forcing overflow. */
+.device-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.device-overview .device-card {
+  width: 100%;
+  min-width: 0;
+}
+
 /* Dashboard system overview has 3 values, so do not force the 4-column device rhythm. */
 .dashboard__panel--system {
   grid-column: 1 / -1;
 }
 
 .dashboard__system-overview {
-  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  width: 100%;
-  min-width: 0;
 }
 
 .dashboard__system-overview .device-card {
@@ -169,18 +191,6 @@
 .performance-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-/* Network overview uses all available width with balanced spacing. */
-.dashboard__panel--wide .device-overview,
-.device-overview {
-  width: 100%;
-  min-width: 0;
-}
-
-.device-overview .device-card {
-  width: 100%;
-  min-width: 0;
 }
 
 /* Avoid large empty horizontal bands on content pages. */
@@ -235,6 +245,7 @@ html[data-theme="dark"] .content__panel > .table-wrap {
     padding: 1.2rem;
   }
 
+  .device-overview,
   .dashboard__system-overview {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -262,7 +273,18 @@ html[data-theme="dark"] .content__panel > .table-wrap {
     padding: 1rem;
   }
 
+  .device-overview,
   .dashboard__system-overview {
     grid-template-columns: 1fr;
+  }
+
+  .topbar__heading h1,
+  .topbar__eyebrow,
+  .profile__name,
+  .profile__role,
+  .metric-card__label,
+  .metric-card__delta,
+  .device-card h3 {
+    overflow-wrap: anywhere;
   }
 }
