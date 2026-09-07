@@ -3,18 +3,19 @@ const { getPool } = require("../config/database");
 const resources = {
   users: {
     table: "users",
-    fields: ["id", "name", "email", "role", "department", "status", "createdAt"],
-    columnMap: { createdAt: "created_at" }
+    fields: ["id", "name", "email", "role", "department", "phone", "status", "createdAt", "updatedAt"],
+    columnMap: { createdAt: "created_at", updatedAt: "updated_at" }
   },
   tickets: {
     table: "tickets",
-    fields: ["id", "title", "description", "category", "priority", "status", "requesterEmail", "assigneeEmail", "deviceId", "createdAt", "updatedAt"],
+    fields: ["id", "title", "description", "category", "priority", "status", "requesterEmail", "assigneeEmail", "deviceId", "createdAt", "updatedAt", "resolvedAt"],
     columnMap: {
       requesterEmail: "requester_email",
       assigneeEmail: "assignee_email",
       deviceId: "device_id",
       createdAt: "created_at",
-      updatedAt: "updated_at"
+      updatedAt: "updated_at",
+      resolvedAt: "resolved_at"
     }
   },
   devices: {
@@ -95,7 +96,7 @@ async function create(collection, value) {
 async function update(collection, id, patch) {
   const resource = meta(collection);
   const fields = resource.fields.filter(
-    (field) => field !== "id" && Object.prototype.hasOwnProperty.call(patch, field)
+    (field) => field !== "id" && !["createdAt", "updatedAt"].includes(field) && Object.prototype.hasOwnProperty.call(patch, field)
   );
   if (!fields.length) return get(collection, id);
 
