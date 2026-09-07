@@ -13,6 +13,19 @@
     }
   }
 
+  function closeEditor() {
+    const panel = document.getElementById("user-editor-panel");
+    if (panel) panel.hidden = true;
+  }
+
+  function normalizeText(value) {
+    return typeof value === "string" ? value.trim() : "";
+  }
+
+  function normalizeEmail(value) {
+    return normalizeText(value).toLowerCase();
+  }
+
   function normalizeUserForApi(user) {
     return {
       id: user.id,
@@ -164,8 +177,54 @@
     window.UserStorage.__apiSyncPatched = true;
   }
 
+  function handleFormSubmit(event) {
+    const form = event.target.closest("#user-form");
+    if (!form || !window.UserStorage) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const payload = {
+      id: normalizeText(form.elements.id && form.elements.id.value),
+      name: normalizeText(form.elements.name && form.elements.name.value),
+      email: normalizeEmail(form.elements.email && form.elements.email.value),
+      department: form.elements.department ? form.elements.department.value : "Khác",
+      role: form.elements.role ? form.elements.role.value : "user",
+      phone: normalizeText(form.elements.phone && form.elements.phone.value),
+      status: form.elements.status ? form.elements.status.value : "active"
+    };
+
+    const result = form.dataset.mode === "edit"
+      ? window.UserStorage.updateUser(form.dataset.userId, payload)
+      : window.UserStorage.createUser(payload);
+
+    if (!result.ok) {
+      setFeedback(result.message, true);
+      return;
+    }
+
+    closeEditor();
+    renderAll();
+    setFeedback(result.message, false);
+  }
+
+  function handleStatusAction(event) {
+    const button = event.target.closest('button[data-action="lock-user"][data-user-id], button[data-action="unlock-user"][data-user-id]');
+    if (!button || !window.UserStorage) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const status = button.dataset.action === "lock-user" ? "locked" : "active";
+    const result = window.UserStorage.changeUserStatus(button.dataset.userId, status);
+    renderAll();
+    setFeedback(result.message, !result.ok);
+  }
+
   function init() {
     patchUserStorage();
+    document.addEventListener("submit", handleFormSubmit, true);
+    document.addEventListener("click", handleStatusAction, true);
     hydrateUsers();
   }
 
