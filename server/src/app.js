@@ -21,6 +21,20 @@ function isAllowedOrigin(origin) {
   return false;
 }
 
+function mapDatabaseError(error) {
+  if (!error || typeof error !== "object") return null;
+  if (error.code === "ER_DUP_ENTRY" || error.errno === 1062) {
+    return { status: 409, code: "DUPLICATE_VALUE", message: "Dữ liệu bị trùng với bản ghi đã tồn tại." };
+  }
+  if (error.code === "ER_ROW_IS_REFERENCED_2" || error.errno === 1451) {
+    return { status: 409, code: "RESOURCE_IN_USE", message: "Không thể xóa dữ liệu vì đang được bản ghi khác sử dụng." };
+  }
+  if (error.code === "ER_NO_REFERENCED_ROW_2" || error.errno === 1452) {
+    return { status: 409, code: "INVALID_REFERENCE", message: "Dữ liệu tham chiếu không tồn tại hoặc không hợp lệ." };
+  }
+  return null;
+}
+
 function createApp() {
   const app = express();
 
@@ -28,7 +42,9 @@ function createApp() {
   app.use(cors({
     origin(origin, callback) {
       if (isAllowedOrigin(origin)) return callback(null, true);
-      return callback(new Error("CORS origin không được phép."));
+      const error = new Error("CORS origin không được phép.");
+      error.code = "CORS_NOT_ALLOWED";
+      return callback(error);
     },
     credentials: false
   }));
@@ -47,10 +63,18 @@ function createApp() {
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);
     console.error(`[${req.requestId || "no-request-id"}]`, error);
+
+    if (error && error.code === "CORS_NOT_ALLOWED") {
+      return fail(res, 403, "CORS_NOT_ALLOWED", "Nguồn truy cập không được phép.");
+    }
+
+    const mapped = mapDatabaseError(error);
+    if (mapped) return fail(res, mapped.status, mapped.code, mapped.message);
+
     return fail(res, 500, "INTERNAL_ERROR", "Đã xảy ra lỗi phía máy chủ.");
   });
 
   return app;
 }
 
-module.exports = { createApp };
+module.exports = { createApp, mapDatabaseError };
