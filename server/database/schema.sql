@@ -4,8 +4,10 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(160) NOT NULL UNIQUE,
   role ENUM('technical_lead','technician','user') NOT NULL,
   department VARCHAR(120) NULL,
+  phone VARCHAR(32) NULL,
   status ENUM('active','disabled','locked') NOT NULL DEFAULT 'active',
-  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS devices (
@@ -52,6 +54,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   device_id VARCHAR(40) NULL,
   created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  resolved_at DATETIME(3) NULL,
   CONSTRAINT fk_tickets_requester FOREIGN KEY (requester_email) REFERENCES users(email)
     ON UPDATE CASCADE ON DELETE SET NULL,
   CONSTRAINT fk_tickets_assignee FOREIGN KEY (assignee_email) REFERENCES users(email)
