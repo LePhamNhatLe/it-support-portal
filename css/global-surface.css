@@ -1,3 +1,6 @@
+@import url("./tech-theme.css");
+@import url("./action-colors.css");
+
 /* P19 shared page-surface polish.
    Gives every module the same card rhythm as Settings without changing business logic. */
 
