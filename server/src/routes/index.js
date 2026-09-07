@@ -9,6 +9,21 @@ const { ok } = require("../utils/http");
 
 const router = express.Router();
 
+router.get("/", (req, res) => ok(res, {
+  name: "IT Support Portal API",
+  version: "v1",
+  status: "running",
+  endpoints: {
+    health: "/api/v1/health",
+    tickets: "/api/v1/tickets",
+    devices: "/api/v1/devices",
+    users: "/api/v1/users",
+    network: "/api/v1/network",
+    settings: "/api/v1/settings",
+    reports: "/api/v1/reports/summary"
+  }
+}));
+
 router.get("/health", (req, res) => ok(res, {
   service: "it-support-portal-api",
   status: "ok",
