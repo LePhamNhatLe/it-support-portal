@@ -32,6 +32,7 @@
       name: user.name,
       email: user.email,
       department: user.department,
+      phone: user.phone || null,
       role: user.role,
       status: user.status
     };
@@ -41,6 +42,7 @@
     return {
       name: user.name,
       department: user.department,
+      phone: user.phone || null,
       role: user.role,
       status: user.status
     };
@@ -56,7 +58,7 @@
       return {
         ...local,
         ...user,
-        phone: local.phone || user.phone || null,
+        phone: user.phone ?? local.phone ?? null,
         updatedAt: user.updatedAt || local.updatedAt || user.createdAt || null
       };
     });
@@ -99,7 +101,7 @@
 
       window.AppApi.post("/users", normalizeUserForApi(result.data))
         .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser, phone: result.data.phone || null };
+          const merged = { ...result.data, ...serverUser };
           const users = window.UserStorage.getUsers().map(function (item) {
             return item.id === merged.id ? merged : item;
           });
@@ -121,7 +123,7 @@
 
       window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(result.data))
         .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser, phone: result.data.phone || null };
+          const merged = { ...result.data, ...serverUser };
           const users = window.UserStorage.getUsers().map(function (item) {
             return item.id === id ? merged : item;
           });
@@ -143,7 +145,7 @@
 
       window.AppApi.patch("/users/" + encodeURIComponent(id), { status: result.data.status })
         .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser, phone: result.data.phone || null };
+          const merged = { ...result.data, ...serverUser };
           const users = window.UserStorage.getUsers().map(function (item) {
             return item.id === id ? merged : item;
           });
