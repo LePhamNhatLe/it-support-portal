@@ -1,4 +1,5 @@
 const express = require("express");
+const env = require("../config/env");
 const tickets = require("./tickets.routes");
 const devices = require("./devices.routes");
 const users = require("./users.routes");
@@ -13,6 +14,7 @@ router.get("/", (req, res) => ok(res, {
   name: "IT Support Portal API",
   version: "v1",
   status: "running",
+  dataSource: env.DATA_SOURCE,
   endpoints: {
     health: "/api/v1/health",
     tickets: "/api/v1/tickets",
@@ -27,6 +29,7 @@ router.get("/", (req, res) => ok(res, {
 router.get("/health", (req, res) => ok(res, {
   service: "it-support-portal-api",
   status: "ok",
+  dataSource: env.DATA_SOURCE,
   timestamp: new Date().toISOString()
 }));
 
