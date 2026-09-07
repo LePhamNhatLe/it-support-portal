@@ -1,7 +1,26 @@
+const fs = require("node:fs");
+const path = require("node:path");
 const mysql = require("mysql2/promise");
 const env = require("./env");
 
 let pool;
+
+function buildSslOptions() {
+  if (!env.DB_SSL) return undefined;
+  if (!env.DB_CA_PATH) {
+    throw new Error("DB_SSL=true nhưng chưa cấu hình DB_CA_PATH trong .env.");
+  }
+
+  const caPath = path.resolve(process.cwd(), env.DB_CA_PATH);
+  if (!fs.existsSync(caPath)) {
+    throw new Error(`Không tìm thấy CA certificate tại: ${caPath}`);
+  }
+
+  return {
+    ca: fs.readFileSync(caPath, "utf8"),
+    rejectUnauthorized: true
+  };
+}
 
 function getPool() {
   if (pool) return pool;
@@ -21,7 +40,7 @@ function getPool() {
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
-    ssl: env.DB_SSL ? { rejectUnauthorized: true } : undefined,
+    ssl: buildSslOptions(),
     timezone: "Z",
     charset: "utf8mb4"
   });
