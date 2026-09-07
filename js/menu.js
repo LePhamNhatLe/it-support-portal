@@ -16,6 +16,35 @@
     document.head.appendChild(script);
   }
 
+  function loadP23ApiSync() {
+    if (document.querySelector('script[data-p23-api-sync="true"]')) return;
+
+    function appendSyncScript() {
+      if (document.querySelector('script[data-p23-api-sync="true"]')) return;
+      const syncScript = document.createElement("script");
+      syncScript.src = resolveAsset("/js/p23-api-sync.js");
+      syncScript.dataset.p23ApiSync = "true";
+      document.head.appendChild(syncScript);
+    }
+
+    if (window.AppApi) {
+      appendSyncScript();
+      return;
+    }
+
+    const existingClient = document.querySelector('script[src*="/js/api-client.js"]');
+    if (existingClient) {
+      existingClient.addEventListener("load", appendSyncScript, { once: true });
+      return;
+    }
+
+    const apiScript = document.createElement("script");
+    apiScript.src = resolveAsset("/js/api-client.js");
+    apiScript.dataset.p23ApiClient = "true";
+    apiScript.addEventListener("load", appendSyncScript, { once: true });
+    document.head.appendChild(apiScript);
+  }
+
   function getCurrentUser() {
     return typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
   }
@@ -233,6 +262,8 @@
     applyTheme,
     closeSidebar
   };
+
+  loadP23ApiSync();
 
   document.addEventListener("DOMContentLoaded", function () {
     applyTheme();
