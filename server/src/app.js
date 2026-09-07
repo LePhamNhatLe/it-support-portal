@@ -5,11 +5,33 @@ const env = require("./config/env");
 const apiRoutes = require("./routes");
 const { fail } = require("./utils/http");
 
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (origin === env.CORS_ORIGIN) return true;
+
+  if (env.NODE_ENV === "development") {
+    try {
+      const url = new URL(origin);
+      return ["localhost", "127.0.0.1"].includes(url.hostname);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 function createApp() {
   const app = express();
 
   app.disable("x-powered-by");
-  app.use(cors({ origin: env.CORS_ORIGIN, credentials: false }));
+  app.use(cors({
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      return callback(new Error("CORS origin không được phép."));
+    },
+    credentials: false
+  }));
   app.use(express.json({ limit: "1mb" }));
 
   app.use((req, res, next) => {
