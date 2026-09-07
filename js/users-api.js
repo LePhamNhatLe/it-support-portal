@@ -20,8 +20,7 @@
       email: user.email,
       department: user.department,
       role: user.role,
-      status: user.status,
-      createdAt: user.createdAt
+      status: user.status
     };
   }
 
