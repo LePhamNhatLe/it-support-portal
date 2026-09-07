@@ -21,7 +21,8 @@
 
   function patchDevices() {
     const store = window.DeviceStorage;
-    if (!store || store.__apiSyncPatched) return;
+    if (!store) return false;
+    if (store.__apiSyncPatched) return true;
     const originalCreate = store.createDevice;
     const originalUpdate = store.updateDevice;
     const originalDelete = store.deleteDevice;
@@ -99,11 +100,13 @@
       document.getElementById("device-editor-panel").hidden = true;
       window.DevicesPage?.renderAll?.(); feedback("device-feedback", result.message, false);
     }, true);
+    return true;
   }
 
   function patchNetwork() {
     const store = window.NetworkStorage;
-    if (!store || store.__apiSyncPatched) return;
+    if (!store) return false;
+    if (store.__apiSyncPatched) return true;
     const originalCreate = store.createNetworkDevice;
     const originalUpdate = store.updateNetworkDevice;
     const originalDelete = store.deleteNetworkDevice;
@@ -172,11 +175,13 @@
       document.getElementById("network-editor-panel").hidden = true;
       window.NetworkPage?.renderAll?.(); feedback("network-feedback", result.message, false);
     }, true);
+    return true;
   }
 
   function patchTickets() {
     const store = window.TicketStorage;
-    if (!store || store.__apiSyncPatched) return;
+    if (!store) return false;
+    if (store.__apiSyncPatched) return true;
     const originalCreate = store.createTicket;
     const originalUpdate = store.updateTicket;
     const originalStatus = store.updateTicketStatus;
@@ -186,14 +191,15 @@
       return {
         id: ticket.id, title: ticket.title, description: ticket.description, category: ticket.category,
         priority: ticket.priority, status: ticket.status, requesterEmail: ticket.requesterEmail || null,
-        assigneeEmail: ticket.assigneeEmail || null, deviceId: ticket.deviceId || null
+        assigneeEmail: ticket.assigneeEmail || null, deviceId: ticket.deviceId || null,
+        resolvedAt: ticket.resolvedAt || null
       };
     }
     function patchPayload(ticket) {
       return {
         title: ticket.title, description: ticket.description, category: ticket.category, priority: ticket.priority,
         status: ticket.status, requesterEmail: ticket.requesterEmail || null, assigneeEmail: ticket.assigneeEmail || null,
-        deviceId: ticket.deviceId || null
+        deviceId: ticket.deviceId || null, resolvedAt: ticket.resolvedAt || null
       };
     }
     function rollback(before, message) {
@@ -220,7 +226,7 @@
     };
     store.updateTicketStatus = function (id, status) {
       const before = store.getTickets().slice(); const result = originalStatus(id, status); if (!result) return null;
-      window.AppApi.patch("/tickets/" + encodeURIComponent(id), { status: result.status }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ trạng thái phiếu."); });
+      window.AppApi.patch("/tickets/" + encodeURIComponent(id), { status: result.status, resolvedAt: result.resolvedAt || null }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ trạng thái phiếu."); });
       return result;
     };
     store.assignTicket = function (id, email) {
@@ -235,10 +241,12 @@
       window.TicketsPage?.renderTicketList?.(); window.TicketDetailPage?.render?.();
       document.documentElement.dataset.ticketsDataSource = "api";
     }).catch(function () { document.documentElement.dataset.ticketsDataSource = "local-cache"; });
+    return true;
   }
 
   function patchSettings() {
-    if (!window.AppStorage || !window.SettingsModule || window.SettingsModule.__apiSyncPatched) return;
+    if (!window.AppStorage || !window.SettingsModule) return false;
+    if (window.SettingsModule.__apiSyncPatched) return true;
     const originalSet = window.AppStorage.set.bind(window.AppStorage);
     let hydrating = false;
     window.AppStorage.set = function (key, value) {
@@ -255,10 +263,13 @@
       hydrating = true; originalSet("systemSettings", settings); hydrating = false;
       window.SettingsModule.render?.(); document.documentElement.dataset.settingsDataSource = "api";
     }).catch(function () { hydrating = false; document.documentElement.dataset.settingsDataSource = "local-cache"; });
+    return true;
   }
 
   function hydrateReports() {
-    if (!window.ReportsModule || !window.AppStorage) return;
+    if (!window.ReportsModule || !window.AppStorage) return false;
+    if (document.documentElement.dataset.reportsHydrationStarted === "true") return true;
+    document.documentElement.dataset.reportsHydrationStarted = "true";
     Promise.all([
       window.AppApi.get("/tickets"), window.AppApi.get("/devices"), window.AppApi.get("/network"), window.AppApi.get("/users")
     ]).then(function (values) {
@@ -268,17 +279,47 @@
       window.AppStorage.set("users", values[3]);
       window.ReportsModule.render(); document.documentElement.dataset.reportsDataSource = "api";
     }).catch(function () { document.documentElement.dataset.reportsDataSource = "local-cache"; });
+    return true;
   }
 
   function init() {
-    patchDevices(); patchNetwork(); patchTickets(); patchSettings(); hydrateReports();
+    return {
+      devices: patchDevices(),
+      network: patchNetwork(),
+      tickets: patchTickets(),
+      settings: patchSettings(),
+      reports: hydrateReports()
+    };
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
-  window.addEventListener("load", init, { once: true });
-  window.setTimeout(init, 0);
-  window.setTimeout(init, 250);
+  function initWhenReady() {
+    let attempts = 0;
+    const maxAttempts = 80;
+    function run() {
+      const state = init();
+      const pageNeedsDevices = Boolean(document.getElementById("device-form"));
+      const pageNeedsNetwork = Boolean(document.getElementById("network-form"));
+      const pageNeedsTickets = Boolean(document.getElementById("create-ticket-form") || window.TicketDetailPage);
+      const pageNeedsSettings = Boolean(document.querySelector("[data-settings-action]"));
+      const pageNeedsReports = Boolean(document.getElementById("report-range"));
+      const ready = (!pageNeedsDevices || state.devices) &&
+        (!pageNeedsNetwork || state.network) &&
+        (!pageNeedsTickets || state.tickets) &&
+        (!pageNeedsSettings || state.settings) &&
+        (!pageNeedsReports || state.reports);
+      if (ready || attempts >= maxAttempts) {
+        document.documentElement.dataset.p23BridgeReady = ready ? "true" : "partial";
+        return;
+      }
+      attempts += 1;
+      window.setTimeout(run, 50);
+    }
+    run();
+  }
 
-  window.P23ApiSync = { init, patchDevices, patchNetwork, patchTickets, patchSettings, hydrateReports };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initWhenReady, { once: true });
+  else initWhenReady();
+  window.addEventListener("load", initWhenReady, { once: true });
+
+  window.P23ApiSync = { init, initWhenReady, patchDevices, patchNetwork, patchTickets, patchSettings, hydrateReports };
 })();
