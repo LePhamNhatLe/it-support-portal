@@ -195,12 +195,10 @@ html[data-theme="dark"] .network-table tbody tr:hover {
 /* Shared compact topbar for tablet/mobile pages. */
 @media (max-width: 840px) {
   .topbar {
-    grid-template-columns: 50px minmax(0, 1fr);
-    grid-template-areas:
-      "menu heading"
-      ". profile";
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    grid-template-areas: "menu heading profile";
     column-gap: 1rem;
-    row-gap: .85rem;
+    row-gap: 0;
     align-items: center;
   }
 
@@ -246,20 +244,67 @@ html[data-theme="dark"] .network-table tbody tr:hover {
 
   .topbar__profile {
     grid-area: profile;
-    justify-self: start;
+    justify-self: end;
     width: max-content;
-    max-width: 100%;
+    max-width: min(100%, 320px);
+    margin: 0;
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
   .topbar {
-    grid-template-areas:
-      "menu heading"
-      "profile profile";
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    gap: .75rem;
   }
 
   .topbar__profile {
-    width: 100%;
+    padding: .7rem .8rem;
+    gap: .7rem;
+  }
+
+  .profile__avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .profile__name {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .profile__role {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar {
+    grid-template-columns: 46px minmax(0, 1fr) auto;
+    gap: .6rem;
+  }
+
+  .topbar__menu-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .topbar__profile {
+    padding: .55rem .65rem;
+    border-radius: 14px;
+  }
+
+  .profile__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
+  .profile__info {
+    display: none;
   }
 }
