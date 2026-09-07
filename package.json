@@ -8,6 +8,7 @@
     "dev": "node --watch server/src/server.js",
     "start": "node server/src/server.js",
     "check:server": "node --check server/src/server.js && node --check server/src/app.js",
+    "test:api": "node --test tests/api-smoke.js",
     "db:ping": "node server/scripts/db-ping.js",
     "db:migrate": "node server/scripts/db-migrate.js",
     "db:seed": "node server/scripts/db-seed.js"
