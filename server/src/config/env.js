@@ -25,5 +25,6 @@ module.exports = Object.freeze({
   DB_PASSWORD: process.env.DB_PASSWORD || "",
   DB_NAME: process.env.DB_NAME || "it_support_portal",
   DB_SSL: toBoolean(process.env.DB_SSL, true),
+  DB_CA_PATH: process.env.DB_CA_PATH || "",
   DB_CONNECTION_LIMIT: toInteger(process.env.DB_CONNECTION_LIMIT, 4)
 });
