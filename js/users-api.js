@@ -2,9 +2,21 @@
   function setFeedback(message, isError) {
     const element = document.getElementById("user-feedback");
     if (!element) return;
+
+    if (!isError) {
+      element.textContent = "";
+      element.hidden = true;
+      delete element.dataset.state;
+      return;
+    }
+
     element.textContent = message || "";
     element.hidden = !message;
-    element.dataset.state = isError ? "error" : "success";
+    element.dataset.state = "error";
+  }
+
+  function clearFeedback() {
+    setFeedback("", false);
   }
 
   function renderAll() {
@@ -80,6 +92,7 @@
       const localUsers = window.UserStorage.getUsers();
       window.UserStorage.saveUsers(mergeServerUsers(serverUsers, localUsers));
       renderAll();
+      clearFeedback();
       document.documentElement.dataset.usersDataSource = "api";
     } catch (error) {
       document.documentElement.dataset.usersDataSource = "local-cache";
@@ -106,10 +119,10 @@
           const users = window.UserStorage.getUsers().map(function (item) { return item.id === merged.id ? merged : item; });
           window.UserStorage.saveUsers(users);
           renderAll();
-          setFeedback("Đã thêm người dùng và đồng bộ MySQL.", false);
+          clearFeedback();
         })
         .catch(function (error) { restoreUsers(before, error.message || "Không thể thêm người dùng vào backend."); });
-      return { ...result, message: "Đã thêm người dùng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang thêm người dùng..." };
     };
 
     window.UserStorage.updateUser = function (id, changes) {
@@ -122,10 +135,10 @@
           const users = window.UserStorage.getUsers().map(function (item) { return item.id === id ? merged : item; });
           window.UserStorage.saveUsers(users);
           renderAll();
-          setFeedback("Đã cập nhật người dùng và đồng bộ MySQL.", false);
+          clearFeedback();
         })
         .catch(function (error) { restoreUsers(before, error.message || "Không thể cập nhật người dùng trên backend."); });
-      return { ...result, message: "Đã cập nhật người dùng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang cập nhật người dùng..." };
     };
 
     window.UserStorage.changeUserStatus = function (id, status) {
@@ -138,10 +151,10 @@
           const users = window.UserStorage.getUsers().map(function (item) { return item.id === id ? merged : item; });
           window.UserStorage.saveUsers(users);
           renderAll();
-          setFeedback("Đã cập nhật trạng thái và đồng bộ MySQL.", false);
+          clearFeedback();
         })
         .catch(function (error) { restoreUsers(before, error.message || "Không thể cập nhật trạng thái trên backend."); });
-      return { ...result, message: "Đang đồng bộ trạng thái với backend..." };
+      return { ...result, message: "Đang cập nhật trạng thái..." };
     };
 
     window.UserStorage.deleteUser = function (id) {
@@ -149,9 +162,9 @@
       const result = originalDelete(id);
       if (!result.ok) return result;
       window.AppApi.delete("/users/" + encodeURIComponent(id))
-        .then(function () { setFeedback("Đã xóa người dùng khỏi MySQL.", false); })
+        .then(function () { clearFeedback(); })
         .catch(function (error) { restoreUsers(before, error.message || "Không thể xóa người dùng trên backend."); });
-      return { ...result, message: "Đã xóa người dùng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang xóa người dùng..." };
     };
 
     window.UserStorage.__apiSyncPatched = true;
@@ -183,15 +196,16 @@
     if (!window.UserStorage.canManageUsers()) return { ok: false, message: "Tài khoản hiện tại không có quyền thêm người dùng." };
     const password = String(payload.password || "");
     if (password.length < 6 || password.length > 72) return { ok: false, message: "Mật khẩu phải từ 6 đến 72 ký tự." };
-    const safeUser = { ...payload }; delete safeUser.password;
+    const safeUser = { ...payload };
+    delete safeUser.password;
     const validation = window.UserStorage.validateUser(safeUser, true);
     if (!validation.ok) return validation;
     if (window.UserStorage.getUserById(payload.id)) return { ok: false, message: "Mã người dùng đã tồn tại." };
     if (window.UserStorage.getUserByEmail(payload.email)) return { ok: false, message: "Email đã tồn tại." };
 
     const serverUser = await window.AppApi.post("/users", normalizeUserForApi(safeUser, password));
-    if (!saveServerUser(serverUser, safeUser)) return { ok: false, message: "Backend đã lưu nhưng không thể cập nhật cache trình duyệt." };
-    return { ok: true, data: serverUser, message: "Đã thêm người dùng và tạo thông tin đăng nhập MySQL." };
+    if (!saveServerUser(serverUser, safeUser)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+    return { ok: true, data: serverUser, message: "Đã thêm người dùng thành công." };
   }
 
   async function persistUpdateUser(id, changes) {
@@ -200,14 +214,15 @@
     if (!current) return { ok: false, message: "Không tìm thấy người dùng." };
     const password = String(changes.password || "");
     if (password && (password.length < 6 || password.length > 72)) return { ok: false, message: "Mật khẩu phải từ 6 đến 72 ký tự." };
-    const safeChanges = { ...changes }; delete safeChanges.password;
+    const safeChanges = { ...changes };
+    delete safeChanges.password;
     const candidate = { ...current, ...safeChanges, id: current.id, email: current.email, createdAt: current.createdAt };
     const validation = window.UserStorage.validateUser(candidate, false);
     if (!validation.ok) return validation;
 
     const serverUser = await window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(candidate, password));
-    if (!saveServerUser(serverUser, candidate)) return { ok: false, message: "Backend đã lưu nhưng không thể cập nhật cache trình duyệt." };
-    return { ok: true, data: serverUser, message: password ? "Đã cập nhật người dùng và đổi mật khẩu." : "Đã cập nhật người dùng và lưu vào MySQL." };
+    if (!saveServerUser(serverUser, candidate)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+    return { ok: true, data: serverUser, message: password ? "Đã cập nhật người dùng và đổi mật khẩu." : "Đã cập nhật người dùng thành công." };
   }
 
   async function handleFormSubmit(event) {
@@ -229,7 +244,7 @@
     };
 
     setFormBusy(form, true);
-    setFeedback("Đang lưu vào backend...", false);
+    clearFeedback();
     try {
       const result = form.dataset.mode === "edit"
         ? await persistUpdateUser(form.dataset.userId, payload)
@@ -238,9 +253,9 @@
       if (form.elements.password) form.elements.password.value = "";
       closeEditor();
       renderAll();
-      setFeedback(result.message, false);
+      clearFeedback();
     } catch (error) {
-      setFeedback(error.message || "Không thể lưu người dùng vào backend.", true);
+      setFeedback(error.message || "Không thể lưu người dùng.", true);
     } finally {
       setFormBusy(form, false);
     }
@@ -254,7 +269,8 @@
     const status = button.dataset.action === "lock-user" ? "locked" : "active";
     const result = window.UserStorage.changeUserStatus(button.dataset.userId, status);
     renderAll();
-    setFeedback(result.message, !result.ok);
+    if (!result.ok) setFeedback(result.message, true);
+    else clearFeedback();
   }
 
   function init() {
