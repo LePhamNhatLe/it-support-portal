@@ -27,6 +27,7 @@ async function addColumnIfMissing(connection, table, column, definition) {
       }
 
       await addColumnIfMissing(connection, "users", "phone", "VARCHAR(32) NULL AFTER `department`");
+      await addColumnIfMissing(connection, "users", "password_hash", "VARCHAR(255) NULL AFTER `phone`");
       await addColumnIfMissing(
         connection,
         "users",
