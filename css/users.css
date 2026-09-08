@@ -1,0 +1,22 @@
+.user-password-field {
+  align-self: start;
+}
+
+.user-password-field small {
+  display: block;
+  margin-top: 8px;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.07);
+  color: #5f6f8d;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .user-password-field small {
+    min-height: 0;
+  }
+}
