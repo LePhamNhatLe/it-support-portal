@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true" />
     <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true" />
+    <link rel="stylesheet" href="../css/users.css" />
   </head>
   <body>
     <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng" />
@@ -50,7 +51,7 @@
                 <div class="tickets__filter"><label for="user-id">Mã người dùng</label><input id="user-id" name="id" type="text" required /></div>
                 <div class="tickets__filter"><label for="user-name">Họ tên</label><input id="user-name" name="name" type="text" maxlength="120" required /></div>
                 <div class="tickets__filter"><label for="user-email">Email</label><input id="user-email" name="email" type="email" required /></div>
-                <div class="tickets__filter"><label for="user-password">Mật khẩu</label><input id="user-password" name="password" type="password" minlength="6" maxlength="72" autocomplete="new-password" /><small>Phải nhập khi tạo mới; để trống khi sửa nếu không đổi mật khẩu.</small></div>
+                <div class="tickets__filter user-password-field"><label for="user-password">Mật khẩu</label><input id="user-password" name="password" type="password" minlength="6" maxlength="72" autocomplete="new-password" /><small>Lưu ý: bắt buộc khi tạo mới. Khi chỉnh sửa, để trống nếu không muốn thay đổi mật khẩu hiện tại.</small></div>
                 <div class="tickets__filter"><label for="user-department">Phòng ban</label><select id="user-department" name="department" required><option>IT</option><option>Kỹ thuật</option><option>Kinh doanh</option><option>Hành chính</option><option>Kế toán</option><option>Nhân sự</option><option>Marketing</option><option>Vận hành</option><option selected>Khác</option></select></div>
                 <div class="tickets__filter"><label for="user-role">Vai trò</label><select id="user-role" name="role" required><option value="technical_lead">Trưởng nhóm kỹ thuật</option><option value="technician">Nhân viên kỹ thuật</option><option value="user" selected>Người dùng</option></select></div>
                 <div class="tickets__filter"><label for="user-phone">Số điện thoại</label><input id="user-phone" name="phone" type="text" /></div>
