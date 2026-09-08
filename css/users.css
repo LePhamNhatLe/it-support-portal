@@ -15,6 +15,10 @@
   line-height: 1.45;
 }
 
+#user-feedback[data-state="success"] {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .user-password-field small {
     min-height: 0;
