@@ -35,7 +35,7 @@
           <div class="login-card__header">
             <p class="login-card__eyebrow">Đăng nhập hệ thống</p>
             <h1 id="login-title">Chào mừng trở lại</h1>
-            <p class="login-card__subtitle">Sử dụng tài khoản nội bộ để tiếp tục.</p>
+            <p class="login-card__subtitle">Tài khoản được xác thực qua backend và MySQL.</p>
           </div>
 
           <form class="login-form">
@@ -43,33 +43,19 @@
 
             <div class="login-form__field">
               <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                autocomplete="email"
-                placeholder="name@itsupport.local"
-                required
-              />
+              <input type="email" id="email" name="email" autocomplete="email" placeholder="name@itsupport.local" required />
             </div>
 
             <div class="login-form__field">
               <label for="password">Mật khẩu</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                autocomplete="current-password"
-                placeholder="Nhập mật khẩu"
-                required
-              />
+              <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required />
             </div>
 
             <button type="submit" class="login-form__submit">Đăng nhập</button>
           </form>
 
           <div class="login-demo" aria-label="Thông tin tài khoản demo">
-            <span>Tài khoản demo</span>
+            <span>Tài khoản demo backend</span>
             <strong>lead@itsupport.local</strong>
             <small>Mật khẩu: 123456</small>
           </div>
@@ -79,6 +65,7 @@
 
     <script src="../data/seed-data.js"></script>
     <script src="../js/permissions.js"></script>
+    <script src="../js/api-client.js"></script>
     <script src="../js/auth.js"></script>
   </body>
 </html>
