@@ -12,19 +12,27 @@ const state = {
   settings: clone(seed.settings)
 };
 
+function publicUser(user) {
+  if (!user) return null;
+  const { passwordHash, ...safe } = user;
+  return safe;
+}
+
 function list(collection) {
+  if (collection === "users") return clone(state.users.map(publicUser));
   return clone(state[collection] || []);
 }
 
 function get(collection, id) {
   const item = (state[collection] || []).find((entry) => String(entry.id) === String(id));
-  return item ? clone(item) : null;
+  if (!item) return null;
+  return clone(collection === "users" ? publicUser(item) : item);
 }
 
 function create(collection, value) {
   if (!Array.isArray(state[collection])) throw new Error(`Unknown collection: ${collection}`);
   state[collection].push(clone(value));
-  return clone(value);
+  return clone(collection === "users" ? publicUser(value) : value);
 }
 
 function update(collection, id, patch) {
@@ -32,7 +40,7 @@ function update(collection, id, patch) {
   const index = state[collection].findIndex((entry) => String(entry.id) === String(id));
   if (index === -1) return null;
   state[collection][index] = { ...state[collection][index], ...clone(patch) };
-  return clone(state[collection][index]);
+  return clone(collection === "users" ? publicUser(state[collection][index]) : state[collection][index]);
 }
 
 function remove(collection, id) {
@@ -40,6 +48,19 @@ function remove(collection, id) {
   const index = state[collection].findIndex((entry) => String(entry.id) === String(id));
   if (index === -1) return false;
   state[collection].splice(index, 1);
+  return true;
+}
+
+function findUserAuthByEmail(email) {
+  const target = String(email || "").trim().toLowerCase();
+  const user = state.users.find((item) => String(item.email || "").toLowerCase() === target);
+  return user ? clone(user) : null;
+}
+
+function setUserPasswordHash(id, passwordHash) {
+  const user = state.users.find((item) => String(item.id) === String(id));
+  if (!user) return false;
+  user.passwordHash = String(passwordHash || "");
   return true;
 }
 
@@ -58,6 +79,8 @@ module.exports = {
   create,
   update,
   remove,
+  findUserAuthByEmail,
+  setUserPasswordHash,
   getSettings,
   updateSettings
 };
