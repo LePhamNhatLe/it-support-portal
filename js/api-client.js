@@ -1,5 +1,6 @@
 (function () {
   const DEFAULT_BASE_URL = "http://localhost:3000/api/v1";
+  const TOKEN_KEY = "authToken";
 
   function getBaseUrl() {
     const configured = window.IT_SUPPORT_API_BASE_URL;
@@ -8,11 +9,33 @@
       : DEFAULT_BASE_URL;
   }
 
+  function getToken() {
+    try {
+      return localStorage.getItem(TOKEN_KEY) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function setToken(token) {
+    try {
+      if (token) localStorage.setItem(TOKEN_KEY, token);
+      else localStorage.removeItem(TOKEN_KEY);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async function request(path, options) {
     const config = options || {};
     const headers = new Headers(config.headers || {});
     if (config.body !== undefined && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
+    }
+    if (!config.skipAuth && !headers.has("Authorization")) {
+      const token = getToken();
+      if (token) headers.set("Authorization", "Bearer " + token);
     }
 
     let response;
@@ -53,6 +76,10 @@
         : "API_ERROR";
       apiError.status = response.status;
       apiError.details = payload && payload.error ? payload.error.details : null;
+      if (["AUTH_REQUIRED", "INVALID_TOKEN", "SESSION_REVOKED"].includes(apiError.code)) {
+        setToken("");
+        try { localStorage.removeItem("currentUser"); } catch (error) {}
+      }
       throw apiError;
     }
 
@@ -61,10 +88,12 @@
 
   window.AppApi = {
     getBaseUrl,
+    getToken,
+    setToken,
     request,
     get: function (path) { return request(path); },
-    post: function (path, body) { return request(path, { method: "POST", body }); },
-    patch: function (path, body) { return request(path, { method: "PATCH", body }); },
+    post: function (path, body, options) { return request(path, { ...(options || {}), method: "POST", body }); },
+    patch: function (path, body, options) { return request(path, { ...(options || {}), method: "PATCH", body }); },
     delete: function (path) { return request(path, { method: "DELETE" }); }
   };
 })();
