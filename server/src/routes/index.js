@@ -1,11 +1,13 @@
 const express = require("express");
 const env = require("../config/env");
+const auth = require("./auth.routes");
 const tickets = require("./tickets.routes");
 const devices = require("./devices.routes");
 const users = require("./users.routes");
 const network = require("./network.routes");
 const settings = require("./settings.routes");
 const reports = require("./reports.routes");
+const { authenticate, authorize } = require("../middleware/auth");
 const { ok } = require("../utils/http");
 
 const router = express.Router();
@@ -17,6 +19,8 @@ router.get("/", (req, res) => ok(res, {
   dataSource: env.DATA_SOURCE,
   endpoints: {
     health: "/api/v1/health",
+    authLogin: "/api/v1/auth/login",
+    authMe: "/api/v1/auth/me",
     tickets: "/api/v1/tickets",
     devices: "/api/v1/devices",
     users: "/api/v1/users",
@@ -33,11 +37,12 @@ router.get("/health", (req, res) => ok(res, {
   timestamp: new Date().toISOString()
 }));
 
-router.use("/tickets", tickets);
-router.use("/devices", devices);
-router.use("/users", users);
-router.use("/network", network);
-router.use("/settings", settings);
-router.use("/reports", reports);
+router.use("/auth", auth);
+router.use("/tickets", authenticate, tickets);
+router.use("/devices", authenticate, authorize("technical_lead", "technician"), devices);
+router.use("/users", authenticate, authorize("technical_lead"), users);
+router.use("/network", authenticate, authorize("technical_lead", "technician"), network);
+router.use("/settings", authenticate, settings);
+router.use("/reports", authenticate, authorize("technical_lead"), reports);
 
 module.exports = router;
