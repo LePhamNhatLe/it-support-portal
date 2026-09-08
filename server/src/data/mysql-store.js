@@ -116,6 +116,23 @@ async function remove(collection, id) {
   return result.affectedRows > 0;
 }
 
+async function findUserAuthByEmail(email) {
+  const [rows] = await getPool().execute(
+    `SELECT id, name, email, role, status, password_hash AS passwordHash
+     FROM users WHERE LOWER(email) = LOWER(?) LIMIT 1`,
+    [email]
+  );
+  return rows[0] || null;
+}
+
+async function setUserPasswordHash(id, passwordHash) {
+  const [result] = await getPool().execute(
+    "UPDATE users SET password_hash = ? WHERE id = ?",
+    [passwordHash, id]
+  );
+  return result.affectedRows > 0;
+}
+
 async function getSettings() {
   const [rows] = await getPool().query(
     "SELECT company_name AS companyName, timezone, language, default_priority AS defaultPriority, sla_hours AS slaHours FROM system_settings WHERE id = 1"
@@ -139,4 +156,14 @@ async function updateSettings(patch) {
   return getSettings();
 }
 
-module.exports = { list, get, create, update, remove, getSettings, updateSettings };
+module.exports = {
+  list,
+  get,
+  create,
+  update,
+  remove,
+  findUserAuthByEmail,
+  setUserPasswordHash,
+  getSettings,
+  updateSettings
+};
