@@ -1,18 +1,23 @@
 (function () {
+  let mutationGeneration = 0;
+  let pendingMutations = 0;
+
   function setFeedback(message, isError) {
     const element = document.getElementById("user-feedback");
     if (!element) return;
-
     if (!isError) {
       element.textContent = "";
       element.hidden = true;
       delete element.dataset.state;
       return;
     }
-
     element.textContent = message || "";
     element.hidden = !message;
     element.dataset.state = "error";
+    if (message) {
+      element.setAttribute("tabindex", "-1");
+      element.focus({ preventScroll: true });
+    }
   }
 
   function clearFeedback() {
@@ -34,6 +39,25 @@
 
   function normalizeEmail(value) {
     return normalizeText(value).toLowerCase();
+  }
+
+  function getCurrentUser() {
+    return typeof window.getCurrentUser === "function" ? window.getCurrentUser() : null;
+  }
+
+  function isCurrentUser(user) {
+    const actor = getCurrentUser();
+    return Boolean(actor && user && normalizeEmail(actor.email) === normalizeEmail(user.email));
+  }
+
+  function beginMutation() {
+    mutationGeneration += 1;
+    pendingMutations += 1;
+  }
+
+  function endMutation() {
+    pendingMutations = Math.max(0, pendingMutations - 1);
+    mutationGeneration += 1;
   }
 
   function normalizeUserForApi(user, password) {
@@ -77,108 +101,6 @@
     });
   }
 
-  function restoreUsers(snapshot, message) {
-    if (window.UserStorage && typeof window.UserStorage.saveUsers === "function") {
-      window.UserStorage.saveUsers(snapshot);
-      renderAll();
-    }
-    setFeedback(message || "Không thể đồng bộ thay đổi với backend.", true);
-  }
-
-  async function hydrateUsers() {
-    if (!window.AppApi || !window.UserStorage) return;
-    try {
-      const serverUsers = await window.AppApi.get("/users");
-      const localUsers = window.UserStorage.getUsers();
-      window.UserStorage.saveUsers(mergeServerUsers(serverUsers, localUsers));
-      renderAll();
-      clearFeedback();
-      document.documentElement.dataset.usersDataSource = "api";
-    } catch (error) {
-      document.documentElement.dataset.usersDataSource = "local-cache";
-      setFeedback(error.status === 401 || error.status === 403
-        ? "Phiên đăng nhập không có quyền truy cập danh sách người dùng."
-        : "Backend chưa sẵn sàng. Trang người dùng đang dùng cache cục bộ.", true);
-    }
-  }
-
-  function patchUserStorage() {
-    if (!window.UserStorage || !window.AppApi || window.UserStorage.__apiSyncPatched) return;
-    const originalCreate = window.UserStorage.createUser;
-    const originalUpdate = window.UserStorage.updateUser;
-    const originalChangeStatus = window.UserStorage.changeUserStatus;
-    const originalDelete = window.UserStorage.deleteUser;
-
-    window.UserStorage.createUser = function (user) {
-      const before = window.UserStorage.getUsers().slice();
-      const result = originalCreate(user);
-      if (!result.ok) return result;
-      window.AppApi.post("/users", normalizeUserForApi(result.data, user.password))
-        .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser };
-          const users = window.UserStorage.getUsers().map(function (item) { return item.id === merged.id ? merged : item; });
-          window.UserStorage.saveUsers(users);
-          renderAll();
-          clearFeedback();
-        })
-        .catch(function (error) { restoreUsers(before, error.message || "Không thể thêm người dùng vào backend."); });
-      return { ...result, message: "Đang thêm người dùng..." };
-    };
-
-    window.UserStorage.updateUser = function (id, changes) {
-      const before = window.UserStorage.getUsers().slice();
-      const result = originalUpdate(id, changes);
-      if (!result.ok) return result;
-      window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(result.data, changes.password))
-        .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser };
-          const users = window.UserStorage.getUsers().map(function (item) { return item.id === id ? merged : item; });
-          window.UserStorage.saveUsers(users);
-          renderAll();
-          clearFeedback();
-        })
-        .catch(function (error) { restoreUsers(before, error.message || "Không thể cập nhật người dùng trên backend."); });
-      return { ...result, message: "Đang cập nhật người dùng..." };
-    };
-
-    window.UserStorage.changeUserStatus = function (id, status) {
-      const before = window.UserStorage.getUsers().slice();
-      const result = originalChangeStatus(id, status);
-      if (!result.ok) return result;
-      window.AppApi.patch("/users/" + encodeURIComponent(id), { status: result.data.status })
-        .then(function (serverUser) {
-          const merged = { ...result.data, ...serverUser };
-          const users = window.UserStorage.getUsers().map(function (item) { return item.id === id ? merged : item; });
-          window.UserStorage.saveUsers(users);
-          renderAll();
-          clearFeedback();
-        })
-        .catch(function (error) { restoreUsers(before, error.message || "Không thể cập nhật trạng thái trên backend."); });
-      return { ...result, message: "Đang cập nhật trạng thái..." };
-    };
-
-    window.UserStorage.deleteUser = function (id) {
-      const before = window.UserStorage.getUsers().slice();
-      const result = originalDelete(id);
-      if (!result.ok) return result;
-      window.AppApi.delete("/users/" + encodeURIComponent(id))
-        .then(function () { clearFeedback(); })
-        .catch(function (error) { restoreUsers(before, error.message || "Không thể xóa người dùng trên backend."); });
-      return { ...result, message: "Đang xóa người dùng..." };
-    };
-
-    window.UserStorage.__apiSyncPatched = true;
-  }
-
-  function setFormBusy(form, busy) {
-    if (!form) return;
-    form.dataset.syncPending = busy ? "true" : "false";
-    form.querySelectorAll("button, input, select, textarea").forEach(function (element) {
-      if (element.type === "hidden") return;
-      element.disabled = Boolean(busy);
-    });
-  }
-
   function saveServerUser(serverUser, fallback) {
     const safeFallback = { ...(fallback || {}) };
     delete safeFallback.password;
@@ -192,6 +114,54 @@
     return window.UserStorage.saveUsers(next);
   }
 
+  function removeCachedUser(id) {
+    const users = window.UserStorage.getUsers();
+    return window.UserStorage.saveUsers(users.filter(function (item) {
+      return item && item.id !== id;
+    }));
+  }
+
+  async function hydrateUsers() {
+    if (!window.AppApi || !window.UserStorage) return;
+    const generationAtStart = mutationGeneration;
+    try {
+      const serverUsers = await window.AppApi.get("/users");
+      if (pendingMutations > 0 || generationAtStart !== mutationGeneration) return;
+      const localUsers = window.UserStorage.getUsers();
+      window.UserStorage.saveUsers(mergeServerUsers(serverUsers, localUsers));
+      renderAll();
+      clearFeedback();
+      document.documentElement.dataset.usersDataSource = "api";
+    } catch (error) {
+      document.documentElement.dataset.usersDataSource = "local-cache";
+      setFeedback(error.status === 401 || error.status === 403
+        ? "Phiên đăng nhập không có quyền truy cập danh sách người dùng."
+        : "Không thể tải danh sách người dùng từ máy chủ.", true);
+    }
+  }
+
+  function setFormBusy(form, busy) {
+    if (!form) return;
+    form.dataset.syncPending = busy ? "true" : "false";
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) {
+      if (!submitButton.dataset.idleText) submitButton.dataset.idleText = submitButton.textContent;
+      submitButton.textContent = busy ? "Đang lưu..." : submitButton.dataset.idleText;
+    }
+    form.querySelectorAll("button, input, select, textarea").forEach(function (element) {
+      if (element.type === "hidden") return;
+      element.disabled = Boolean(busy);
+    });
+  }
+
+  function syncPasswordRequirement() {
+    const form = document.getElementById("user-form");
+    if (!form || !form.elements.password) return;
+    const isCreate = form.dataset.mode !== "edit";
+    form.elements.password.required = isCreate;
+    form.elements.password.setAttribute("aria-required", isCreate ? "true" : "false");
+  }
+
   async function persistCreateUser(payload) {
     if (!window.UserStorage.canManageUsers()) return { ok: false, message: "Tài khoản hiện tại không có quyền thêm người dùng." };
     const password = String(payload.password || "");
@@ -203,9 +173,14 @@
     if (window.UserStorage.getUserById(payload.id)) return { ok: false, message: "Mã người dùng đã tồn tại." };
     if (window.UserStorage.getUserByEmail(payload.email)) return { ok: false, message: "Email đã tồn tại." };
 
-    const serverUser = await window.AppApi.post("/users", normalizeUserForApi(safeUser, password));
-    if (!saveServerUser(serverUser, safeUser)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
-    return { ok: true, data: serverUser, message: "Đã thêm người dùng thành công." };
+    beginMutation();
+    try {
+      const serverUser = await window.AppApi.post("/users", normalizeUserForApi(safeUser, password));
+      if (!saveServerUser(serverUser, safeUser)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+      return { ok: true, data: serverUser, message: "Đã thêm người dùng thành công." };
+    } finally {
+      endMutation();
+    }
   }
 
   async function persistUpdateUser(id, changes) {
@@ -216,13 +191,62 @@
     if (password && (password.length < 6 || password.length > 72)) return { ok: false, message: "Mật khẩu phải từ 6 đến 72 ký tự." };
     const safeChanges = { ...changes };
     delete safeChanges.password;
+
+    if (isCurrentUser(current)) {
+      if (safeChanges.role && safeChanges.role !== current.role) {
+        return { ok: false, message: "Không thể tự thay đổi vai trò của tài khoản đang đăng nhập." };
+      }
+      if (safeChanges.status && safeChanges.status !== "active") {
+        return { ok: false, message: "Không thể tự khóa hoặc vô hiệu tài khoản đang đăng nhập." };
+      }
+    }
+
     const candidate = { ...current, ...safeChanges, id: current.id, email: current.email, createdAt: current.createdAt };
     const validation = window.UserStorage.validateUser(candidate, false);
     if (!validation.ok) return validation;
 
-    const serverUser = await window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(candidate, password));
-    if (!saveServerUser(serverUser, candidate)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
-    return { ok: true, data: serverUser, message: password ? "Đã cập nhật người dùng và đổi mật khẩu." : "Đã cập nhật người dùng thành công." };
+    beginMutation();
+    try {
+      const serverUser = await window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(candidate, password));
+      if (!saveServerUser(serverUser, candidate)) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+      return { ok: true, data: serverUser, message: password ? "Đã cập nhật người dùng và đổi mật khẩu." : "Đã cập nhật người dùng thành công." };
+    } finally {
+      endMutation();
+    }
+  }
+
+  async function persistChangeUserStatus(id, status) {
+    if (!window.UserStorage.canManageUsers()) return { ok: false, message: "Tài khoản hiện tại không có quyền thay đổi trạng thái người dùng." };
+    const current = window.UserStorage.getUserById(id);
+    if (!current) return { ok: false, message: "Không tìm thấy người dùng." };
+    if (isCurrentUser(current) && status !== "active") {
+      return { ok: false, message: "Không thể tự khóa hoặc vô hiệu tài khoản đang đăng nhập." };
+    }
+
+    beginMutation();
+    try {
+      const serverUser = await window.AppApi.patch("/users/" + encodeURIComponent(id), { status });
+      if (!saveServerUser(serverUser, { ...current, status })) return { ok: false, message: "Đã lưu dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+      return { ok: true, data: serverUser, message: status === "active" ? "Đã mở khóa người dùng." : "Đã khóa người dùng." };
+    } finally {
+      endMutation();
+    }
+  }
+
+  async function persistDeleteUser(id) {
+    if (!window.UserStorage.canManageUsers()) return { ok: false, message: "Tài khoản hiện tại không có quyền xóa người dùng." };
+    const current = window.UserStorage.getUserById(id);
+    if (!current) return { ok: false, message: "Không tìm thấy người dùng." };
+    if (isCurrentUser(current)) return { ok: false, message: "Không thể xóa chính tài khoản đang đăng nhập." };
+
+    beginMutation();
+    try {
+      await window.AppApi.delete("/users/" + encodeURIComponent(id));
+      if (!removeCachedUser(id)) return { ok: false, message: "Đã xóa dữ liệu nhưng không thể cập nhật cache trình duyệt." };
+      return { ok: true, data: current, message: "Đã xóa người dùng thành công." };
+    } finally {
+      endMutation();
+    }
   }
 
   async function handleFormSubmit(event) {
@@ -231,6 +255,9 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     if (form.dataset.syncPending === "true") return;
+
+    syncPasswordRequirement();
+    if (!form.reportValidity()) return;
 
     const payload = {
       id: normalizeText(form.elements.id && form.elements.id.value),
@@ -261,20 +288,36 @@
     }
   }
 
-  function handleStatusAction(event) {
+  async function handleStatusAction(event) {
     const button = event.target.closest('button[data-action="lock-user"][data-user-id], button[data-action="unlock-user"][data-user-id]');
-    if (!button || !window.UserStorage) return;
+    if (!button || !window.UserStorage || !window.AppApi) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    if (button.disabled) return;
     const status = button.dataset.action === "lock-user" ? "locked" : "active";
-    const result = window.UserStorage.changeUserStatus(button.dataset.userId, status);
-    renderAll();
-    if (!result.ok) setFeedback(result.message, true);
-    else clearFeedback();
+    button.disabled = true;
+    clearFeedback();
+    try {
+      const result = await persistChangeUserStatus(button.dataset.userId, status);
+      if (!result.ok) return setFeedback(result.message, true);
+      renderAll();
+    } catch (error) {
+      setFeedback(error.message || "Không thể cập nhật trạng thái người dùng.", true);
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function observeFormMode() {
+    const form = document.getElementById("user-form");
+    if (!form) return;
+    syncPasswordRequirement();
+    const observer = new MutationObserver(syncPasswordRequirement);
+    observer.observe(form, { attributes: true, attributeFilter: ["data-mode"] });
   }
 
   function init() {
-    patchUserStorage();
+    observeFormMode();
     document.addEventListener("submit", handleFormSubmit, true);
     document.addEventListener("click", handleStatusAction, true);
     hydrateUsers();
@@ -283,5 +326,11 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  window.UsersApiBridge = { hydrateUsers, persistCreateUser, persistUpdateUser };
+  window.UsersApiBridge = {
+    hydrateUsers,
+    persistCreateUser,
+    persistUpdateUser,
+    persistChangeUserStatus,
+    persistDeleteUser
+  };
 })();
