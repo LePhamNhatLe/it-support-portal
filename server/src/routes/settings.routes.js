@@ -1,5 +1,6 @@
 const express = require("express");
 const store = require("../data/store");
+const { authorize } = require("../middleware/auth");
 const { ok, fail } = require("../utils/http");
 const { requiredString, enumValue, collect } = require("../utils/validators");
 
@@ -13,7 +14,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.patch("/", async (req, res, next) => {
+router.patch("/", authorize("technical_lead"), async (req, res, next) => {
   try {
     const current = await store.getSettings();
     const merged = { ...current, ...(req.body || {}) };
