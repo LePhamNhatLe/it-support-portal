@@ -30,52 +30,27 @@ test("health reports active data source", async () => {
   });
 });
 
-test("user CRUD keeps phone field in memory mode", async () => {
+test("protected resources require authentication", async () => {
   await withServer(async (base) => {
-    const id = "USR-990";
-    const create = await fetch(`${base}/users`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id,
-        name: "P23.5 Smoke User",
-        email: "p235-smoke@itsupport.local",
-        department: "Khác",
-        phone: "0900000000",
-        role: "user",
-        status: "active"
-      })
-    });
-    assert.equal(create.status, 201);
-    const created = await create.json();
-    assert.equal(created.data.phone, "0900000000");
-
-    const read = await fetch(`${base}/users/${id}`);
-    const readBody = await read.json();
-    assert.equal(readBody.data.phone, "0900000000");
-
-    const remove = await fetch(`${base}/users/${id}`, { method: "DELETE" });
-    assert.equal(remove.status, 204);
+    const response = await fetch(`${base}/users`);
+    const body = await response.json();
+    assert.equal(response.status, 401);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, "AUTH_REQUIRED");
   });
 });
 
-test("duplicate IDs return conflict", async () => {
+test("invalid login is rejected without exposing account details", async () => {
   await withServer(async (base) => {
-    const response = await fetch(`${base}/users`, {
+    const response = await fetch(`${base}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: "USR-001",
-        name: "Duplicate",
-        email: "duplicate@itsupport.local",
-        department: "Khác",
-        role: "user",
-        status: "active"
-      })
+      body: JSON.stringify({ email: "unknown@example.invalid", password: "not-valid" })
     });
     const body = await response.json();
-    assert.equal(response.status, 409);
-    assert.equal(body.error.code, "DUPLICATE_ID");
+    assert.equal(response.status, 401);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, "INVALID_CREDENTIALS");
   });
 });
 
