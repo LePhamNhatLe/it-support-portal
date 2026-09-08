@@ -35,60 +35,58 @@
     style.textContent = `
       .app-success-toast {
         position: fixed;
-        top: 24px;
-        right: 24px;
+        top: 28px;
+        right: 28px;
         z-index: 99999;
         display: flex;
         align-items: center;
-        gap: 12px;
-        width: min(390px, calc(100vw - 32px));
-        padding: 15px 17px;
+        gap: 16px;
+        width: min(470px, calc(100vw - 40px));
+        min-height: 88px;
+        padding: 18px 22px;
         border: 1px solid rgba(22, 163, 74, 0.22);
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.97);
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2);
         color: #1f2937;
         opacity: 0;
-        transform: translateY(-14px) scale(0.98);
+        transform: translateY(-10px);
         pointer-events: none;
-        transition: opacity 180ms ease, transform 220ms ease;
+        transition: opacity 160ms ease, transform 180ms ease;
         backdrop-filter: blur(12px);
       }
 
       .app-success-toast.is-visible {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
 
       .app-success-toast.is-leaving {
         opacity: 0;
-        transform: translateY(-8px) scale(0.98);
+        transform: translateY(-6px);
       }
 
       .app-success-toast__check {
         position: relative;
-        flex: 0 0 34px;
-        width: 34px;
-        height: 34px;
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
         background: #16a34a;
-        box-shadow: 0 7px 18px rgba(22, 163, 74, 0.25);
-        transform: scale(0.72);
-        animation: app-success-pop 360ms cubic-bezier(.2,.9,.28,1.35) forwards;
+        box-shadow: 0 8px 20px rgba(22, 163, 74, 0.24);
       }
 
       .app-success-toast__check::after {
         content: "";
         position: absolute;
-        left: 10px;
-        top: 8px;
-        width: 10px;
-        height: 6px;
-        border-left: 3px solid #fff;
-        border-bottom: 3px solid #fff;
-        transform: rotate(-45deg) scale(0);
+        left: 13px;
+        top: 11px;
+        width: 15px;
+        height: 8px;
+        border-left: 4px solid #fff;
+        border-bottom: 4px solid #fff;
+        transform: rotate(-45deg);
         transform-origin: center;
-        animation: app-success-check 260ms ease 170ms forwards;
       }
 
       .app-success-toast__content {
@@ -96,29 +94,18 @@
       }
 
       .app-success-toast__title {
-        margin: 0 0 2px;
-        font-size: 14px;
-        font-weight: 750;
-        line-height: 1.35;
+        margin: 0 0 4px;
+        font-size: 17px;
+        font-weight: 760;
+        line-height: 1.3;
         color: #166534;
       }
 
       .app-success-toast__message {
         margin: 0;
-        font-size: 13.5px;
-        line-height: 1.45;
+        font-size: 15px;
+        line-height: 1.5;
         color: #475569;
-      }
-
-      @keyframes app-success-pop {
-        0% { transform: scale(0.72); }
-        70% { transform: scale(1.12); }
-        100% { transform: scale(1); }
-      }
-
-      @keyframes app-success-check {
-        from { transform: rotate(-45deg) scale(0); opacity: 0; }
-        to { transform: rotate(-45deg) scale(1); opacity: 1; }
       }
 
       @media (max-width: 640px) {
@@ -127,14 +114,13 @@
           right: 16px;
           left: 16px;
           width: auto;
+          min-height: 82px;
+          padding: 16px 18px;
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .app-success-toast,
-        .app-success-toast__check,
-        .app-success-toast__check::after {
-          animation: none !important;
+        .app-success-toast {
           transition: none !important;
         }
       }
@@ -204,7 +190,7 @@
       toast.classList.remove("is-visible");
       window.setTimeout(function () {
         toast.classList.remove("is-leaving");
-      }, 240);
+      }, 200);
     }, 2000);
   }
 
