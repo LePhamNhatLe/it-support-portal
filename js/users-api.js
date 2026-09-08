@@ -179,12 +179,76 @@
     window.UserStorage.__apiSyncPatched = true;
   }
 
-  function handleFormSubmit(event) {
+  function setFormBusy(form, busy) {
+    if (!form) return;
+    form.dataset.syncPending = busy ? "true" : "false";
+    form.querySelectorAll("button, input, select, textarea").forEach(function (element) {
+      if (element.type === "hidden") return;
+      element.disabled = Boolean(busy);
+    });
+  }
+
+  function saveServerUser(serverUser, fallback) {
+    const merged = { ...(fallback || {}), ...(serverUser || {}) };
+    const users = window.UserStorage.getUsers();
+    const index = users.findIndex(function (item) { return item && item.id === merged.id; });
+    const next = users.slice();
+    if (index >= 0) next[index] = merged;
+    else next.push(merged);
+    return window.UserStorage.saveUsers(next);
+  }
+
+  async function persistCreateUser(payload) {
+    if (!window.UserStorage.canManageUsers()) {
+      return { ok: false, message: "Tài khoản hiện tại không có quyền thêm người dùng." };
+    }
+    const validation = window.UserStorage.validateUser(payload, true);
+    if (!validation.ok) return validation;
+    if (window.UserStorage.getUserById(payload.id)) {
+      return { ok: false, message: "Mã người dùng đã tồn tại." };
+    }
+    if (window.UserStorage.getUserByEmail(payload.email)) {
+      return { ok: false, message: "Email đã tồn tại." };
+    }
+
+    const serverUser = await window.AppApi.post("/users", normalizeUserForApi(payload));
+    if (!saveServerUser(serverUser, payload)) {
+      return { ok: false, message: "Backend đã lưu nhưng không thể cập nhật cache trình duyệt." };
+    }
+    return { ok: true, data: serverUser, message: "Đã thêm người dùng và lưu vào MySQL." };
+  }
+
+  async function persistUpdateUser(id, changes) {
+    if (!window.UserStorage.canManageUsers()) {
+      return { ok: false, message: "Tài khoản hiện tại không có quyền chỉnh sửa người dùng." };
+    }
+    const current = window.UserStorage.getUserById(id);
+    if (!current) return { ok: false, message: "Không tìm thấy người dùng." };
+
+    const candidate = {
+      ...current,
+      ...changes,
+      id: current.id,
+      email: current.email,
+      createdAt: current.createdAt
+    };
+    const validation = window.UserStorage.validateUser(candidate, false);
+    if (!validation.ok) return validation;
+
+    const serverUser = await window.AppApi.patch("/users/" + encodeURIComponent(id), normalizePatchForApi(candidate));
+    if (!saveServerUser(serverUser, candidate)) {
+      return { ok: false, message: "Backend đã lưu nhưng không thể cập nhật cache trình duyệt." };
+    }
+    return { ok: true, data: serverUser, message: "Đã cập nhật người dùng và lưu vào MySQL." };
+  }
+
+  async function handleFormSubmit(event) {
     const form = event.target.closest("#user-form");
-    if (!form || !window.UserStorage) return;
+    if (!form || !window.UserStorage || !window.AppApi) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
+    if (form.dataset.syncPending === "true") return;
 
     const payload = {
       id: normalizeText(form.elements.id && form.elements.id.value),
@@ -196,18 +260,27 @@
       status: form.elements.status ? form.elements.status.value : "active"
     };
 
-    const result = form.dataset.mode === "edit"
-      ? window.UserStorage.updateUser(form.dataset.userId, payload)
-      : window.UserStorage.createUser(payload);
+    setFormBusy(form, true);
+    setFeedback("Đang lưu vào backend...", false);
 
-    if (!result.ok) {
-      setFeedback(result.message, true);
-      return;
+    try {
+      const result = form.dataset.mode === "edit"
+        ? await persistUpdateUser(form.dataset.userId, payload)
+        : await persistCreateUser(payload);
+
+      if (!result.ok) {
+        setFeedback(result.message, true);
+        return;
+      }
+
+      closeEditor();
+      renderAll();
+      setFeedback(result.message, false);
+    } catch (error) {
+      setFeedback(error.message || "Không thể lưu người dùng vào backend.", true);
+    } finally {
+      setFormBusy(form, false);
     }
-
-    closeEditor();
-    renderAll();
-    setFeedback(result.message, false);
   }
 
   function handleStatusAction(event) {
@@ -236,5 +309,5 @@
     init();
   }
 
-  window.UsersApiBridge = { hydrateUsers };
+  window.UsersApiBridge = { hydrateUsers, persistCreateUser, persistUpdateUser };
 })();
