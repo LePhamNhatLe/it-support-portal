@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   role ENUM('technical_lead','technician','user') NOT NULL,
   department VARCHAR(120) NULL,
   phone VARCHAR(32) NULL,
+  password_hash VARCHAR(255) NULL,
   status ENUM('active','disabled','locked') NOT NULL DEFAULT 'active',
   created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)
