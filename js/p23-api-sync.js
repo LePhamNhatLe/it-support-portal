@@ -19,6 +19,46 @@
     return list.map(function (entry) { return entry && entry.id === item.id ? { ...entry, ...item } : entry; });
   }
 
+  function snapshotLocalStorage() {
+    const snapshot = {};
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key != null) snapshot[key] = localStorage.getItem(key);
+    }
+    return snapshot;
+  }
+
+  function restoreLocalStorage(snapshot) {
+    const keys = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key != null) keys.push(key);
+    }
+    keys.forEach(function (key) {
+      if (!Object.prototype.hasOwnProperty.call(snapshot, key)) localStorage.removeItem(key);
+    });
+    Object.keys(snapshot).forEach(function (key) {
+      localStorage.setItem(key, snapshot[key]);
+    });
+  }
+
+  function probeMutation(run) {
+    const snapshot = snapshotLocalStorage();
+    try {
+      return run();
+    } finally {
+      restoreLocalStorage(snapshot);
+    }
+  }
+
+  function setFormBusy(form, busy) {
+    if (!form) return;
+    form.dataset.syncBusy = busy ? "true" : "false";
+    form.querySelectorAll("button, input, select, textarea").forEach(function (control) {
+      control.disabled = Boolean(busy);
+    });
+  }
+
   function patchDevices() {
     const store = window.DeviceStorage;
     if (!store) return false;
@@ -37,45 +77,53 @@
     }
 
     store.createDevice = function (device) {
-      const before = store.getDevices().slice();
-      const result = originalCreate(device);
+      const result = probeMutation(function () { return originalCreate(device); });
       if (!result.ok) return result;
-      window.AppApi.post("/devices", payload(result.data)).then(function (serverItem) {
-        store.saveDevices(replaceById(store.getDevices(), { ...result.data, ...serverItem }));
+      const syncPromise = window.AppApi.post("/devices", payload(result.data)).then(function (serverItem) {
+        const committed = originalCreate({ ...result.data, ...serverItem });
+        if (!committed.ok && committed.reason !== "duplicate_id") throw new Error(committed.message);
+        if (committed.reason === "duplicate_id") store.saveDevices(replaceById(store.getDevices(), { ...result.data, ...serverItem }));
         window.DevicesPage?.renderAll?.();
-        feedback("device-feedback", "Đã thêm thiết bị và đồng bộ MySQL.", false);
+        feedback("device-feedback", "Đã thêm thiết bị và lưu vào MySQL.", false);
+        return serverItem;
       }).catch(function (error) {
-        store.saveDevices(before); window.DevicesPage?.renderAll?.();
-        feedback("device-feedback", error.message || "Không thể đồng bộ thiết bị.", true);
+        feedback("device-feedback", error.message || "Không thể thêm thiết bị vào backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã thêm thiết bị. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang lưu thiết bị vào backend...", syncPromise };
     };
 
     store.updateDevice = function (id, changes) {
-      const before = store.getDevices().slice();
-      const result = originalUpdate(id, changes);
+      const result = probeMutation(function () { return originalUpdate(id, changes); });
       if (!result.ok) return result;
       const data = payload(result.data); delete data.id;
-      window.AppApi.patch("/devices/" + encodeURIComponent(id), data).then(function (serverItem) {
-        store.saveDevices(replaceById(store.getDevices(), { ...result.data, ...serverItem }));
+      const syncPromise = window.AppApi.patch("/devices/" + encodeURIComponent(id), data).then(function (serverItem) {
+        const committed = originalUpdate(id, { ...result.data, ...serverItem });
+        if (!committed.ok) throw new Error(committed.message);
         window.DevicesPage?.renderAll?.();
-        feedback("device-feedback", "Đã cập nhật thiết bị và đồng bộ MySQL.", false);
+        feedback("device-feedback", "Đã cập nhật thiết bị và lưu vào MySQL.", false);
+        return serverItem;
       }).catch(function (error) {
-        store.saveDevices(before); window.DevicesPage?.renderAll?.();
-        feedback("device-feedback", error.message || "Không thể đồng bộ thiết bị.", true);
+        feedback("device-feedback", error.message || "Không thể cập nhật thiết bị trên backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã cập nhật thiết bị. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang cập nhật thiết bị trên backend...", syncPromise };
     };
 
     store.deleteDevice = function (id) {
-      const before = store.getDevices().slice();
-      const result = originalDelete(id);
+      const result = probeMutation(function () { return originalDelete(id); });
       if (!result.ok) return result;
-      window.AppApi.delete("/devices/" + encodeURIComponent(id)).catch(function (error) {
-        store.saveDevices(before); window.DevicesPage?.renderAll?.();
+      const syncPromise = window.AppApi.delete("/devices/" + encodeURIComponent(id)).then(function () {
+        const committed = originalDelete(id);
+        if (!committed.ok && committed.reason !== "not_found") throw new Error(committed.message);
+        window.DevicesPage?.renderAll?.();
+        feedback("device-feedback", "Đã xóa thiết bị khỏi MySQL.", false);
+        return true;
+      }).catch(function (error) {
         feedback("device-feedback", error.message || "Không thể xóa thiết bị trên backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã xóa thiết bị. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang xóa thiết bị trên backend...", syncPromise };
     };
 
     store.__apiSyncPatched = true;
@@ -85,9 +133,9 @@
       document.documentElement.dataset.devicesDataSource = "api";
     }).catch(function () { document.documentElement.dataset.devicesDataSource = "local-cache"; });
 
-    document.addEventListener("submit", function (event) {
+    document.addEventListener("submit", async function (event) {
       const form = event.target.closest("#device-form");
-      if (!form) return;
+      if (!form || form.dataset.syncBusy === "true") return;
       event.preventDefault(); event.stopImmediatePropagation();
       const data = {
         id: form.elements.id.value.trim(), name: form.elements.name.value.trim(), type: form.elements.type.value,
@@ -97,8 +145,17 @@
       };
       const result = form.dataset.mode === "edit" ? store.updateDevice(form.dataset.deviceId, data) : store.createDevice(data);
       if (!result.ok) return feedback("device-feedback", result.message, true);
-      document.getElementById("device-editor-panel").hidden = true;
-      window.DevicesPage?.renderAll?.(); feedback("device-feedback", result.message, false);
+      setFormBusy(form, true);
+      feedback("device-feedback", result.message, false);
+      try {
+        await result.syncPromise;
+        document.getElementById("device-editor-panel").hidden = true;
+        window.DevicesPage?.renderAll?.();
+      } catch (error) {
+        // Feedback is already shown by the persistence layer.
+      } finally {
+        setFormBusy(form, false);
+      }
     }, true);
     return true;
   }
@@ -121,37 +178,53 @@
     }
 
     store.createNetworkDevice = function (item) {
-      const before = store.getNetworkDevices().slice();
-      const result = originalCreate(item); if (!result.ok) return result;
-      window.AppApi.post("/network", payload(result.data)).then(function (serverItem) {
-        store.saveNetworkDevices(replaceById(store.getNetworkDevices(), { ...result.data, ...serverItem }));
-        window.NetworkPage?.renderAll?.(); feedback("network-feedback", "Đã thêm thiết bị mạng và đồng bộ MySQL.", false);
+      const result = probeMutation(function () { return originalCreate(item); });
+      if (!result.ok) return result;
+      const syncPromise = window.AppApi.post("/network", payload(result.data)).then(function (serverItem) {
+        const committed = originalCreate({ ...result.data, ...serverItem });
+        if (!committed.ok && committed.reason !== "duplicate_id") throw new Error(committed.message);
+        if (committed.reason === "duplicate_id") store.saveNetworkDevices(replaceById(store.getNetworkDevices(), { ...result.data, ...serverItem }));
+        window.NetworkPage?.renderAll?.();
+        feedback("network-feedback", "Đã thêm thiết bị mạng và lưu vào MySQL.", false);
+        return serverItem;
       }).catch(function (error) {
-        store.saveNetworkDevices(before); window.NetworkPage?.renderAll?.(); feedback("network-feedback", error.message || "Không thể đồng bộ thiết bị mạng.", true);
+        feedback("network-feedback", error.message || "Không thể thêm thiết bị mạng vào backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã thêm thiết bị mạng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang lưu thiết bị mạng vào backend...", syncPromise };
     };
 
     store.updateNetworkDevice = function (id, changes) {
-      const before = store.getNetworkDevices().slice();
-      const result = originalUpdate(id, changes); if (!result.ok) return result;
+      const result = probeMutation(function () { return originalUpdate(id, changes); });
+      if (!result.ok) return result;
       const data = payload(result.data); delete data.id;
-      window.AppApi.patch("/network/" + encodeURIComponent(id), data).then(function (serverItem) {
-        store.saveNetworkDevices(replaceById(store.getNetworkDevices(), { ...result.data, ...serverItem }));
-        window.NetworkPage?.renderAll?.(); feedback("network-feedback", "Đã cập nhật thiết bị mạng và đồng bộ MySQL.", false);
+      const syncPromise = window.AppApi.patch("/network/" + encodeURIComponent(id), data).then(function (serverItem) {
+        const committed = originalUpdate(id, { ...result.data, ...serverItem });
+        if (!committed.ok) throw new Error(committed.message);
+        window.NetworkPage?.renderAll?.();
+        feedback("network-feedback", "Đã cập nhật thiết bị mạng và lưu vào MySQL.", false);
+        return serverItem;
       }).catch(function (error) {
-        store.saveNetworkDevices(before); window.NetworkPage?.renderAll?.(); feedback("network-feedback", error.message || "Không thể đồng bộ thiết bị mạng.", true);
+        feedback("network-feedback", error.message || "Không thể cập nhật thiết bị mạng trên backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã cập nhật thiết bị mạng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang cập nhật thiết bị mạng trên backend...", syncPromise };
     };
 
     store.deleteNetworkDevice = function (id) {
-      const before = store.getNetworkDevices().slice();
-      const result = originalDelete(id); if (!result.ok) return result;
-      window.AppApi.delete("/network/" + encodeURIComponent(id)).catch(function (error) {
-        store.saveNetworkDevices(before); window.NetworkPage?.renderAll?.(); feedback("network-feedback", error.message || "Không thể xóa thiết bị mạng trên backend.", true);
+      const result = probeMutation(function () { return originalDelete(id); });
+      if (!result.ok) return result;
+      const syncPromise = window.AppApi.delete("/network/" + encodeURIComponent(id)).then(function () {
+        const committed = originalDelete(id);
+        if (!committed.ok && committed.reason !== "not_found") throw new Error(committed.message);
+        window.NetworkPage?.renderAll?.();
+        feedback("network-feedback", "Đã xóa thiết bị mạng khỏi MySQL.", false);
+        return true;
+      }).catch(function (error) {
+        feedback("network-feedback", error.message || "Không thể xóa thiết bị mạng trên backend.", true);
+        throw error;
       });
-      return { ...result, message: "Đã xóa thiết bị mạng. Đang đồng bộ backend..." };
+      return { ...result, message: "Đang xóa thiết bị mạng trên backend...", syncPromise };
     };
 
     store.__apiSyncPatched = true;
@@ -160,8 +233,8 @@
       document.documentElement.dataset.networkDataSource = "api";
     }).catch(function () { document.documentElement.dataset.networkDataSource = "local-cache"; });
 
-    document.addEventListener("submit", function (event) {
-      const form = event.target.closest("#network-form"); if (!form) return;
+    document.addEventListener("submit", async function (event) {
+      const form = event.target.closest("#network-form"); if (!form || form.dataset.syncBusy === "true") return;
       event.preventDefault(); event.stopImmediatePropagation();
       const data = {
         id: form.elements.id.value.trim(), name: form.elements.name.value.trim(), type: form.elements.type.value,
@@ -172,8 +245,17 @@
       };
       const result = form.dataset.mode === "edit" ? store.updateNetworkDevice(form.dataset.networkId, data) : store.createNetworkDevice(data);
       if (!result.ok) return feedback("network-feedback", result.message, true);
-      document.getElementById("network-editor-panel").hidden = true;
-      window.NetworkPage?.renderAll?.(); feedback("network-feedback", result.message, false);
+      setFormBusy(form, true);
+      feedback("network-feedback", result.message, false);
+      try {
+        await result.syncPromise;
+        document.getElementById("network-editor-panel").hidden = true;
+        window.NetworkPage?.renderAll?.();
+      } catch (error) {
+        // Feedback is already shown by the persistence layer.
+      } finally {
+        setFormBusy(form, false);
+      }
     }, true);
     return true;
   }
@@ -202,45 +284,130 @@
         deviceId: ticket.deviceId || null, resolvedAt: ticket.resolvedAt || null
       };
     }
-    function rollback(before, message) {
-      store.saveTickets(before); window.TicketsPage?.renderTicketList?.(); window.TicketDetailPage?.render?.();
-      feedback("ticket-feedback", message, true); notify(message, "error");
+    function rerenderTickets() {
+      window.TicketsPage?.renderTicketList?.();
+      window.TicketDetailPage?.render?.();
     }
 
     store.createTicket = function (ticket) {
-      const before = store.getTickets().slice();
-      const ok = originalCreate(ticket); if (!ok) return false;
-      window.AppApi.post("/tickets", createPayload(store.getTicketById(ticket.id))).then(function (serverItem) {
-        store.saveTickets(replaceById(store.getTickets(), { ...store.getTicketById(ticket.id), ...serverItem }));
-        window.TicketsPage?.renderTicketList?.(); feedback("ticket-feedback", "Đã tạo phiếu và đồng bộ MySQL.", false);
-      }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ phiếu hỗ trợ."); });
+      let candidate = null;
+      const ok = probeMutation(function () {
+        const created = originalCreate(ticket);
+        candidate = created ? store.getTicketById(ticket.id) : null;
+        return created;
+      });
+      if (!ok || !candidate) return false;
+      store.__lastSyncPromise = window.AppApi.post("/tickets", createPayload(candidate)).then(function (serverItem) {
+        const committed = originalCreate({ ...candidate, ...serverItem });
+        if (!committed && !store.getTicketById(candidate.id)) throw new Error("Không thể lưu phiếu vào cache sau khi backend xác nhận.");
+        if (store.getTicketById(candidate.id)) store.saveTickets(replaceById(store.getTickets(), { ...candidate, ...serverItem }));
+        rerenderTickets(); feedback("ticket-feedback", "Đã tạo phiếu và lưu vào MySQL.", false);
+        return serverItem;
+      }).catch(function (error) {
+        feedback("ticket-feedback", error.message || "Không thể tạo phiếu trên backend.", true);
+        notify(error.message || "Không thể tạo phiếu trên backend.", "error");
+        throw error;
+      });
       return true;
     };
 
     store.updateTicket = function (id, changes) {
-      const before = store.getTickets().slice(); const result = originalUpdate(id, changes); if (!result) return null;
-      window.AppApi.patch("/tickets/" + encodeURIComponent(id), patchPayload(result)).then(function (serverItem) {
-        store.saveTickets(replaceById(store.getTickets(), { ...result, ...serverItem }));
-      }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ phiếu hỗ trợ."); });
-      return result;
+      const result = probeMutation(function () { return originalUpdate(id, changes); });
+      if (!result) return null;
+      const syncPromise = window.AppApi.patch("/tickets/" + encodeURIComponent(id), patchPayload(result)).then(function (serverItem) {
+        const committed = originalUpdate(id, { ...result, ...serverItem });
+        if (!committed) throw new Error("Không thể áp dụng thay đổi phiếu sau khi backend xác nhận.");
+        rerenderTickets();
+        return serverItem;
+      }).catch(function (error) {
+        feedback("ticket-feedback", error.message || "Không thể cập nhật phiếu trên backend.", true);
+        notify(error.message || "Không thể cập nhật phiếu trên backend.", "error");
+        throw error;
+      });
+      return { ...result, syncPromise };
     };
+
     store.updateTicketStatus = function (id, status) {
-      const before = store.getTickets().slice(); const result = originalStatus(id, status); if (!result) return null;
-      window.AppApi.patch("/tickets/" + encodeURIComponent(id), { status: result.status, resolvedAt: result.resolvedAt || null }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ trạng thái phiếu."); });
-      return result;
+      const result = probeMutation(function () { return originalStatus(id, status); });
+      if (!result) return null;
+      const syncPromise = window.AppApi.patch("/tickets/" + encodeURIComponent(id), { status: result.status, resolvedAt: result.resolvedAt || null }).then(function (serverItem) {
+        const committed = originalStatus(id, status);
+        if (!committed) throw new Error("Không thể áp dụng trạng thái phiếu sau khi backend xác nhận.");
+        store.saveTickets(replaceById(store.getTickets(), { ...committed, ...serverItem }));
+        rerenderTickets();
+        return serverItem;
+      }).catch(function (error) {
+        feedback("ticket-feedback", error.message || "Không thể đồng bộ trạng thái phiếu.", true);
+        notify(error.message || "Không thể đồng bộ trạng thái phiếu.", "error");
+        throw error;
+      });
+      return { ...result, syncPromise };
     };
+
     store.assignTicket = function (id, email) {
-      const before = store.getTickets().slice(); const result = originalAssign(id, email); if (!result) return null;
-      window.AppApi.patch("/tickets/" + encodeURIComponent(id), { assigneeEmail: result.assigneeEmail, status: result.status }).catch(function (error) { rollback(before, error.message || "Không thể đồng bộ phân công phiếu."); });
-      return result;
+      const result = probeMutation(function () { return originalAssign(id, email); });
+      if (!result) return null;
+      const syncPromise = window.AppApi.patch("/tickets/" + encodeURIComponent(id), { assigneeEmail: result.assigneeEmail, status: result.status }).then(function (serverItem) {
+        const committed = originalAssign(id, email);
+        if (!committed) throw new Error("Không thể áp dụng phân công sau khi backend xác nhận.");
+        store.saveTickets(replaceById(store.getTickets(), { ...committed, ...serverItem }));
+        rerenderTickets();
+        return serverItem;
+      }).catch(function (error) {
+        feedback("ticket-feedback", error.message || "Không thể đồng bộ phân công phiếu.", true);
+        notify(error.message || "Không thể đồng bộ phân công phiếu.", "error");
+        throw error;
+      });
+      return { ...result, syncPromise };
     };
 
     store.__apiSyncPatched = true;
     window.AppApi.get("/tickets").then(function (items) {
       store.saveTickets(Array.isArray(items) ? items : []);
-      window.TicketsPage?.renderTicketList?.(); window.TicketDetailPage?.render?.();
+      rerenderTickets();
       document.documentElement.dataset.ticketsDataSource = "api";
     }).catch(function () { document.documentElement.dataset.ticketsDataSource = "local-cache"; });
+
+    document.addEventListener("submit", async function (event) {
+      const form = event.target.closest("#create-ticket-form");
+      if (!form || form.dataset.syncBusy === "true" || !window.TicketsPage || typeof window.getCurrentUser !== "function") return;
+      event.preventDefault(); event.stopImmediatePropagation();
+      const currentUser = window.getCurrentUser();
+      const nextId = window.TicketsPage.generateNextTicketId?.();
+      const title = (form.elements.title?.value || "").trim();
+      const description = (form.elements.description?.value || "").trim();
+      const category = (form.elements.category?.value || "").trim();
+      const priority = (form.elements.priority?.value || "").trim();
+      const deviceId = (form.elements.deviceId?.value || "").trim() || null;
+      if (!currentUser || !currentUser.email || !nextId || !title || !description || !category || !priority) {
+        feedback("ticket-feedback", "Vui lòng nhập đầy đủ và đúng thông tin phiếu hỗ trợ.", true);
+        return;
+      }
+      const now = new Date().toISOString();
+      const ticket = {
+        id: nextId, title, description, category, priority, status: "open",
+        requesterEmail: currentUser.email, assigneeEmail: null, deviceId,
+        createdAt: now, updatedAt: now, resolvedAt: null
+      };
+      const ok = store.createTicket(ticket);
+      if (!ok || !store.__lastSyncPromise) {
+        feedback("ticket-feedback", "Không thể chuẩn bị dữ liệu phiếu hỗ trợ.", true);
+        return;
+      }
+      setFormBusy(form, true);
+      feedback("ticket-feedback", "Đang lưu phiếu vào backend...", false);
+      try {
+        await store.__lastSyncPromise;
+        form.reset();
+        const panel = document.getElementById("create-ticket-panel");
+        if (panel) panel.hidden = true;
+        rerenderTickets();
+      } catch (error) {
+        // Feedback is already shown by the persistence layer.
+      } finally {
+        setFormBusy(form, false);
+      }
+    }, true);
     return true;
   }
 
