@@ -1,0 +1,233 @@
+/* P19 action system: one blue visual language for add/view/edit/delete/apply/reset actions. */
+
+:root {
+  --action-blue-50: #eff6ff;
+  --action-blue-100: #dbeafe;
+  --action-blue-200: #bfdbfe;
+  --action-blue-400: #60a5fa;
+  --action-blue-500: #3b82f6;
+  --action-blue-600: #2563eb;
+  --action-blue-700: #1d4ed8;
+  --action-blue-800: #1e40af;
+  --action-cyan-500: #0ea5e9;
+}
+
+/* Shared action layout. */
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.action-btn,
+button[data-action],
+.button[data-action],
+button[data-settings-action],
+.button[data-settings-action],
+#report-apply,
+#report-reset,
+#reset-user-settings {
+  min-height: 38px;
+  padding: 0 .9rem;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease, filter .18s ease;
+}
+
+/* View: lightest blue, clearly secondary. */
+html:not([data-theme="dark"]) .action-btn--view,
+html:not([data-theme="dark"]) button[data-action^="view-"],
+html:not([data-theme="dark"]) .button[data-action^="view-"],
+html:not([data-theme="dark"]) button[data-action*="detail"] {
+  color: var(--action-blue-700);
+  background: linear-gradient(180deg, #f8fbff, var(--action-blue-100));
+  border-color: rgba(59,130,246,.28);
+  box-shadow: 0 5px 12px rgba(37,99,235,.08);
+}
+
+/* Edit/update/assign: solid blue, same family as the Add button. */
+html:not([data-theme="dark"]) .action-btn--edit,
+html:not([data-theme="dark"]) button[data-action^="edit-"],
+html:not([data-theme="dark"]) .button[data-action^="edit-"],
+html:not([data-theme="dark"]) button[data-action*="update"],
+html:not([data-theme="dark"]) button[data-action*="assign"],
+html:not([data-theme="dark"]) button[data-settings-action] {
+  color: #fff;
+  background: linear-gradient(105deg, var(--action-blue-600), var(--action-blue-500));
+  border-color: rgba(59,130,246,.44);
+  box-shadow: 0 7px 16px rgba(37,99,235,.18);
+}
+
+/* Delete: still blue as requested, but deeper to remain distinguishable. */
+html:not([data-theme="dark"]) .action-btn--delete,
+html:not([data-theme="dark"]) button[data-action^="delete-"],
+html:not([data-theme="dark"]) .button[data-action^="delete-"] {
+  color: #fff;
+  background: linear-gradient(105deg, var(--action-blue-800), var(--action-blue-700));
+  border-color: rgba(30,64,175,.46);
+  box-shadow: 0 7px 16px rgba(30,64,175,.18);
+}
+
+/* State actions remain inside the same blue system. */
+html:not([data-theme="dark"]) button[data-action^="lock-"],
+html:not([data-theme="dark"]) .button[data-action^="lock-"] {
+  color: var(--action-blue-800);
+  background: linear-gradient(180deg, var(--action-blue-50), var(--action-blue-200));
+  border-color: rgba(37,99,235,.30);
+}
+
+html:not([data-theme="dark"]) button[data-action^="unlock-"],
+html:not([data-theme="dark"]) .button[data-action^="unlock-"],
+html:not([data-theme="dark"]) button[data-action*="restore"] {
+  color: #fff;
+  background: linear-gradient(105deg, #0284c7, var(--action-cyan-500));
+  border-color: rgba(14,165,233,.38);
+  box-shadow: 0 7px 16px rgba(14,165,233,.16);
+}
+
+/* Apply is prominent; Reset is deliberately quieter. */
+html:not([data-theme="dark"]) #report-apply,
+html:not([data-theme="dark"]) button[id*="apply"],
+html:not([data-theme="dark"]) button[data-action*="apply"] {
+  color: #fff;
+  background: linear-gradient(105deg, var(--action-blue-600), var(--action-cyan-500));
+  border-color: rgba(14,165,233,.40);
+  box-shadow: 0 8px 18px rgba(37,99,235,.20);
+}
+
+html:not([data-theme="dark"]) #report-reset,
+html:not([data-theme="dark"]) #reset-user-settings,
+html:not([data-theme="dark"]) button[id*="reset"],
+html:not([data-theme="dark"]) button[data-action*="reset"] {
+  color: var(--action-blue-700);
+  background: linear-gradient(180deg, #f8fbff, var(--action-blue-100));
+  border-color: rgba(59,130,246,.22);
+  box-shadow: 0 4px 10px rgba(37,99,235,.06);
+}
+
+html:not([data-theme="dark"]) button[data-action="change-ticket-status"] {
+  color: #fff;
+  background: linear-gradient(105deg, var(--action-blue-600), var(--action-cyan-500));
+  border-color: rgba(14,165,233,.40);
+  box-shadow: 0 8px 18px rgba(37,99,235,.20);
+}
+
+/* Hover/focus: emphasize without shifting layout. */
+html:not([data-theme="dark"]) .action-btn:hover,
+html:not([data-theme="dark"]) button[data-action]:hover,
+html:not([data-theme="dark"]) button[data-settings-action]:hover,
+html:not([data-theme="dark"]) #report-apply:hover,
+html:not([data-theme="dark"]) #report-reset:hover,
+html:not([data-theme="dark"]) #reset-user-settings:hover {
+  filter: brightness(.97) saturate(1.08);
+  box-shadow: 0 10px 22px rgba(37,99,235,.18);
+}
+
+.action-btn:focus-visible,
+button[data-action]:focus-visible,
+button[data-settings-action]:focus-visible,
+#report-apply:focus-visible,
+#report-reset:focus-visible,
+#reset-user-settings:focus-visible {
+  outline: 3px solid rgba(96,165,250,.28);
+  outline-offset: 2px;
+}
+
+/* Dark mode: same hierarchy, brighter electric-blue contrast. */
+html[data-theme="dark"] .action-btn--view,
+html[data-theme="dark"] button[data-action^="view-"],
+html[data-theme="dark"] .button[data-action^="view-"],
+html[data-theme="dark"] button[data-action*="detail"] {
+  color: #93c5fd;
+  background: rgba(37,99,235,.14);
+  border-color: rgba(96,165,250,.26);
+}
+
+html[data-theme="dark"] .action-btn--edit,
+html[data-theme="dark"] button[data-action^="edit-"],
+html[data-theme="dark"] .button[data-action^="edit-"],
+html[data-theme="dark"] button[data-action*="update"],
+html[data-theme="dark"] button[data-action*="assign"],
+html[data-theme="dark"] button[data-settings-action] {
+  color: #fff;
+  background: linear-gradient(105deg, #1d4ed8, #2563eb);
+  border-color: rgba(96,165,250,.34);
+  box-shadow: 0 8px 18px rgba(37,99,235,.16);
+}
+
+html[data-theme="dark"] .action-btn--delete,
+html[data-theme="dark"] button[data-action^="delete-"],
+html[data-theme="dark"] .button[data-action^="delete-"] {
+  color: #fff;
+  background: linear-gradient(105deg, #172554, #1e40af);
+  border-color: rgba(96,165,250,.28);
+  box-shadow: 0 8px 18px rgba(15,23,42,.30);
+}
+
+html[data-theme="dark"] button[data-action^="lock-"] {
+  color: #bfdbfe;
+  background: rgba(30,64,175,.20);
+  border-color: rgba(96,165,250,.24);
+}
+
+html[data-theme="dark"] button[data-action^="unlock-"],
+html[data-theme="dark"] button[data-action*="restore"] {
+  color: #fff;
+  background: linear-gradient(105deg, #0369a1, #0284c7);
+  border-color: rgba(56,189,248,.30);
+}
+
+html[data-theme="dark"] #report-apply,
+html[data-theme="dark"] button[id*="apply"],
+html[data-theme="dark"] button[data-action*="apply"],
+html[data-theme="dark"] button[data-action="change-ticket-status"] {
+  color: #fff;
+  background: linear-gradient(105deg, #2563eb, #0ea5e9);
+  border-color: rgba(56,189,248,.32);
+  box-shadow: 0 8px 18px rgba(14,165,233,.16);
+}
+
+html[data-theme="dark"] #report-reset,
+html[data-theme="dark"] #reset-user-settings,
+html[data-theme="dark"] button[id*="reset"],
+html[data-theme="dark"] button[data-action*="reset"] {
+  color: #bfdbfe;
+  background: rgba(30,64,175,.16);
+  border-color: rgba(96,165,250,.20);
+}
+
+html[data-theme="dark"] .action-btn:hover,
+html[data-theme="dark"] button[data-action]:hover,
+html[data-theme="dark"] button[data-settings-action]:hover,
+html[data-theme="dark"] #report-apply:hover,
+html[data-theme="dark"] #report-reset:hover,
+html[data-theme="dark"] #reset-user-settings:hover {
+  filter: brightness(1.10) saturate(1.08);
+  box-shadow: 0 10px 24px rgba(14,165,233,.16);
+}
+
+@media (max-width: 720px) {
+  .table-actions {
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .action-btn,
+  button[data-action],
+  .button[data-action] {
+    min-height: 36px;
+    padding-inline: .78rem;
+  }
+}

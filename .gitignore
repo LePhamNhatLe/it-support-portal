@@ -14,6 +14,11 @@ Thumbs.db
 # Environment variables
 .env
 .env.*
+!.env.example
+
+# Local certificates / database credentials
+server/certs/*.pem
+server/certs/*.crt
 
 # Dependencies
 node_modules/

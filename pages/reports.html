@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo | Cổng IT Support</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/polish.css" data-ui-polish="true">
+  <link rel="stylesheet" href="../css/global-surface.css" data-global-surface="true">
+  <link rel="stylesheet" href="../css/reports-polish.css">
+</head>
+<body>
+  <input type="checkbox" id="sidebar-toggle" class="layout__toggle" aria-label="Chuyển đổi điều hướng">
+  <div class="layout">
+    <aside class="sidebar" aria-label="Điều hướng chính">
+      <div class="sidebar__brand"><div class="sidebar__logo">IT</div><div><p class="sidebar__product">IT Support</p><span class="sidebar__subtitle">Portal</span></div></div>
+      <nav class="sidebar__nav" aria-label="Menu bên"><ul>
+        <li><a href="dashboard.html" data-permission="dashboard">Bảng điều khiển</a></li>
+        <li><a href="tickets.html" data-permission="tickets">Phiếu hỗ trợ</a></li>
+        <li><a href="devices.html" data-permission="devices">Thiết bị</a></li>
+        <li><a href="users.html" data-permission="users">Người dùng</a></li>
+        <li><a href="network.html" data-permission="network">Mạng</a></li>
+        <li><a href="reports.html" data-permission="reports" class="active" aria-current="page">Báo cáo</a></li>
+        <li><a href="settings.html" data-permission="settings">Cài đặt</a></li>
+      </ul></nav>
+      <div class="sidebar__footer"><button class="sidebar__logout" type="button">Đăng xuất</button></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <label for="sidebar-toggle" class="topbar__menu-button" aria-label="Mở menu"><span></span><span></span><span></span></label>
+        <div class="topbar__heading"><p class="topbar__eyebrow">Theo dõi tình hình hỗ trợ và tài sản công nghệ thông tin</p><h1>Báo cáo</h1></div>
+        <div class="topbar__profile"><div class="profile__avatar" data-user-avatar></div><div class="profile__info"><span class="profile__name" data-user-name></span><span class="profile__role" data-user-role></span></div></div>
+      </header>
+
+      <main class="content" id="main-content">
+        <section class="page-header tickets__hero"><div><p class="topbar__eyebrow">Tổng hợp dữ liệu theo khoảng thời gian và trạng thái hiện tại.</p><h2>Báo cáo tổng quan</h2></div></section>
+
+        <section class="report-filter-bar" aria-label="Bộ lọc báo cáo">
+          <div class="ui-field"><label for="report-range">Khoảng thời gian</label><select id="report-range"><option value="all">Tất cả thời gian</option><option value="today">Hôm nay</option><option value="7">7 ngày qua</option><option value="30">30 ngày qua</option><option value="90">3 tháng qua</option><option value="custom">Tùy chọn thời gian</option></select></div>
+          <div class="ui-field"><label for="report-from">Từ ngày</label><input id="report-from" type="date"></div>
+          <div class="ui-field"><label for="report-to">Đến ngày</label><input id="report-to" type="date"></div>
+          <div class="report-filter-actions"><button class="button button--ghost" id="report-reset" type="button">Đặt lại</button><button class="button button--primary" id="report-apply" type="button">Áp dụng</button></div>
+        </section>
+
+        <section class="dashboard__summary tickets__summary report-summary">
+          <article class="metric-card"><div><p class="metric-card__label">Tổng phiếu</p><p class="metric-card__value" data-report="tickets-total">0</p></div><span class="metric-card__delta metric-card__delta--neutral">Theo bộ lọc</span></article>
+          <article class="metric-card"><div><p class="metric-card__label">Đã giải quyết</p><p class="metric-card__value" data-report="tickets-resolved">0</p></div><span class="metric-card__delta metric-card__delta--success" data-report="tickets-resolved-rate">0%</span></article>
+          <article class="metric-card"><div><p class="metric-card__label">Đang xử lý</p><p class="metric-card__value" data-report="tickets-processing">0</p></div><span class="metric-card__delta metric-card__delta--warning" data-report="tickets-processing-rate">0%</span></article>
+          <article class="metric-card"><div><p class="metric-card__label">Thời gian xử lý TB</p><p class="metric-card__value" data-report="avg-resolution">-</p></div><span class="metric-card__delta metric-card__delta--neutral">Phiếu đã xử lý</span></article>
+        </section>
+
+        <section class="report-distribution-grid">
+          <article class="dashboard__panel"><div class="panel__header"><h2>Theo trạng thái</h2><p>Tỷ lệ trạng thái của phiếu trong bộ lọc.</p></div><div class="report-bar-list" id="report-status-list"></div></article>
+          <article class="dashboard__panel"><div class="panel__header"><h2>Theo ưu tiên</h2><p>Phân bố mức độ ưu tiên của phiếu.</p></div><div class="report-bar-list" id="report-priority-list"></div></article>
+          <article class="dashboard__panel"><div class="panel__header"><h2>Theo danh mục</h2><p>Nhóm sự cố và yêu cầu phổ biến.</p></div><div class="report-bar-list" id="report-category-list"></div></article>
+        </section>
+
+        <section class="dashboard__panel">
+          <div class="panel__header"><h2>Tài sản và hạ tầng</h2><p>Tổng hợp nhanh thiết bị đầu cuối và thiết bị mạng.</p></div>
+          <div class="report-inventory-grid">
+            <div class="report-inventory-card"><span>Tổng thiết bị</span><strong data-report="devices-total">0</strong></div>
+            <div class="report-inventory-card"><span>Đang sử dụng</span><strong data-report="devices-in-use">0</strong></div>
+            <div class="report-inventory-card"><span>Bảo trì</span><strong data-report="devices-maintenance">0</strong></div>
+            <div class="report-inventory-card"><span>Ngưng sử dụng</span><strong data-report="devices-retired">0</strong></div>
+            <div class="report-inventory-card"><span>Tổng thiết bị mạng</span><strong data-report="network-total">0</strong></div>
+            <div class="report-inventory-card"><span>Mạng trực tuyến</span><strong data-report="network-online">0</strong></div>
+            <div class="report-inventory-card"><span>Mạng có vấn đề</span><strong data-report="network-issues">0</strong></div>
+          </div>
+        </section>
+
+        <section class="dashboard__panel">
+          <div class="panel__header"><h2>Hiệu suất nhân viên kỹ thuật</h2><p>Tính theo phiếu được phân công và thời gian xử lý.</p></div>
+          <div class="table-wrap"><table class="dashboard-table performance-table"><thead><tr><th>Nhân viên</th><th>Phiếu được giao</th><th>Đã giải quyết</th><th>Đang xử lý</th><th>Thời gian xử lý TB</th></tr></thead><tbody id="report-performance-body"></tbody></table></div>
+        </section>
+
+        <section class="dashboard__panel report-export-panel">
+          <div class="panel__header"><h2>Xuất báo cáo</h2><p>In trang hoặc xuất danh sách phiếu theo bộ lọc hiện tại.</p></div>
+          <div class="report-action-buttons"><button class="button button--ghost" id="report-print" type="button">In báo cáo</button><button class="button button--primary" id="report-export" type="button">Xuất CSV</button></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../data/seed-data.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/permissions.js"></script>
+  <script src="../js/guard.js"></script>
+  <script src="../js/profile.js"></script>
+  <script src="../js/menu.js"></script>
+  <script src="../js/reports.js"></script>
+</body>
+</html>
