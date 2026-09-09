@@ -247,7 +247,7 @@ test("technician only sees and edits tickets assigned to that technician", async
     });
     assert.equal(hiddenResponse.status, 403);
 
-    const assignedResponse = await fetch(`${base}/tickets/TKT-001`, {
+    const assignedResponse = await fetch(`${base}/tickets/TKT-0001`, {
       headers: authHeaders("USR-002")
     });
     assert.equal(assignedResponse.status, 200);
