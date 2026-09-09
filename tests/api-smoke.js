@@ -30,6 +30,22 @@ function authHeaders(userId = "USR-001") {
   };
 }
 
+function ticketPayload(id, overrides = {}) {
+  return {
+    id,
+    title: `Ticket ${id}`,
+    description: "API authorization test ticket.",
+    category: "network",
+    priority: "medium",
+    status: "open",
+    requesterEmail: "user@itsupport.local",
+    assigneeEmail: null,
+    deviceId: null,
+    resolvedAt: null,
+    ...overrides
+  };
+}
+
 test("health reports active data source", async () => {
   await withServer(async (base) => {
     const response = await fetch(`${base}/health`);
@@ -133,6 +149,185 @@ test("creating a user requires a password", async () => {
     const body = await response.json();
     assert.equal(response.status, 400);
     assert.equal(body.error.code, "VALIDATION_ERROR");
+  });
+});
+
+test("regular user only lists tickets requested by that user", async () => {
+  await withServer(async (base) => {
+    const response = await fetch(`${base}/tickets`, { headers: authHeaders("USR-003") });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(body.ok, true);
+    assert.ok(body.data.length >= 1);
+    assert.ok(body.data.every((ticket) => ticket.requesterEmail === "user@itsupport.local"));
+  });
+});
+
+test("regular user cannot read another requester's ticket by direct API", async () => {
+  await withServer(async (base) => {
+    const createResponse = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-001"),
+      body: JSON.stringify(ticketPayload("TKT-0910", { requesterEmail: "lead@itsupport.local" }))
+    });
+    assert.equal(createResponse.status, 201);
+
+    const response = await fetch(`${base}/tickets/TKT-0910`, {
+      headers: authHeaders("USR-003")
+    });
+    const body = await response.json();
+    assert.equal(response.status, 403);
+    assert.equal(body.error.code, "TICKET_SCOPE_FORBIDDEN");
+  });
+});
+
+test("regular user cannot spoof requester or self-assign during ticket creation", async () => {
+  await withServer(async (base) => {
+    const spoofRequester = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify(ticketPayload("TKT-0911", { requesterEmail: "lead@itsupport.local" }))
+    });
+    assert.equal(spoofRequester.status, 403);
+
+    const selfAssign = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify(ticketPayload("TKT-0912", { assigneeEmail: "technician@itsupport.local" }))
+    });
+    const body = await selfAssign.json();
+    assert.equal(selfAssign.status, 403);
+    assert.equal(body.error.code, "TICKET_SCOPE_FORBIDDEN");
+  });
+});
+
+test("regular user can edit own open ticket content but cannot change protected workflow fields", async () => {
+  await withServer(async (base) => {
+    const createResponse = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify(ticketPayload("TKT-0913"))
+    });
+    assert.equal(createResponse.status, 201);
+
+    const contentResponse = await fetch(`${base}/tickets/TKT-0913`, {
+      method: "PATCH",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify({ title: "Updated by requester" })
+    });
+    assert.equal(contentResponse.status, 200);
+
+    const requesterResponse = await fetch(`${base}/tickets/TKT-0913`, {
+      method: "PATCH",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify({ requesterEmail: "lead@itsupport.local" })
+    });
+    assert.equal(requesterResponse.status, 403);
+
+    const assignmentResponse = await fetch(`${base}/tickets/TKT-0913`, {
+      method: "PATCH",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify({ assigneeEmail: "technician@itsupport.local", status: "assigned" })
+    });
+    assert.equal(assignmentResponse.status, 403);
+  });
+});
+
+test("technician only sees and edits tickets assigned to that technician", async () => {
+  await withServer(async (base) => {
+    const createUnassigned = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-001"),
+      body: JSON.stringify(ticketPayload("TKT-0914"))
+    });
+    assert.equal(createUnassigned.status, 201);
+
+    const hiddenResponse = await fetch(`${base}/tickets/TKT-0914`, {
+      headers: authHeaders("USR-002")
+    });
+    assert.equal(hiddenResponse.status, 403);
+
+    const assignedResponse = await fetch(`${base}/tickets/TKT-001`, {
+      headers: authHeaders("USR-002")
+    });
+    assert.equal(assignedResponse.status, 200);
+  });
+});
+
+test("technician can progress assigned workflow but cannot perform lead-only transitions", async () => {
+  await withServer(async (base) => {
+    const createResponse = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-001"),
+      body: JSON.stringify(ticketPayload("TKT-0915", {
+        status: "assigned",
+        assigneeEmail: "technician@itsupport.local"
+      }))
+    });
+    assert.equal(createResponse.status, 201);
+
+    const progressResponse = await fetch(`${base}/tickets/TKT-0915`, {
+      method: "PATCH",
+      headers: authHeaders("USR-002"),
+      body: JSON.stringify({ status: "in_progress" })
+    });
+    assert.equal(progressResponse.status, 200);
+
+    const closeResponse = await fetch(`${base}/tickets/TKT-0915`, {
+      method: "PATCH",
+      headers: authHeaders("USR-002"),
+      body: JSON.stringify({ status: "closed" })
+    });
+    const body = await closeResponse.json();
+    assert.equal(closeResponse.status, 403);
+    assert.equal(body.error.code, "TICKET_SCOPE_FORBIDDEN");
+  });
+});
+
+test("technical lead can assign and manage tickets across requester scope", async () => {
+  await withServer(async (base) => {
+    const createResponse = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-001"),
+      body: JSON.stringify(ticketPayload("TKT-0916"))
+    });
+    assert.equal(createResponse.status, 201);
+
+    const response = await fetch(`${base}/tickets/TKT-0916`, {
+      method: "PATCH",
+      headers: authHeaders("USR-001"),
+      body: JSON.stringify({
+        assigneeEmail: "technician@itsupport.local",
+        status: "assigned"
+      })
+    });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(body.data.assigneeEmail, "technician@itsupport.local");
+    assert.equal(body.data.status, "assigned");
+  });
+});
+
+test("ticket deletion is lead-only", async () => {
+  await withServer(async (base) => {
+    const createResponse = await fetch(`${base}/tickets`, {
+      method: "POST",
+      headers: authHeaders("USR-003"),
+      body: JSON.stringify(ticketPayload("TKT-0917"))
+    });
+    assert.equal(createResponse.status, 201);
+
+    const userDelete = await fetch(`${base}/tickets/TKT-0917`, {
+      method: "DELETE",
+      headers: authHeaders("USR-003")
+    });
+    assert.equal(userDelete.status, 403);
+
+    const leadDelete = await fetch(`${base}/tickets/TKT-0917`, {
+      method: "DELETE",
+      headers: authHeaders("USR-001")
+    });
+    assert.equal(leadDelete.status, 204);
   });
 });
 
