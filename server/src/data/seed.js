@@ -5,7 +5,7 @@ module.exports = {
     { id: "USR-003", name: "Lê Minh Anh", email: "user@itsupport.local", role: "user", department: "Vận hành", status: "active", createdAt: "2026-08-01T08:10:00.000Z" }
   ],
   tickets: [
-    { id: "TKT-001", title: "Không truy cập được Wi-Fi văn phòng", description: "Thiết bị mất kết nối Wi-Fi tại khu vực làm việc.", category: "network", priority: "high", status: "assigned", requesterEmail: "user@itsupport.local", assigneeEmail: "technician@itsupport.local", deviceId: null, createdAt: "2026-09-01T02:00:00.000Z", updatedAt: "2026-09-01T02:10:00.000Z" }
+    { id: "TKT-0001", title: "Không truy cập được Wi-Fi văn phòng", description: "Thiết bị mất kết nối Wi-Fi tại khu vực làm việc.", category: "network", priority: "high", status: "assigned", requesterEmail: "user@itsupport.local", assigneeEmail: "technician@itsupport.local", deviceId: null, createdAt: "2026-09-01T02:00:00.000Z", updatedAt: "2026-09-01T02:10:00.000Z" }
   ],
   devices: [
     { id: "DEV-001", name: "Laptop văn phòng", type: "laptop", status: "in_use", userEmail: "user@itsupport.local", department: "Vận hành", ipAddress: "192.168.10.25", serialNumber: "DEMO-LAP-001", purchaseDate: "2026-01-10", notes: "Thiết bị demo backend." }
