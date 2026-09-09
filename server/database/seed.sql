@@ -15,8 +15,10 @@ INSERT INTO network_devices (id, name, type, status, ip_address, mac_address, ar
 ON DUPLICATE KEY UPDATE
   name = VALUES(name), status = VALUES(status), area = VALUES(area), vlan = VALUES(vlan), subnet = VALUES(subnet), gateway = VALUES(gateway), management_url = VALUES(management_url), uptime_hours = VALUES(uptime_hours), notes = VALUES(notes);
 
+DELETE FROM tickets WHERE id = 'TKT-001';
+
 INSERT INTO tickets (id, title, description, category, priority, status, requester_email, assignee_email, device_id, created_at, updated_at) VALUES
-  ('TKT-001','Không truy cập được Wi-Fi văn phòng','Thiết bị mất kết nối Wi-Fi tại khu vực làm việc.','network','high','assigned','user@itsupport.local','technician@itsupport.local',NULL,'2026-09-01 02:00:00.000','2026-09-01 02:10:00.000')
+  ('TKT-0001','Không truy cập được Wi-Fi văn phòng','Thiết bị mất kết nối Wi-Fi tại khu vực làm việc.','network','high','assigned','user@itsupport.local','technician@itsupport.local',NULL,'2026-09-01 02:00:00.000','2026-09-01 02:10:00.000')
 ON DUPLICATE KEY UPDATE
   title = VALUES(title), description = VALUES(description), category = VALUES(category), priority = VALUES(priority), status = VALUES(status), requester_email = VALUES(requester_email), assignee_email = VALUES(assignee_email), device_id = VALUES(device_id), updated_at = VALUES(updated_at);
 
