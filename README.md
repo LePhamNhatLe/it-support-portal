@@ -14,7 +14,7 @@ Full-stack IT Helpdesk & Infrastructure Management Portal built for technical su
 
 The project includes ticket management, device inventory, user and role administration, network inventory, dashboards, reports, settings, backend authentication, and MySQL persistence.
 
-It is designed as a practical portfolio project and as a reusable source-code base for learning, demos, customization, and further internal-tool development.
+It is designed as a portfolio-ready and reusable source-code base for demos, customization, and further internal-tool development.
 
 ## Tech Stack
 
@@ -37,6 +37,7 @@ It is designed as a practical portfolio project and as a reusable source-code ba
 - Password hashing with bcrypt
 - Authenticated `/api/v1` REST API
 - Role-based route protection
+- Ticket ownership / assignee authorization
 - Ticket creation, assignment, status tracking, comments, notes, and history
 - IT device / asset inventory
 - User management with role and account status controls
@@ -157,9 +158,13 @@ Current backend route-level access model:
 | Reports | Yes | No | No |
 | Settings | Yes | Yes | Yes |
 
-User-management self-protection is enforced on the backend, including protection against self-demotion, self-locking, self-disabling, and self-deletion.
+Ticket-level rules are also enforced on the backend:
 
-Ticket-level ownership and assignee authorization is still being hardened before the final release. The current branch should not be treated as production-ready until the final security and integration pass is complete.
+- Technical Lead can view and manage all tickets, assign technicians, manage workflow, and delete tickets.
+- Technician can only view tickets assigned to that technician and can only perform allowed workflow transitions.
+- User can only view tickets requested by that user, cannot spoof requester identity, cannot self-assign a technician, and cannot modify protected workflow fields.
+
+User-management self-protection is enforced on the backend, including protection against self-demotion, self-locking, self-disabling, and self-deletion.
 
 ## MySQL
 
@@ -244,6 +249,8 @@ API smoke/security tests:
 npm run test:api
 ```
 
+Current security/API smoke suite: **17 tests / 17 passing**.
+
 Database connectivity:
 
 ```bash
@@ -256,14 +263,7 @@ Frontend regression page:
 tests/regression.html
 ```
 
-Recommended manual persistence check:
-
-```text
-create/update record in frontend
-→ verify API response
-→ refresh browser
-→ record must still exist
-```
+Manual regression has been completed across the three demo roles for login, ticket flow, ticket assignment/workflow, Users, Devices, Network, Settings, refresh persistence, and logout/login persistence with the MySQL path active.
 
 ## Data Validation and Protection
 
@@ -280,6 +280,7 @@ Implemented protections include:
 - Semantic API errors for duplicate and reference violations
 - User dependency protection
 - Backend user self-protection
+- Ticket requester / assignee authorization
 - JWT authentication
 - bcrypt password hashing
 - CSV spreadsheet formula-injection protection
@@ -301,22 +302,18 @@ Implemented protections include:
 - P22 MySQL Integration: **DONE**
 - P23 Frontend / Backend Integration: **DONE**
 - P23.5 Integration Stabilization: **DONE**
-- P24 Backend Authentication & Security: **IN PROGRESS - authentication foundation complete, final ticket authorization hardening remaining**
-- P25 Integration & Database Testing: **PLANNED**
+- P24 Backend Authentication & Security: **DONE**
+- P25 Integration & Database Testing: **DONE**
 - P26 Deployment: **PLANNED**
-- P27 Final Portfolio / Source Release: **PLANNED**
+- P27 Final Portfolio / Source Release: **IN PROGRESS**
 
 ## Current Release Note
 
-The authentication foundation is implemented and working with JWT, bcrypt, protected backend routes, MySQL-backed users, and backend user-management protections.
+Authentication and authorization are implemented with JWT, bcrypt, protected backend routes, user-management protections, ticket ownership/assignee rules, and direct-API authorization checks.
 
-Before final commercial/production-style release, the project still requires:
+The API security smoke suite passes 17/17 tests, and manual role-based / MySQL persistence regression has been completed for the current local full-stack build.
 
-1. Final ticket ownership / assignee authorization rules
-2. Full role-based browser regression
-3. Full MySQL persistence regression
-4. Deployment validation
-5. Final packaging and release documentation
+Before a hosted production-style release, the remaining work is deployment validation and final source packaging/release documentation.
 
 ## Documentation
 
@@ -342,7 +339,7 @@ GitHub: [LePhamNhatLe](https://github.com/LePhamNhatLe)
 
 Dự án bao gồm quản lý phiếu hỗ trợ, thiết bị IT, người dùng và phân quyền, thiết bị mạng, dashboard, báo cáo, cài đặt hệ thống, xác thực backend và lưu trữ MySQL.
 
-Dự án được xây dựng theo hướng thực hành thực tế, portfolio kỹ thuật và có thể dùng làm source code nền để học tập, demo, tùy biến hoặc tiếp tục phát triển thành công cụ nội bộ.
+Dự án được xây dựng theo hướng portfolio kỹ thuật và source code có thể tái sử dụng để demo, tùy biến hoặc tiếp tục phát triển thành công cụ nội bộ.
 
 ## Công nghệ sử dụng
 
@@ -365,6 +362,7 @@ Dự án được xây dựng theo hướng thực hành thực tế, portfolio 
 - Hash mật khẩu bằng bcrypt
 - REST API `/api/v1` có xác thực
 - Phân quyền route ở backend
+- Phân quyền ticket theo requester / assignee ở backend
 - Quản lý ticket từ tạo mới đến xử lý, phân công và theo dõi trạng thái
 - Quản lý thiết bị / tài sản IT
 - Quản lý người dùng, vai trò và trạng thái tài khoản
@@ -483,9 +481,13 @@ Authorization: Bearer <JWT_TOKEN>
 | Reports | Có | Không | Không |
 | Settings | Có | Có | Có |
 
-Backend đã có bảo vệ tài khoản đang đăng nhập, bao gồm không cho tự hạ role, tự khóa, tự vô hiệu hóa hoặc tự xóa tài khoản.
+Backend còn áp dụng quyền chi tiết ở cấp ticket:
 
-Phân quyền chi tiết ở cấp ticket theo requester / assignee vẫn đang được hoàn thiện trước bản release cuối. Vì vậy branch hiện tại chưa nên được xem là production-ready cho đến khi hoàn tất security pass và integration regression.
+- Technical Lead xem và quản lý toàn bộ ticket, phân công technician, quản lý workflow và xóa ticket.
+- Technician chỉ xem ticket được assign cho chính mình và chỉ được chuyển các trạng thái workflow được phép.
+- User chỉ xem ticket do chính mình tạo, không thể giả requester, tự assign technician hoặc thay đổi các trường workflow được bảo vệ.
+
+Backend cũng bảo vệ tài khoản đang đăng nhập, bao gồm không cho tự hạ role, tự khóa, tự vô hiệu hóa hoặc tự xóa tài khoản.
 
 ## MySQL
 
@@ -570,6 +572,8 @@ API smoke/security test:
 npm run test:api
 ```
 
+Bộ API/security smoke test hiện tại: **17 test / 17 pass**.
+
 Kiểm tra kết nối database:
 
 ```bash
@@ -582,14 +586,7 @@ Frontend regression:
 tests/regression.html
 ```
 
-Luồng kiểm tra persistence khuyến nghị:
-
-```text
-tạo / sửa dữ liệu trên frontend
-→ kiểm tra API
-→ refresh trình duyệt
-→ dữ liệu vẫn phải tồn tại
-```
+Manual regression đã được kiểm tra qua 3 role demo đối với login, ticket flow, phân công/xử lý ticket, Users, Devices, Network, Settings, refresh persistence và logout/login persistence khi chạy với MySQL.
 
 ## Validation và bảo vệ dữ liệu
 
@@ -606,6 +603,7 @@ Các lớp bảo vệ hiện có:
 - API error có ý nghĩa cho duplicate / invalid reference
 - Bảo vệ dependency khi xóa user
 - Backend self-protection cho tài khoản đang đăng nhập
+- Phân quyền ticket theo requester / assignee
 - JWT authentication
 - bcrypt password hashing
 - Chống CSV spreadsheet formula injection
@@ -627,22 +625,18 @@ Các lớp bảo vệ hiện có:
 - P22 MySQL Integration: **DONE**
 - P23 Frontend / Backend Integration: **DONE**
 - P23.5 Integration Stabilization: **DONE**
-- P24 Backend Authentication & Security: **ĐANG LÀM - nền tảng authentication đã hoàn tất, còn hardening ticket authorization**
-- P25 Integration & Database Testing: **PLANNED**
+- P24 Backend Authentication & Security: **DONE**
+- P25 Integration & Database Testing: **DONE**
 - P26 Deployment: **PLANNED**
-- P27 Final Portfolio / Source Release: **PLANNED**
+- P27 Final Portfolio / Source Release: **ĐANG THỰC HIỆN**
 
 ## Ghi chú release hiện tại
 
-Nền tảng authentication đã hoạt động với JWT, bcrypt, protected backend routes, MySQL-backed users và các lớp bảo vệ ở module Users.
+Authentication và authorization đã hoàn tất với JWT, bcrypt, protected backend routes, bảo vệ module Users, phân quyền ticket theo requester/assignee và kiểm tra quyền ở direct API.
 
-Trước khi phát hành bản thương mại / production-style cuối cùng, dự án còn cần:
+Bộ API/security smoke test đang pass 17/17, đồng thời manual regression theo role và MySQL persistence đã hoàn tất cho bản full-stack local hiện tại.
 
-1. Hoàn thiện phân quyền ticket theo requester / assignee
-2. Full browser regression theo từng role
-3. Full MySQL persistence regression
-4. Kiểm tra deployment
-5. Đóng gói và hoàn thiện tài liệu release
+Trước khi phát hành bản hosted production-style, phần còn lại là kiểm tra deployment và đóng gói source / tài liệu release cuối.
 
 ## Tài liệu
 
