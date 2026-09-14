@@ -129,6 +129,18 @@ function transitionAllowed(fromStatus, toStatus) {
   return (STATUS_TRANSITIONS[fromStatus] || []).includes(toStatus);
 }
 
+function generateNextTicketId(tickets) {
+  const highestNumber = (Array.isArray(tickets) ? tickets : []).reduce((highest, ticket) => {
+    if (!ticket || typeof ticket.id !== "string") return highest;
+    const match = /^TKT-(\d+)$/.exec(ticket.id.trim());
+    if (!match) return highest;
+    const number = Number(match[1]);
+    return Number.isFinite(number) ? Math.max(highest, number) : highest;
+  }, 0);
+
+  return `TKT-${String(highestNumber + 1).padStart(4, "0")}`;
+}
+
 router.get("/", async (req, res, next) => {
   try {
     const tickets = await store.list("tickets");
@@ -171,7 +183,11 @@ router.post("/", async (req, res, next) => {
 
     const errors = validateCreate(body);
     if (errors.length) return fail(res, 400, "VALIDATION_ERROR", "Dữ liệu không hợp lệ.", errors);
-    if (await store.get("tickets", body.id)) return fail(res, 409, "DUPLICATE_ID", "Mã dữ liệu đã tồn tại.");
+
+    const existingTickets = await store.list("tickets");
+    if (existingTickets.some((ticket) => ticket && ticket.id === body.id)) {
+      body.id = generateNextTicketId(existingTickets);
+    }
 
     if (body.assigneeEmail && !(await validateAssignee(body.assigneeEmail))) {
       return fail(res, 400, "INVALID_ASSIGNEE", "Người phụ trách phải là tài khoản kỹ thuật đang hoạt động.");
