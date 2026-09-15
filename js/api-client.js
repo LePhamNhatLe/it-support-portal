@@ -1,22 +1,13 @@
 (function () {
-  const LOCAL_BASE_URL = "http://localhost:3000/api/v1";
-  const HOSTED_BASE_URL = "https://it-support-portal-api.onrender.com/api/v1";
+  const DEFAULT_BASE_URL = "https://it-support-portal-api.onrender.com/api/v1";
   const TOKEN_KEY = "authToken";
   let successToastTimer = null;
-
-  function getDefaultBaseUrl() {
-    const hostname = window.location && window.location.hostname
-      ? window.location.hostname.toLowerCase()
-      : "";
-    const isLocal = ["localhost", "127.0.0.1", ""].includes(hostname);
-    return isLocal ? LOCAL_BASE_URL : HOSTED_BASE_URL;
-  }
 
   function getBaseUrl() {
     const configured = window.IT_SUPPORT_API_BASE_URL;
     return typeof configured === "string" && configured.trim()
       ? configured.replace(/\/$/, "")
-      : getDefaultBaseUrl();
+      : DEFAULT_BASE_URL;
   }
 
   function getToken() {
