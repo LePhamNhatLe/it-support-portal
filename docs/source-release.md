@@ -127,6 +127,24 @@ Do not distribute real production values for:
 
 The repository includes `.env.example` only as a configuration template.
 
+## Build a Clean ZIP on Windows
+
+The repository includes a PowerShell packaging script that creates a sanitized source ZIP and excludes environment files, Vercel metadata, `node_modules`, `.git`, and private certificate/key files.
+
+From the project root, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\package-release.ps1
+```
+
+The generated package is written to:
+
+```text
+release/it-support-portal-source.zip
+```
+
+The script also creates a staging folder at `release/it-support-portal-source/` so the package contents can be inspected before delivery.
+
 ## Suggested Delivery Package
 
 A clean customer/evaluator ZIP should contain the repository source while excluding:
@@ -139,6 +157,7 @@ node_modules/
 !.env.example
 server/certs/*.pem
 server/certs/*.crt
+server/certs/*.key
 .vercel/
 ```
 
@@ -156,6 +175,7 @@ js/
 server/
 tests/
 docs/
+scripts/
 ```
 
 ## Deployment Notes
@@ -171,12 +191,12 @@ For a hosted setup similar to the demo:
 
 ## Release Status
 
-P27 Final Portfolio / Source Release is considered complete when:
+P27 Final Portfolio / Source Release is complete when:
 
 - README reflects the hosted demo
 - deployment has been validated
 - this source-release guide is included
 - automated tests pass
-- a clean ZIP is generated without secrets
+- the clean packaging script is available for source delivery
 
 Licensing and commercial usage terms are intentionally not defined in this repository. The distributor should provide the appropriate license or sales terms separately when selling or transferring the source code.
