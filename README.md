@@ -18,11 +18,19 @@ It is designed as a portfolio-ready and reusable source-code base for demos, cus
 
 ## Live Demo
 
-- Frontend: https://it-support-portal-snowy.vercel.app
-- Backend: https://it-support-portal-api.onrender.com
-- Database: Aiven MySQL
+Frontend:
 
-Production flow:
+```text
+https://it-support-portal-snowy.vercel.app
+```
+
+Backend health endpoint:
+
+```text
+https://it-support-portal-api.onrender.com/api/v1/health
+```
+
+Production architecture:
 
 ```text
 Vercel frontend
@@ -31,8 +39,6 @@ Render Express API
       ↓
 Aiven MySQL
 ```
-
-Production login has been validated through the hosted Vercel → Render → Aiven MySQL path.
 
 ## Tech Stack
 
@@ -323,17 +329,15 @@ Implemented protections include:
 - P24 Backend Authentication & Security: **DONE**
 - P25 Integration & Database Testing: **DONE**
 - P26 Deployment: **DONE**
-- P27 Final Portfolio / Source Release: **IN PROGRESS**
+- P27 Final Portfolio / Source Release: **DONE**
 
 ## Current Release Note
 
 Authentication and authorization are implemented with JWT, bcrypt, protected backend routes, user-management protections, ticket ownership/assignee rules, and direct-API authorization checks.
 
-The API security smoke suite passes 17/17 tests, and manual role-based / MySQL persistence regression has been completed.
+The API security smoke suite passes 17/17 tests, manual role-based / MySQL persistence regression is complete, and the hosted production path has been validated through Vercel frontend → Render API → Aiven MySQL.
 
-Hosted deployment has also been validated successfully. The production frontend is served from Vercel, the Express API runs on Render, and persistent application data is stored in Aiven MySQL. Production login has been confirmed through the complete hosted stack.
-
-Remaining P27 work focuses on final source packaging and release documentation.
+The project now includes final source-release documentation and is ready for portfolio presentation or clean source packaging. Production credentials and secrets are intentionally excluded from the repository.
 
 ## Documentation
 
@@ -341,6 +345,7 @@ Remaining P27 work focuses on final source packaging and release documentation.
 - [MySQL Cloud Setup](docs/mysql-cloud-setup.md)
 - [Project Specification](docs/project-spec.md)
 - [Frontend Portfolio Release Notes](docs/frontend-portfolio-release.md)
+- [Source Release Guide](docs/source-release.md)
 
 ## Author
 
@@ -361,23 +366,29 @@ Dự án bao gồm quản lý phiếu hỗ trợ, thiết bị IT, người dùn
 
 Dự án được xây dựng theo hướng portfolio kỹ thuật và source code có thể tái sử dụng để demo, tùy biến hoặc tiếp tục phát triển thành công cụ nội bộ.
 
-## Demo trực tiếp
+## Demo trực tuyến
 
-- Frontend: https://it-support-portal-snowy.vercel.app
-- Backend: https://it-support-portal-api.onrender.com
-- Database: Aiven MySQL
-
-Luồng production:
+Frontend:
 
 ```text
-Frontend Vercel
+https://it-support-portal-snowy.vercel.app
+```
+
+Backend health endpoint:
+
+```text
+https://it-support-portal-api.onrender.com/api/v1/health
+```
+
+Kiến trúc production:
+
+```text
+Vercel frontend
       ↓
-Express API trên Render
+Render Express API
       ↓
 Aiven MySQL
 ```
-
-Đăng nhập production đã được kiểm tra thành công qua toàn bộ luồng Vercel → Render → Aiven MySQL.
 
 ## Công nghệ sử dụng
 
@@ -666,17 +677,15 @@ Các lớp bảo vệ hiện có:
 - P24 Backend Authentication & Security: **DONE**
 - P25 Integration & Database Testing: **DONE**
 - P26 Deployment: **DONE**
-- P27 Final Portfolio / Source Release: **ĐANG THỰC HIỆN**
+- P27 Final Portfolio / Source Release: **DONE**
 
 ## Ghi chú release hiện tại
 
 Authentication và authorization đã hoàn tất với JWT, bcrypt, protected backend routes, bảo vệ module Users, phân quyền ticket theo requester/assignee và kiểm tra quyền ở direct API.
 
-Bộ API/security smoke test đang pass 17/17, đồng thời manual regression theo role và MySQL persistence đã hoàn tất.
+Bộ API/security smoke test đang pass 17/17, manual regression theo role và MySQL persistence đã hoàn tất, đồng thời luồng production đã được xác nhận qua Vercel frontend → Render API → Aiven MySQL.
 
-Deployment hosted đã được kiểm tra thành công. Frontend production chạy trên Vercel, Express API chạy trên Render và dữ liệu ứng dụng được lưu trong Aiven MySQL. Đăng nhập production đã được xác nhận qua toàn bộ hosted stack.
-
-Phần còn lại của P27 tập trung vào đóng gói source và hoàn thiện tài liệu release cuối.
+Dự án hiện đã có tài liệu source release cuối và sẵn sàng dùng làm portfolio hoặc đóng gói source sạch để phát hành/bán. Credential và secret production được cố ý loại khỏi repository.
 
 ## Tài liệu
 
@@ -684,6 +693,7 @@ Phần còn lại của P27 tập trung vào đóng gói source và hoàn thiệ
 - [MySQL Cloud Setup](docs/mysql-cloud-setup.md)
 - [Project Specification](docs/project-spec.md)
 - [Frontend Portfolio Release Notes](docs/frontend-portfolio-release.md)
+- [Source Release Guide](docs/source-release.md)
 
 ## Tác giả
 
