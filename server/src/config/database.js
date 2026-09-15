@@ -7,8 +7,16 @@ let pool;
 
 function buildSslOptions() {
   if (!env.DB_SSL) return undefined;
+
+  if (env.DB_CA_CERT) {
+    return {
+      ca: env.DB_CA_CERT.replace(/\\n/g, "\n"),
+      rejectUnauthorized: true
+    };
+  }
+
   if (!env.DB_CA_PATH) {
-    throw new Error("DB_SSL=true nhưng chưa cấu hình DB_CA_PATH trong .env.");
+    throw new Error("DB_SSL=true nhưng chưa cấu hình DB_CA_CERT hoặc DB_CA_PATH.");
   }
 
   const caPath = path.resolve(process.cwd(), env.DB_CA_PATH);
