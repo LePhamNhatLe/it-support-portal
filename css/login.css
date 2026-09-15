@@ -1,0 +1,334 @@
+:root {
+  --bg: #07111f;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-strong: #f8fbff;
+  --border: rgba(60, 80, 110, 0.14);
+  --text: #1f2a3a;
+  --muted: #62718a;
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --danger: #dc2626;
+  --tech-line: rgba(56, 189, 248, 0.16);
+  --tech-line-strong: rgba(59, 130, 246, 0.26);
+  --tech-node: rgba(125, 211, 252, 0.78);
+  --shadow: 0 38px 110px rgba(2, 6, 23, 0.42);
+  --transition: 180ms ease;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100%; }
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(37, 99, 235, 0.26), transparent 26%),
+    radial-gradient(circle at 82% 16%, rgba(14, 165, 233, 0.18), transparent 22%),
+    radial-gradient(circle at 72% 82%, rgba(59, 130, 246, 0.14), transparent 24%),
+    linear-gradient(145deg, #06101d 0%, #0b1830 46%, #081422 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Mainboard-style technical grid and circuit traces. */
+body::before {
+  z-index: 0;
+  opacity: .92;
+  background:
+    linear-gradient(var(--tech-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tech-line) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 0 11%, var(--tech-line-strong) 11% 11.14%, transparent 11.14% 31%, var(--tech-line) 31% 31.12%, transparent 31.12% 100%),
+    linear-gradient(transparent 0 18%, var(--tech-line-strong) 18% 18.14%, transparent 18.14% 48%, var(--tech-line) 48% 48.12%, transparent 48.12% 100%),
+    linear-gradient(90deg, transparent 0 68%, rgba(34, 211, 238, .16) 68% 68.13%, transparent 68.13% 84%, rgba(59,130,246,.16) 84% 84.13%, transparent 84.13% 100%),
+    linear-gradient(transparent 0 72%, rgba(34, 211, 238, .14) 72% 72.13%, transparent 72.13% 100%);
+  background-size:
+    36px 36px,
+    36px 36px,
+    260px 260px,
+    300px 300px,
+    360px 360px,
+    420px 420px;
+  mask-image: radial-gradient(circle at center, #000 20%, rgba(0,0,0,.92) 68%, rgba(0,0,0,.6) 100%);
+  -webkit-mask-image: radial-gradient(circle at center, #000 20%, rgba(0,0,0,.92) 68%, rgba(0,0,0,.6) 100%);
+}
+
+/* Nodes, chip pads and subtle scan glow. */
+body::after {
+  z-index: 0;
+  opacity: .92;
+  background:
+    radial-gradient(circle at 10% 16%, var(--tech-node) 0 2px, rgba(56,189,248,.22) 3px 6px, transparent 7px),
+    radial-gradient(circle at 24% 42%, var(--tech-node) 0 2px, rgba(56,189,248,.18) 3px 6px, transparent 7px),
+    radial-gradient(circle at 34% 76%, var(--tech-node) 0 2px, rgba(59,130,246,.18) 3px 6px, transparent 7px),
+    radial-gradient(circle at 68% 20%, var(--tech-node) 0 2px, rgba(34,211,238,.18) 3px 6px, transparent 7px),
+    radial-gradient(circle at 82% 48%, var(--tech-node) 0 2px, rgba(59,130,246,.18) 3px 6px, transparent 7px),
+    radial-gradient(circle at 90% 78%, var(--tech-node) 0 2px, rgba(34,211,238,.18) 3px 6px, transparent 7px),
+    linear-gradient(90deg, transparent 0 8%, rgba(56,189,248,.11) 8% 8.28%, transparent 8.28% 16%, rgba(56,189,248,.11) 16% 16.28%, transparent 16.28% 100%),
+    linear-gradient(transparent 0 34%, rgba(59,130,246,.10) 34% 34.28%, transparent 34.28% 100%),
+    repeating-linear-gradient(135deg, transparent 0 42px, rgba(125,211,252,.035) 42px 43px, transparent 43px 86px);
+  filter: drop-shadow(0 0 8px rgba(56,189,248,.22));
+}
+
+button, input { font: inherit; }
+
+.login-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.login-shell {
+  width: min(1080px, 100%);
+  min-height: 620px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr);
+  overflow: hidden;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 30px;
+  background: rgba(8, 20, 38, 0.72);
+  box-shadow:
+    var(--shadow),
+    0 0 0 1px rgba(59,130,246,.08) inset,
+    0 0 44px rgba(37,99,235,.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.login-brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  color: #fff;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(96, 165, 250, .32), transparent 28%),
+    linear-gradient(145deg, rgba(7,22,43,.98) 0%, rgba(14,48,91,.96) 56%, rgba(30,64,175,.92) 100%);
+}
+
+.login-brand::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .5;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(147, 197, 253, .13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, .13) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 0 27%, rgba(125,211,252,.22) 27% 27.18%, transparent 27.18% 72%, rgba(125,211,252,.16) 72% 72.18%, transparent 72.18%),
+    linear-gradient(transparent 0 38%, rgba(125,211,252,.18) 38% 38.18%, transparent 38.18% 76%, rgba(125,211,252,.14) 76% 76.18%, transparent 76.18%),
+    radial-gradient(circle at 24% 24%, rgba(255,255,255,.9) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 78% 66%, rgba(125,211,252,.85) 0 1.5px, transparent 2.5px);
+  background-size: 34px 34px, 34px 34px, 240px 240px, 280px 280px, auto, auto;
+}
+
+.login-brand::after {
+  content: "";
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  right: -96px;
+  bottom: -84px;
+  border-radius: 50%;
+  border: 1px solid rgba(125,211,252,.24);
+  box-shadow:
+    0 0 0 36px rgba(56,189,248,.045),
+    0 0 0 74px rgba(59,130,246,.032),
+    0 0 52px rgba(34,211,238,.16);
+  pointer-events: none;
+}
+
+.login-brand__top {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.login-brand__logo {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #38bdf8, #2563eb);
+  font-weight: 800;
+  box-shadow: 0 0 26px rgba(56,189,248,.38), 0 14px 28px rgba(0,0,0,.2);
+}
+
+.login-brand__product,
+.login-brand__subtitle { margin: 0; }
+.login-brand__product { font-size: 1.05rem; font-weight: 800; }
+.login-brand__subtitle { color: rgba(255,255,255,.72); }
+
+.login-brand__content { max-width: 560px; position: relative; z-index: 1; }
+.login-brand__eyebrow {
+  margin: 0 0 .8rem;
+  color: #7dd3fc;
+  font-size: .86rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.login-brand__content h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+.login-brand__content > p:last-child {
+  margin: 0;
+  max-width: 510px;
+  color: rgba(255,255,255,.74);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.login-brand__features {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: .8rem;
+}
+.login-brand__features div {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid rgba(125,211,252,.2);
+  border-radius: 16px;
+  background: rgba(4, 18, 36, .34);
+  backdrop-filter: blur(6px);
+}
+.login-brand__features div::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  opacity: .48;
+}
+.login-brand__features strong,
+.login-brand__features span { display: block; }
+.login-brand__features strong { margin-bottom: .35rem; font-size: .92rem; }
+.login-brand__features span { color: rgba(255,255,255,.68); font-size: .78rem; line-height: 1.45; }
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem);
+  background: rgba(248, 251, 255, .96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(125,211,252,.14);
+}
+
+.login-card__header { margin-bottom: 1.7rem; }
+.login-card__eyebrow {
+  margin: 0 0 .6rem;
+  color: var(--primary);
+  font-size: .84rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.login-card__header h1 {
+  margin: 0 0 .65rem;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  letter-spacing: -.035em;
+}
+.login-card__subtitle { margin: 0; color: var(--muted); line-height: 1.6; }
+
+.login-form { display: grid; gap: 1rem; }
+.login-form__error {
+  min-height: 0;
+  color: var(--danger);
+  font-size: .9rem;
+  line-height: 1.45;
+}
+.login-form__error:empty { display: none; }
+
+.login-form__field { display: grid; gap: .45rem; }
+.login-form__field label { font-size: .9rem; font-weight: 700; }
+.login-form__field input {
+  width: 100%;
+  min-height: 50px;
+  padding: .9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(248,251,255,.96);
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.login-form__field input:focus-visible {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56,189,248,.14), 0 0 24px rgba(37,99,235,.08);
+  background: #fff;
+}
+
+.login-form__submit {
+  width: 100%;
+  min-height: 50px;
+  margin-top: .35rem;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #2563eb, #0ea5e9);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(37,99,235,.18);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.login-form__submit:hover,
+.login-form__submit:focus-visible {
+  box-shadow: 0 16px 34px rgba(14,165,233,.28);
+  filter: brightness(1.04);
+}
+.login-form__submit:active { transform: scale(.99); }
+
+.login-demo {
+  margin-top: 1.4rem;
+  padding: 1rem;
+  display: grid;
+  gap: .22rem;
+  border: 1px solid rgba(59,130,246,.15);
+  border-radius: 14px;
+  background: rgba(239,246,255,.82);
+}
+.login-demo span { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+.login-demo strong { font-size: .9rem; }
+.login-demo small { color: var(--muted); }
+
+@media (max-width: 900px) {
+  .login-shell { grid-template-columns: 1fr; min-height: 0; max-width: 620px; }
+  .login-brand { min-height: 320px; }
+  .login-brand__content h2 { max-width: 520px; }
+  .login-card { border-left: 0; border-top: 1px solid rgba(125,211,252,.14); }
+}
+
+@media (max-width: 640px) {
+  .login-page { padding: .75rem; }
+  .login-shell { border-radius: 22px; }
+  .login-brand { min-height: 250px; padding: 1.5rem; }
+  .login-brand__content h2 { font-size: 1.8rem; }
+  .login-brand__content > p:last-child { display: none; }
+  .login-brand__features { display: none; }
+  .login-card { padding: 1.5rem; }
+  body::before { background-size: 28px 28px, 28px 28px, 210px 210px, 230px 230px, 280px 280px, 320px 320px; }
+}

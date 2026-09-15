@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P18 Full Regression | IT Support Portal</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; line-height: 1.5; }
+      .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+      button { padding: 8px 14px; cursor: pointer; }
+      table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+      th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
+      .pass { font-weight: 700; }
+      .fail { font-weight: 700; text-decoration: underline; }
+      #regression-summary { font-weight: 700; }
+      code { white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>P18 Full Project Regression</h1>
+      <p>Trang kiểm thử nội bộ. Runner sẽ snapshot dữ liệu liên quan, chạy test và khôi phục LocalStorage sau khi hoàn tất.</p>
+
+      <div class="toolbar">
+        <button id="run-full-regression" type="button">Chạy lại toàn bộ kiểm thử</button>
+        <a href="../pages/dashboard.html">Quay lại Dashboard</a>
+      </div>
+
+      <p id="regression-summary" role="status">Chưa chạy.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nhóm</th>
+            <th>Kiểm thử</th>
+            <th>Kết quả</th>
+            <th>Chi tiết</th>
+          </tr>
+        </thead>
+        <tbody id="regression-results"></tbody>
+      </table>
+    </main>
+
+    <script src="../data/seed-data.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ticket-action-permissions.js"></script>
+    <script src="../js/ticket-operations.js"></script>
+    <script src="../js/ticket-activity.js"></script>
+    <script src="../js/tickets-integration.js"></script>
+    <script src="../js/devices.js"></script>
+    <script src="../js/devices-actions.js"></script>
+    <script src="../js/users.js"></script>
+    <script src="../js/users-actions.js"></script>
+    <script src="../js/network.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/reports.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/ticket-regression.js"></script>
+    <script src="../js/device-regression.js"></script>
+    <script src="../js/user-regression.js"></script>
+    <script src="../js/network-regression.js"></script>
+    <script src="full-regression.js"></script>
+  </body>
+</html>
