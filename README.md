@@ -346,6 +346,7 @@ The project now includes final source-release documentation and is ready for por
 - [Project Specification](docs/project-spec.md)
 - [Frontend Portfolio Release Notes](docs/frontend-portfolio-release.md)
 - [Source Release Guide](docs/source-release.md)
+- [Installation & Demo Guide](docs/installation-and-demo.md)
 
 ## Author
 
